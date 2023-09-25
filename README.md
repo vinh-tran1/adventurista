@@ -15,17 +15,17 @@ Adventurista hopes to solve all these problems and more: imagine that when you t
 Adventurista allows users to grow an global network of friends, meet new people, find new places, and plan new adventures.
 
 ## Technology Stack
-We will be using a MERN stack along with Amazon Web Services.
+Our mobile app is built using a MERN stack along with Amazon Web Services.
 
 1. MERN Stack
 - **Frontend**: React Native, Redux
 - **Backend**: Node.js, Express.js, MongoDB
   
 2. AWS
-- ECS + Fargate for 
-- RDS/DynamoDB for
-- S3 for
-- API Gateway for
-- Lambda for
+- **ECS + Fargate** for 
+- **RDS/DynamoDB** for
+- **S3** for storing images
+- **API Gateway** for
+- **Lambda** for
 
-Our app will be able to run on iOS and Android.
+Using React Native, our app is able to run on both iOS and Android. Using AWS, our app is able to 
