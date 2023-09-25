@@ -17,15 +17,15 @@ Adventurista allows users to grow an global network of friends, meet new people,
 ## Technology Stack
 We will be using a MERN stack along with Amazon Web Services.
 
-(1) MERN Stack
+1. MERN Stack
 - **Frontend**: React Native, Redux
 - **Backend**: Node.js, Express.js, MongoDB
   
-(2) AWS
-- ECS + Fargate for ...
-- RDS/DynamoDB for ...
-- S3 for ...
-- API Gateway for ...
-- Lambda for ...
+2. AWS
+- ECS + Fargate for 
+- RDS/DynamoDB for
+- S3 for
+- API Gateway for
+- Lambda for
 
 Our app will be able to run on iOS and Android.
