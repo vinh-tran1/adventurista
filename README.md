@@ -12,7 +12,7 @@ Meeting new people, finding hidden gems, or picking activities can all be tricky
 
 Adventurista hopes to solve all these problems and more: imagine that when you travel, you can see on any given day what events are popular or where everyone your age is going for the night. This social platform is essentially facebook group meets dating app – it connects people through group events. It allows users to seamlessly plan adventures, post their own events as well as browse through other people’s events in the vicinity, join groups and add friends, and organize itineraries. 
 
-Adventurista allows users to grow an global network of friends, meet new people, find new places, and plan new adventures.
+Adventurista allows users to grow a global network of friends, meet new people, find new places, and plan new adventures.
 
 ## Technology Stack
 Our mobile app is built using a MERN stack along with Amazon Web Services.
