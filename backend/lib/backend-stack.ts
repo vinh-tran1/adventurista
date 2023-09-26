@@ -15,6 +15,7 @@ export class BackendStack extends cdk.Stack {
       synth: new CodeBuildStep("Synth", {
         input: CodePipelineSource.gitHub("yale-swe/f23-adventurista", "main"),
         commands: ["cd backend", "npm ci", "npm run build", "npx cdk synth"],
+		primaryOutputDirectory: 'backend/cdk.out',
         rolePolicyStatements: [
           new cdk.aws_iam.PolicyStatement({
             actions: ["sts:AssumeRole"],
