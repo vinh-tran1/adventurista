@@ -1,5 +1,9 @@
 import * as cdk from "aws-cdk-lib";
-import { CodePipeline, CodePipelineSource, ShellStep } from "aws-cdk-lib/pipelines";
+import {
+  CodeBuildStep,
+  CodePipeline,
+  CodePipelineSource,
+} from "aws-cdk-lib/pipelines";
 import { Construct } from "constructs";
 
 export class BackendStack extends cdk.Stack {
@@ -8,9 +12,20 @@ export class BackendStack extends cdk.Stack {
 
     new CodePipeline(this, "Pipeline", {
       pipelineName: "AdventuristaPipeline",
-      synth: new ShellStep("Synth", {
+      synth: new CodeBuildStep("Synth", {
         input: CodePipelineSource.gitHub("yale-swe/f23-adventurista", "main"),
         commands: ["cd backend", "npm ci", "npm run build", "npx cdk synth"],
+        rolePolicyStatements: [
+          new cdk.aws_iam.PolicyStatement({
+            actions: ["sts:AssumeRole"],
+            resources: ["*"],
+            conditions: {
+              StringEquals: {
+                "iam:ResourceTag/aws-cdk:bootstrap-role": "lookup",
+              },
+            },
+          }),
+        ],
       }),
     });
   }
