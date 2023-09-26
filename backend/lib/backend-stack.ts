@@ -48,7 +48,7 @@ export class BackendStack extends cdk.Stack {
     );
 
     const prodStage = pipeline.addStage(
-      new PipelineAppStage(this, "dev", {
+      new PipelineAppStage(this, "prod", {
         env: { account: awsProps.awsAccountIdPROD, region: awsProps.awsRegion },
       })
     );
