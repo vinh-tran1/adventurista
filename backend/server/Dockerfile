@@ -4,6 +4,6 @@
     RUN npm install\
         && npm install typescript -g
     COPY . .
-	EXPOSE 3000
+	EXPOSE 80
     RUN tsc
     CMD ["node", "./dist/app.js"]
