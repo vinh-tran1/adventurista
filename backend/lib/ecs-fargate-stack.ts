@@ -1,7 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Vpc } from "aws-cdk-lib/aws-ec2";
 import { Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
-import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
+import { NetworkLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 import { Construct } from "constructs";
 
 export class EcsFargateStack extends cdk.Stack {
@@ -25,16 +25,15 @@ export class EcsFargateStack extends cdk.Stack {
     });
 
     // Fargate service
-    const backendService = new ApplicationLoadBalancedFargateService(
+    const backendService = new NetworkLoadBalancedFargateService (
       this,
       "backendService",
       {
         cluster: cluster,
         memoryLimitMiB: 1024,
-        cpu: 512,
         desiredCount: 2,
         taskImageOptions: {
-          image: ContainerImage.fromAsset("../backend/server"),
+          image: ContainerImage.fromAsset("../server"),
           environment: {
             stageName: stageName,
           },
