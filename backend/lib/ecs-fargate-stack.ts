@@ -31,9 +31,10 @@ export class EcsFargateStack extends cdk.Stack {
       {
         cluster: cluster,
         memoryLimitMiB: 1024,
+		cpu: 512,
         desiredCount: 2,
         taskImageOptions: {
-          image: ContainerImage.fromAsset("../server"),
+          image: ContainerImage.fromAsset("../backend/server"),
           environment: {
             stageName: stageName,
           },
