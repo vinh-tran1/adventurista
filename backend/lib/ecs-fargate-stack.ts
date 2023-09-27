@@ -1,5 +1,5 @@
 import * as cdk from "aws-cdk-lib";
-import { Vpc } from "aws-cdk-lib/aws-ec2";
+// import { Vpc } from "aws-cdk-lib/aws-ec2";
 import { Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
 import { NetworkLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 import { Construct } from "constructs";
@@ -14,14 +14,14 @@ export class EcsFargateStack extends cdk.Stack {
     super(scope, id, props);
 
     // VPC
-    const vpc = new Vpc(this, "AdventuristaVPC", {
-      maxAzs: 2,
-      natGateways: 1,
-    });
+    // const vpc = new Vpc(this, "AdventuristaVPC", {
+    //   maxAzs: 2,
+    //   natGateways: 1,
+    // });
 
     // Fargate cluster
     const cluster = new Cluster(this, "AdventuristaCluster", {
-      vpc: vpc as any,
+      // vpc: vpc as any,
     });
 
     // Fargate service
