@@ -6,8 +6,6 @@ import { Construct } from "constructs";
 import { CfnOutput, CfnResource, Stack, StackProps } from "aws-cdk-lib";
 import { CfnIntegration, CfnRoute } from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
-import path = require("path");
-
 
 export class EcsFargateStack extends cdk.Stack {
   constructor(
@@ -75,7 +73,7 @@ export class EcsFargateStack extends cdk.Stack {
         memoryLimitMiB: 1024,
         publicLoadBalancer: false,
         taskImageOptions: {
-          image: ContainerImage.fromAsset(path.join(__dirname, "../server/")),
+          image: ContainerImage.fromAsset("../backend/server"),
           environment: {
             stageName: stageName,
           },
