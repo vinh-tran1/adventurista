@@ -3,7 +3,7 @@ import { Vpc } from "aws-cdk-lib/aws-ec2";
 import { Cluster, ContainerImage } from "aws-cdk-lib/aws-ecs";
 import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 import { Construct } from "constructs";
-import { CfnOutput, CfnResource, Stack, StackProps } from "aws-cdk-lib";
+import { CfnOutput, CfnResource } from "aws-cdk-lib";
 import { CfnIntegration, CfnRoute } from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 
@@ -81,7 +81,7 @@ export class EcsFargateStack extends cdk.Stack {
       }
     );
 
-	fargate.targetGroup.configureHealthCheck({ path: "/health" });
+	// fargate.targetGroup.configureHealthCheck({ path: "/health" });
 
     const httpVpcLink = new CfnResource(this, "HttpVpcLink", {
       type: "AWS::ApiGatewayV2::VpcLink",
@@ -118,12 +118,5 @@ export class EcsFargateStack extends cdk.Stack {
       description: "API Gateway URL to access the GET endpoint",
       value: api.url!,
     });
-  }
-}
-
-export class CdkStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
-    super(scope, id, props);
-
   }
 }

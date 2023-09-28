@@ -1,9 +1,16 @@
-    FROM node:alpine
-    WORKDIR /usr/server
-    COPY package.json .
-    RUN npm install\
-        && npm install typescript -g
-    COPY . .
-	EXPOSE 80
-    RUN tsc
-    CMD ["node", "./dist/app.js"]
+FROM node:alpine
+WORKDIR /usr
+COPY package.json ./
+COPY tsconfig.json ./
+COPY src ./src
+RUN npm install
+RUN npm run build
+
+FROM node:alpine
+WORKDIR /usr
+COPY package.json ./
+RUN npm install --only=production
+COPY --from=0 /usr/dist .
+RUN npm install pm2 -g
+EXPOSE 80
+CMD ["pm2-runtime","index.js"]
