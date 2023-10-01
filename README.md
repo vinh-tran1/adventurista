@@ -21,10 +21,10 @@ Our mobile app is built using a MERN stack along with Amazon Web Services.
 - **Frontend**: React Native, Redux
 - **Backend**: Node.js, Express.js, MongoDB
 
+Using React Native, our app is able to run on both iOS and Android.
+
 2. AWS
 - **ECS + Fargate** for compute. We will run a containerized Node.js server(s) with Express to process the API calls
 - **DynamoDB** for persistent data storage. We will have different tables for users, events, friends, etc.
 - **S3** for storing images
 - **API Gateway** for the public endpoint and routing API calls to the Node.js server(s)
-
-Using React Native, our app is able to run on both iOS and Android. Using AWS, our app is able to
