@@ -4,7 +4,7 @@ Social Connectivity App For Travel
 ## Summary
 **Adventurista** is a mobile app designed to tackle the challenges of travel coordination, planning, and meeting new people. The platform allows users to post upcoming adventure plans and join other people’s events within their travel location – fostering seamless friendships, expanding their global network, and making memorable travel experiences.
 
-_It is a term project for Yale's CPSC 439 (Software Engineering) by **Patrick, Nikhil, Ej, Vinh, and Akshay**_
+_This is a term project for Yale's CPSC 439 (Software Engineering) by **Patrick, Nikhil, Ej, Vinh, and Akshay**_
 
 ## Problem
 
