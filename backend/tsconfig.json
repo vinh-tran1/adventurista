@@ -8,6 +8,7 @@
     ],
     "declaration": true,
     "noImplicitAny": false,
+    "esModuleInterop": true,
     "strictNullChecks": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
