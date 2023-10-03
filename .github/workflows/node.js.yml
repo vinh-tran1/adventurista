@@ -34,8 +34,5 @@ jobs:
       - name: INSTALL PROJECT DEPENDENCIES
         run: npm ci
 
-      - name: BUILD
-        run: npm run build --if-present
-
       - name: UNIT TEST (JEST)
         run: npm test
