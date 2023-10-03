@@ -1,7 +1,6 @@
-import { Express } from "express";
-var express = require("express");
+import express from "express";
 
-const app: Express = express();
+const app = express();
 const port = 80;
 
 app.use(express.urlencoded({ extended: false }));
@@ -26,5 +25,6 @@ app.get("/works", (req, res) => {
 });
 
 app.listen(port, () => {
+  // tslint:disable-next-line:no-console
   console.log(`Container listening on port ${port}`);
 });

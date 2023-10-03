@@ -6,6 +6,7 @@ import { Construct } from "constructs";
 import { CfnOutput, CfnResource } from "aws-cdk-lib";
 import { CfnIntegration, CfnRoute } from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
+import path = require('path');
 
 export class EcsFargateStack extends cdk.Stack {
   constructor(
@@ -15,44 +16,6 @@ export class EcsFargateStack extends cdk.Stack {
     props?: cdk.StackProps
   ) {
     super(scope, id, props);
-
-    // // VPC
-    // const vpc = new Vpc(this, "AdventuristaVPC", {
-    //   maxAzs: 2,
-    //   natGateways: 1,
-    // });
-
-    // // Fargate cluster
-    // const cluster = new Cluster(this, "AdventuristaCluster", {
-    //   vpc: vpc as any,
-    // });
-
-    // // Fargate service
-    // const backendService = new NetworkLoadBalancedFargateService(
-    //   this,
-    //   "backendService",
-    //   {
-    //     cluster: cluster,
-    //     memoryLimitMiB: 1024,
-    //     cpu: 512,
-    //     desiredCount: 2,
-    //     taskImageOptions: {
-    //       image: ContainerImage.fromAsset("../backend/server"),
-    //       environment: {
-    //         stageName: stageName,
-    //       },
-    //     },
-    //   }
-    // );
-
-    // // Health check
-    // backendService.targetGroup.configureHealthCheck({ path: "/health" });
-
-    // // Load balancer url
-    // new cdk.CfnOutput(this, "loadBalancerUrl", {
-    //   value: backendService.loadBalancer.loadBalancerDnsName,
-    //   exportName: "loadBalancerUrl",
-    // });
 
     const vpc = new Vpc(this, "MyVpc", {
       maxAzs: 3,
@@ -69,11 +32,11 @@ export class EcsFargateStack extends cdk.Stack {
         assignPublicIp: false,
         cluster: cluster,
         cpu: 512,
-        desiredCount: 2,
-        memoryLimitMiB: 1024,
+        desiredCount: 1,
+        memoryLimitMiB: 2048,
         publicLoadBalancer: false,
         taskImageOptions: {
-          image: ContainerImage.fromAsset("../backend/server"),
+          image: ContainerImage.fromAsset(path.join(__dirname, '../src/')),
           environment: {
             stageName: stageName,
           },
@@ -87,7 +50,7 @@ export class EcsFargateStack extends cdk.Stack {
       type: "AWS::ApiGatewayV2::VpcLink",
       properties: {
         Name: "V2 VPC Link",
-        SubnetIds: vpc.privateSubnets.map((m) => m.subnetId),
+        SubnetIds: vpc.privateSubnets.map(m => m.subnetId),
       },
     });
 
