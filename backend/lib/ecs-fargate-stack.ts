@@ -73,7 +73,7 @@ export class EcsFargateStack extends cdk.Stack {
 
     new CfnRoute(this, "Route", {
       apiId: api.httpApiId,
-      routeKey: "ANY /{proxy+}", // for something more general use 'ANY /{proxy+}'
+      routeKey: "ANY /", // for something more general use 'ANY /{proxy+}'
       target: `integrations/${integration.ref}`,
     });
 
