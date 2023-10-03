@@ -65,7 +65,7 @@ export class EcsFargateStack extends cdk.Stack {
       connectionId: httpVpcLink.ref,
       connectionType: "VPC_LINK",
       description: "API Integration with AWS Fargate Service",
-      integrationMethod: "ANY", // for GET and POST, use ANY
+      integrationMethod: "GET", // for GET and POST, use ANY
       integrationType: "HTTP_PROXY",
       integrationUri: fargate.listener.listenerArn,
       payloadFormatVersion: "1.0", // supported values for Lambda proxy integrations are 1.0 and 2.0. For all other integrations, 1.0 is the only supported value
@@ -73,7 +73,7 @@ export class EcsFargateStack extends cdk.Stack {
 
     new CfnRoute(this, "Route", {
       apiId: api.httpApiId,
-      routeKey: "ANY /", // for something more general use 'ANY /{proxy+}'
+      routeKey: "GET /", // for something more general use 'ANY /{proxy+}'
       target: `integrations/${integration.ref}`,
     });
 
