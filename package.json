@@ -1,5 +1,5 @@
 {
-  "dependencies": {
-    "@react-navigation/bottom-tabs": "^6.5.9"
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
