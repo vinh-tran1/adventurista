@@ -84,10 +84,10 @@ export class CdkStack extends Stack {
       }
     );
 
-    // Add bucket policy to restrict access to VPCE
+    // Add bucket policy to restrict access to VPC
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.ALLOW,
+        effect: Effect.DENY,
         resources: [profPicBucket.bucketArn],
         actions: ["s3:ListBucket"],
         principals: [new AnyPrincipal()],
@@ -101,7 +101,7 @@ export class CdkStack extends Stack {
 
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.ALLOW,
+        effect: Effect.DENY,
         resources: [profPicBucket.arnForObjects("*")],
         actions: ["s3:PutObject", "s3:GetObject"], // no permanent delete; we will soft delete
         principals: [new AnyPrincipal()],
