@@ -152,8 +152,6 @@ async function getUser(userId: string): Promise<User | null> {
 
 
 async function getEvents(area: string, userLocation: string, distance: number, user: User): Promise<Event[]> {
-  // Your logic for filtering events based on `area`, `userLocation`, and `distance` will depend on your specific use case and database schema.
-  // Here's an example of how you might filter events based on `area` (assuming `area` is a property of your events in DynamoDB):
 
   const params = {
     TableName: EVENTS_TABLE_NAME,
@@ -173,7 +171,7 @@ async function getEvents(area: string, userLocation: string, distance: number, u
   }
 }
 
-// Additional endpoints and functions will go here...
+
 app.get("/events", async (req, res) => {
   const { area, userLocation, distance, userId } = req.query;
   const user = await getUser(userId as string);
@@ -211,9 +209,7 @@ app.get("/event/:eventId", async (req, res) => {
   res.status(200).send(event);
 });
 
-async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {
-  // Logic to send a friend request from requester to requestee.
-  // Example: Update user data in a database.
+async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {.
 
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
@@ -240,9 +236,6 @@ app.post("/friend-request", async (req, res) => {
 });
 
 async function blockUser(blockerId: string, blockedUserId: string): Promise<string> {
-  // Logic to block a user.
-  // Example: Update user data in a database.
-
   const blocker: User | null = await getUser(blockerId);
 
   if (!blocker) {
@@ -264,8 +257,6 @@ app.post("/block-user", async (req, res) => {
 });
 
 async function goingToEvent(userId: string, eventId: string): Promise<string> {
-  // Logic to mark a user as going to an event and update the event's attendees.
-  // Example: Update user and event data in a database.
 
   const user: User | null = await getUser(userId);
   const event: Event | null = await getEvent(eventId);
@@ -290,7 +281,6 @@ app.post("/going-to-event", async (req, res) => {
   res.status(200).send(result);
 });
 
-// Add more API endpoints as per your requirements.
 
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
