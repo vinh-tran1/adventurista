@@ -46,7 +46,7 @@ type Event = {
 };
 
 async function createUser(user: User): Promise<User | string> {
-    if (!user.name || !user.primaryLocation || !user.profilePictureUrl) {
+    if (!user.name || !user.primaryLocation) {
         return "Required user fields are missing";
     }
 
@@ -65,7 +65,7 @@ async function createUser(user: User): Promise<User | string> {
 }
 
 async function createEvent(event: Event): Promise<Event | string> {
-    if (!event.time || !event.location || !event.poster || !event.photo) {
+    if (!event.time || !event.location || !event.poster) {
         return "Required event fields are missing";
     }
 
@@ -100,7 +100,7 @@ app.post("/user/create", async (req, res) => {
         eventsGoingTo: [],
         eventsNotGoingTo: [],
         messages: [],
-        profilePictureUrl: req.body.profilePictureUrl,
+        profilePictureUrl: "",
     };
 
     const result = await createUser(user);
@@ -118,7 +118,7 @@ app.post("/event/create", async (req, res) => {
         location: req.body.location,
         poster: req.body.poster,
         blockedUsers: [],
-        photo: req.body.photo,
+        photo: "",
         whoIsGoing: [],
     };
 
