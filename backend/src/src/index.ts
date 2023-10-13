@@ -159,13 +159,13 @@ async function getEvents(area: string, userLocation: string, distance: number, u
 
 // Additional endpoints and functions will go here...
 app.get("/events", async (req, res) => {
-    const { area, userLocation, distance, userId } = req.query;
-    const user = await getUser(userId);
-    if (!user) {
-        return res.status(404).send("User not found");
-    }
-    const events = await getEvents(area, userLocation, distance, user);
-    res.status(200).send(events);
+  const { area, userLocation, distance, userId } = req.query;
+  const user = await getUser(userId as string);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  const events = await getEvents(area as string, userLocation as string, parseInt(distance as string), user);
+  res.status(200).send(events);
 });
 
 async function getEvent(eventId: string): Promise<Event | null> {
