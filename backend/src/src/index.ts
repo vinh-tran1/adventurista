@@ -209,7 +209,7 @@ app.get("/event/:eventId", async (req, res) => {
   res.status(200).send(event);
 });
 
-async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {.
+async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {
 
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
