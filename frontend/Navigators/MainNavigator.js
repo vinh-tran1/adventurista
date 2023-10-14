@@ -10,15 +10,16 @@ import MessagesNavigator from "./MessagesNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import AuthenticationNavigator from "./AuthenticationNavigator";
 
-// Screens
-
 // Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectIsLoggedIn } from '../Redux/userSlice';
 
 const Tab = createBottomTabNavigator();
 
 const MainNavigator = () => {
 
-    const isLoggedIn = false;
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const dispatch = useDispatch();
 
     if (isLoggedIn) {
         return (

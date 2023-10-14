@@ -1,33 +1,47 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image
-} from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
 // Redux
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../../../Redux/userSlice";
 
 const Login = ({ navigation }) => {
 
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    dispatch(setUserInfo({
+      id: '',
+      name: '',
+      email: email,
+      username: '',
+      phone_number: '',
+    }));
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Adventurista!</Text>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Log in with Google</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Log in with Apple</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Log in with Outlook</Text>
-      </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Welcome to Adventurista!</Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Email</Text>
+        <TextInput value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Password</Text>
+        <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity style={styles.signupContainer} onPress={() => navigation.navigate('Signup Main')}>
-        <Text style={styles.signupText}>Don’t Have An Account? Sign Up</Text>
+        <Text style={styles.signup}>Don't have an account? Sign up!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -36,40 +50,53 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 35,
+  headerContainer: {
+    marginBottom: 17.5,
+    alignItems: "center"
+  },
+  header: {
+    fontSize: 25,
+    fontWeight: "bold"
+  },
+  inputContainer: {
+    paddingHorizontal: 40,
+  },
+  label: {
+    marginVertical: 10,
+    fontSize: 14,
+    fontWeight: "bold"
+  },
+  input: {
+    paddingVertical: 5,
+    paddingLeft: 10,
+    borderWidth: 0.25,
+    borderColor: "#717171",
+    marginBottom: 5,
+    borderRadius: 10
   },
   buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12.5,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    borderRadius: 15,
-    borderWidth: 1
+    alignItems: "center",
+    marginTop: 20
   },
-  buttonIcon: {
-    width: 24,
-    height: 24,
-    marginRight: 10,
-    color: "#03254C"
+  loginButton: {
+    backgroundColor: "black",
+    paddingVertical: 10,
+    width: 150,
+    borderRadius: 10
   },
   buttonText: {
+    color: 'white',
     fontSize: 16,
+    textAlign: 'center',
     fontWeight: "bold"
   },
   signupContainer: {
-    marginTop: 20
+    alignItems: "center",
+    marginTop: 17.5
   },
-  signupText: {
-    fontSize: 14,
+  signup: {
     fontWeight: "bold"
   }
 });
