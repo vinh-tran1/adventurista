@@ -42,7 +42,7 @@ type Event = {
   eventId: string;
   time: string;
   location: string;
-  poster: string;
+  postingUserId: string;
   blockedUsers: string[];
   photo: string;
   whoIsGoing: string[];
@@ -68,7 +68,7 @@ async function createUser(user: User): Promise<User | string> {
 }
 
 async function createEvent(event: Event): Promise<Event | string> {
-  if (!event.time || !event.location || !event.poster) {
+  if (!event.time || !event.location || !event.postingUserId) {
     return "Required event fields are missing";
   }
 
@@ -119,7 +119,7 @@ app.post("/event/create", async (req, res) => {
     eventId: uuidv4(),
     time: req.body.time,
     location: req.body.location,
-    poster: req.body.poster,
+    postingUserId: req.body.postingUserId,
     blockedUsers: [],
     photo: "",
     whoIsGoing: [],
@@ -137,8 +137,8 @@ async function getUser(userId: string): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
-      [USERS_PRIMARY_KEY]: userId
-    }
+      [USERS_PRIMARY_KEY]: userId,
+    },
   };
 
   try {
@@ -150,16 +150,29 @@ async function getUser(userId: string): Promise<User | null> {
   }
 }
 
+app.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  res.status(200).send(user);
+});
 
-async function getEvents(area: string, userLocation: string, distance: number, user: User): Promise<Event[]> {
-
+async function getEvents(
+  area: string,
+  userLocation: string,
+  distance: number,
+  user: User
+): Promise<Event[]> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
-    FilterExpression: "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
+    FilterExpression:
+      "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
     ExpressionAttributeValues: {
       ":area": area,
-      ":userId": user.userId
-    }
+      ":userId": user.userId,
+    },
   };
 
   try {
@@ -171,14 +184,18 @@ async function getEvents(area: string, userLocation: string, distance: number, u
   }
 }
 
-
 app.get("/events", async (req, res) => {
   const { area, userLocation, distance, userId } = req.query;
   const user = await getUser(userId as string);
   if (!user) {
     return res.status(404).send("User not found");
   }
-  const events = await getEvents(area as string, userLocation as string, parseInt(distance as string), user);
+  const events = await getEvents(
+    area as string,
+    userLocation as string,
+    parseInt(distance as string),
+    user
+  );
   res.status(200).send(events);
 });
 
@@ -186,8 +203,8 @@ async function getEvent(eventId: string): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
-      [EVENTS_PRIMARY_KEY]: eventId
-    }
+      [EVENTS_PRIMARY_KEY]: eventId,
+    },
   };
 
   try {
@@ -199,7 +216,6 @@ async function getEvent(eventId: string): Promise<Event | null> {
   }
 }
 
-
 app.get("/event/:eventId", async (req, res) => {
   const { eventId } = req.params;
   const event = await getEvent(eventId);
@@ -209,8 +225,10 @@ app.get("/event/:eventId", async (req, res) => {
   res.status(200).send(event);
 });
 
-async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {
-
+async function sendFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
@@ -228,14 +246,16 @@ async function sendFriendRequest(requesterId: string, requestId: string): Promis
   return "Friend request sent";
 }
 
-
 app.post("/friend-request", async (req, res) => {
   const { requesterId, requestId } = req.body;
   const result = await sendFriendRequest(requesterId, requestId);
   res.status(200).send(result);
 });
 
-async function blockUser(blockerId: string, blockedUserId: string): Promise<string> {
+async function blockUser(
+  blockerId: string,
+  blockedUserId: string
+): Promise<string> {
   const blocker: User | null = await getUser(blockerId);
 
   if (!blocker) {
@@ -257,7 +277,6 @@ app.post("/block-user", async (req, res) => {
 });
 
 async function goingToEvent(userId: string, eventId: string): Promise<string> {
-
   const user: User | null = await getUser(userId);
   const event: Event | null = await getEvent(eventId);
 
@@ -274,29 +293,20 @@ async function goingToEvent(userId: string, eventId: string): Promise<string> {
   return "Marked as going to the event";
 }
 
-
 app.post("/going-to-event", async (req, res) => {
   const { userId, eventId } = req.body;
   const result = await goingToEvent(userId, eventId);
   res.status(200).send(result);
 });
 
-
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
 });
 
 app.get("/", (req, res) => {
-  res
-    .status(200)
-    .send(
-      "Hello Serverless APIGW with Application Load-Balanced Fargate Service!"
-    );
+  res.status(200).send("Healthy!");
 });
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-
-
-

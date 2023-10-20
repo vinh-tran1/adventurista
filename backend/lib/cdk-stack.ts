@@ -14,7 +14,11 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import path = require("path");
 import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement, Effect, AnyPrincipal } from "aws-cdk-lib/aws-iam";
-import { BlockPublicAccess, BucketEncryption, Bucket } from "aws-cdk-lib/aws-s3";
+import {
+  BlockPublicAccess,
+  BucketEncryption,
+  Bucket,
+} from "aws-cdk-lib/aws-s3";
 
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -41,6 +45,15 @@ export class CdkStack extends Stack {
         type: AttributeType.STRING,
       },
       tableName: "users",
+      removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
+    });
+
+    const eventsTable = new Table(this, "events", {
+      partitionKey: {
+        name: "eventId",
+        type: AttributeType.STRING,
+      },
+      tableName: "events",
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
     });
 
@@ -79,15 +92,17 @@ export class CdkStack extends Stack {
           environment: {
             USERS_PRIMARY_KEY: "userId",
             USERS_TABLE_NAME: usersTable.tableName,
+            EVENTS_PRIMARY_KEY: "eventId",
+            EVENTS_TABLE_NAME: eventsTable.tableName,
           },
         },
       }
     );
 
-    // Add bucket policy to restrict access to VPCE
+    // Add bucket policy to restrict access to VPC
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.ALLOW,
+        effect: Effect.DENY,
         resources: [profPicBucket.bucketArn],
         actions: ["s3:ListBucket"],
         principals: [new AnyPrincipal()],
@@ -101,7 +116,7 @@ export class CdkStack extends Stack {
 
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.ALLOW,
+        effect: Effect.DENY,
         resources: [profPicBucket.arnForObjects("*")],
         actions: ["s3:PutObject", "s3:GetObject"], // no permanent delete; we will soft delete
         principals: [new AnyPrincipal()],
@@ -124,7 +139,7 @@ export class CdkStack extends Stack {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
         ],
-        resources: [`${usersTable.tableArn}`],
+        resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`],
         conditions: {
           ArnEquals: {
             "aws:PrincipalArn": `${fargate.taskDefinition.taskRole.roleArn}`,
@@ -136,6 +151,7 @@ export class CdkStack extends Stack {
     // R/W permissions for Fargate
     profPicBucket.grantReadWrite(fargate.taskDefinition.taskRole);
     usersTable.grantReadWriteData(fargate.taskDefinition.taskRole);
+	eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
 
     // API Gateway
     const httpVpcLink = new CfnResource(this, "HttpVpcLink", {

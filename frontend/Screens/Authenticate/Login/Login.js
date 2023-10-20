@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -25,7 +25,8 @@ const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.header}>Welcome to Adventurista!</Text>
+        {/* <Text style={styles.header}>Welcome to Adventurista!</Text> */}
+        <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>
@@ -56,9 +57,13 @@ const styles = StyleSheet.create({
     marginBottom: 17.5,
     alignItems: "center"
   },
-  header: {
-    fontSize: 25,
-    fontWeight: "bold"
+  // header: {
+  //   fontSize: 25,
+  //   fontWeight: "bold"
+  // },
+  logo: {
+    height: 75,
+    width: 250,
   },
   inputContainer: {
     paddingHorizontal: 40,
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   input: {
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingLeft: 10,
     borderWidth: 0.25,
     borderColor: "#717171",
@@ -81,7 +86,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   loginButton: {
-    backgroundColor: "black",
+    backgroundColor: "#CA75FF",
     paddingVertical: 10,
     width: 150,
     borderRadius: 10
