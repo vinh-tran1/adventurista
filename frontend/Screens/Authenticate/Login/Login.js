@@ -25,7 +25,6 @@ const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        {/* <Text style={styles.header}>Welcome to Adventurista!</Text> */}
         <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
       <View style={styles.inputContainer}>
