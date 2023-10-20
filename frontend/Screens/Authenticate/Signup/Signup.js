@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     borderColor: "#717171",
     marginBottom: 5,
-    borderRadius: 10
+    borderRadius: 15
   },
   buttonContainer: {
     alignItems: "center",
