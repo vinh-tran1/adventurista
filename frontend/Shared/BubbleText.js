@@ -15,15 +15,14 @@ const BubbleText = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#EDDBFF",
-    paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingHorizontal: 17.5,
+    paddingVertical: 7.5,
     borderRadius: 20,
-    width: 80,
     marginRight: 7.5
   },
   title: {
     fontWeight: "bold",
-    fontSize: 13
+    fontSize: 12
   }
 });
 
