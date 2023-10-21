@@ -22,7 +22,7 @@ const PostTop = (props) => {
                             <View style={{ backgroundColor: "#D186FF", borderRadius: 20, width: 30, height: 30 }}>
                                 <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15} />
                             </View>
-                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24</Text>
+                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24 others</Text>
                         </View>
                         <Text style={{ color: "white", fontWeight: "bold" }}>by {createdBy}</Text>
                     </View>
@@ -59,7 +59,7 @@ const PostTop = (props) => {
         flex: 1,
         justifyContent: "flex-end",
         marginBottom: 20,
-        marginHorizontal: 20,
+        marginHorizontal: 15,
     }
   });
   
