@@ -28,7 +28,6 @@ const Signup = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        {/* <Text style={styles.header}>Welcome to Adventurista!</Text> */}
         <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
       <View style={styles.inputContainer}>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     borderColor: "#717171",
     marginBottom: 5,
-    borderRadius: 10
+    borderRadius: 15
   },
   buttonContainer: {
     alignItems: "center",

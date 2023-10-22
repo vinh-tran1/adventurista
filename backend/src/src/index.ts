@@ -42,7 +42,7 @@ type Event = {
   eventId: string;
   time: string;
   location: string;
-  poster: string;
+  postingUserId: string;
   blockedUsers: string[];
   photo: string;
   whoIsGoing: string[];
@@ -68,7 +68,7 @@ async function createUser(user: User): Promise<User | string> {
 }
 
 async function createEvent(event: Event): Promise<Event | string> {
-  if (!event.time || !event.location || !event.poster) {
+  if (!event.time || !event.location || !event.postingUserId) {
     return "Required event fields are missing";
   }
 
@@ -119,11 +119,14 @@ app.post("/event/create", async (req, res) => {
     eventId: uuidv4(),
     time: req.body.time,
     location: req.body.location,
-    poster: req.body.poster,
+    postingUserId: req.body.postingUserId,
     blockedUsers: [],
     photo: "",
-    whoIsGoing: [],
+    whoIsGoing: [req.body.postingUserId],
   };
+
+  const user = await getUser(event.postingUserId);
+  event.blockedUsers = user.blockedUsers;
 
   const result = await createEvent(event);
   if (typeof result === "string") {
@@ -137,8 +140,8 @@ async function getUser(userId: string): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
-      [USERS_PRIMARY_KEY]: userId
-    }
+      [USERS_PRIMARY_KEY]: userId,
+    },
   };
 
   try {
@@ -150,16 +153,29 @@ async function getUser(userId: string): Promise<User | null> {
   }
 }
 
+app.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  res.status(200).send(user);
+});
 
-async function getEvents(area: string, userLocation: string, distance: number, user: User): Promise<Event[]> {
-
+async function getEvents(
+  area: string,
+  userLocation: string,
+  distance: number,
+  user: User
+): Promise<Event[]> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
-    FilterExpression: "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
+    FilterExpression:
+      "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
     ExpressionAttributeValues: {
       ":area": area,
-      ":userId": user.userId
-    }
+      ":userId": user.userId,
+    },
   };
 
   try {
@@ -171,14 +187,18 @@ async function getEvents(area: string, userLocation: string, distance: number, u
   }
 }
 
-
 app.get("/events", async (req, res) => {
   const { area, userLocation, distance, userId } = req.query;
   const user = await getUser(userId as string);
   if (!user) {
     return res.status(404).send("User not found");
   }
-  const events = await getEvents(area as string, userLocation as string, parseInt(distance as string), user);
+  const events = await getEvents(
+    area as string,
+    userLocation as string,
+    parseInt(distance as string),
+    user
+  );
   res.status(200).send(events);
 });
 
@@ -186,8 +206,8 @@ async function getEvent(eventId: string): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
-      [EVENTS_PRIMARY_KEY]: eventId
-    }
+      [EVENTS_PRIMARY_KEY]: eventId,
+    },
   };
 
   try {
@@ -199,7 +219,6 @@ async function getEvent(eventId: string): Promise<Event | null> {
   }
 }
 
-
 app.get("/event/:eventId", async (req, res) => {
   const { eventId } = req.params;
   const event = await getEvent(eventId);
@@ -209,14 +228,16 @@ app.get("/event/:eventId", async (req, res) => {
   res.status(200).send(event);
 });
 
-async function sendFriendRequest(requesterId: string, requestId: string): Promise<string> {
-
+async function sendFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
 
   if (!requester || !requestee) {
-    return "User not found";
+    return null;
   }
 
   // Add logic to update `requests` in the database.
@@ -224,40 +245,393 @@ async function sendFriendRequest(requesterId: string, requestId: string): Promis
   requestee.requests.incoming.push(requesterId);
 
   // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error friend requesting user:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error friend requesting user:", err);
+    return null;
+  }
 
   return "Friend request sent";
 }
 
-
 app.post("/friend-request", async (req, res) => {
   const { requesterId, requestId } = req.body;
   const result = await sendFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend request unable to be processed");
+  }
   res.status(200).send(result);
 });
 
-async function blockUser(blockerId: string, blockedUserId: string): Promise<string> {
+async function unaddFriend(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.friends.includes(requestId) ||
+    !requestee.friends.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove friend from each other's list
+  const i = requester.friends.indexOf(requestId);
+  const j = requestee.friends.indexOf(requesterId);
+  requester.friends.splice(i, 1);
+  requestee.friends.splice(j, 1);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET friends = :friends",
+    ExpressionAttributeValues: {
+      ":friends": requester.friends,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error unadding friend:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET friends = :friends",
+    ExpressionAttributeValues: {
+      ":friends": requestee.friends,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error unadding friend:", err);
+    return null;
+  }
+
+  return "Friend unadd processed";
+}
+
+app.post("/friend-request/unadd", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await unaddFriend(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend unadd unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
+async function acceptFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.requests.outgoing.includes(requestId) ||
+    !requestee.requests.incoming.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove incoming and outgoing requests
+  const i = requester.requests.outgoing.indexOf(requestId);
+  const j = requestee.requests.incoming.indexOf(requesterId);
+  requester.requests.outgoing.splice(i, 1);
+  requestee.requests.incoming.splice(j, 1);
+
+  // Add to friends list
+  requester.friends.push(requestId);
+  requestee.friends.push(requesterId);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing, friends = :friends",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+      ":friends": requester.friends,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming, friends = :friends",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+      ":friends": requestee.friends,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  return "Friend request accepted";
+}
+
+app.post("/friend-request/accept", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await acceptFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res
+      .status(404)
+      .send("Friend request acceptance unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
+async function denyFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.requests.outgoing.includes(requestId) ||
+    !requestee.requests.incoming.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove incoming and outgoing requests
+  const i = requester.requests.outgoing.indexOf(requestId);
+  const j = requestee.requests.incoming.indexOf(requesterId);
+  requester.requests.outgoing.splice(i, 1);
+  requestee.requests.incoming.splice(j, 1);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  return "Friend request denied";
+}
+
+app.post("/friend-request/deny", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await denyFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend request denial unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
+async function blockUser(
+  blockerId: string,
+  blockedUserId: string
+): Promise<User | null> {
   const blocker: User | null = await getUser(blockerId);
 
   if (!blocker) {
-    return "User not found";
+    return null;
+  }
+
+  if (blocker.blockedUsers.includes(blockedUserId)) {
+    return null;
   }
 
   // Add logic to update `blockedUsers` in the database.
   blocker.blockedUsers.push(blockedUserId);
 
   // Save updated user back to the database.
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: blocker.userId,
+    },
+    UpdateExpression: "SET blockedUsers = :blockedUsers",
+    ExpressionAttributeValues: {
+      ":blockedUsers": blocker.blockedUsers,
+    },
+  };
 
-  return "User blocked";
+  try {
+    await db.update(params).promise();
+    return blocker;
+  } catch (err) {
+    console.error("Error blocking user:", err);
+    return null;
+  }
 }
 
 app.post("/block-user", async (req, res) => {
   const { blockerId, blockedUserId } = req.body;
   const result = await blockUser(blockerId, blockedUserId);
+  if (!result) {
+    return res.status(404).send("Blocking user not found");
+  }
   res.status(200).send(result);
 });
 
-async function goingToEvent(userId: string, eventId: string): Promise<string> {
+async function unblockUser(
+  unblockerId: string,
+  blockedUserId: string
+): Promise<User | null> {
+  const blocker: User | null = await getUser(unblockerId);
 
+  if (!blocker) {
+    return null;
+  }
+
+  if (!blocker.blockedUsers.includes(blockedUserId)) {
+    return null;
+  }
+
+  const i = blocker.blockedUsers.indexOf(blockedUserId);
+  blocker.blockedUsers.splice(i, 1);
+
+  // Save updated user back to the database.
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: blocker.userId,
+    },
+    UpdateExpression: "SET blockedUsers = :blockedUsers",
+    ExpressionAttributeValues: {
+      ":blockedUsers": blocker.blockedUsers,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return blocker;
+  } catch (err) {
+    console.error("Error unblocking user:", err);
+    return null;
+  }
+}
+
+app.post("/unblock-user", async (req, res) => {
+  const { unblockerId, blockedUserId } = req.body;
+  const result = await unblockUser(unblockerId, blockedUserId);
+  if (!result) {
+    return res.status(404).send("Unblocking user not found");
+  }
+  res.status(200).send(result);
+});
+
+app.get("/who-is-going", async (req, res) => {
+  const { eventId } = req.body;
+  const event = await getEvent(eventId);
+
+  if (typeof event === null) {
+    return res.status(400).send("Event does not exist");
+  }
+
+  res.status(200).send(event.whoIsGoing);
+});
+
+async function goingToEvent(
+  userId: string,
+  eventId: string
+): Promise<string | null> {
   const user: User | null = await getUser(userId);
   const event: Event | null = await getEvent(eventId);
 
@@ -265,38 +639,147 @@ async function goingToEvent(userId: string, eventId: string): Promise<string> {
     return "User or Event not found";
   }
 
+  if (
+    event.whoIsGoing.includes(userId) &&
+    user.eventsGoingTo.includes(eventId)
+  ) {
+    return "User is already going to event";
+  }
+
   // Add logic to update `eventsGoingTo` and `whoIsGoing` in the database.
   user.eventsGoingTo.push(eventId);
   event.whoIsGoing.push(userId);
 
-  // Save updated user and event back to the database.
+  // Update events table
+  const eventParams = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+    ExpressionAttributeValues: {
+      ":whoIsGoing": event.whoIsGoing,
+    },
+  };
 
-  return "Marked as going to the event";
+  try {
+    await db.update(eventParams).promise();
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return `Error updating event: ${err}`;
+  }
+
+  // Update users table
+  const userParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression: "SET eventsGoingTo = :eventsGoingTo",
+    ExpressionAttributeValues: {
+      ":eventsGoingTo": user.eventsGoingTo,
+    },
+  };
+
+  try {
+    await db.update(userParams).promise();
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return `Error updating user: ${err}`;
+  }
+  return null;
 }
-
 
 app.post("/going-to-event", async (req, res) => {
   const { userId, eventId } = req.body;
   const result = await goingToEvent(userId, eventId);
-  res.status(200).send(result);
+  if (result) {
+    return res.status(404).send(result);
+  }
+  res.status(200).send(`User ${userId} going to event ${eventId}`);
 });
 
+async function cancelGoingToEvent(
+  userId: string,
+  eventId: string
+): Promise<string | null> {
+  const user: User | null = await getUser(userId);
+  const event: Event | null = await getEvent(eventId);
+
+  if (!user || !event) {
+    return "User or Event not found";
+  }
+
+  if (
+    !event.whoIsGoing.includes(userId) ||
+    !user.eventsGoingTo.includes(eventId)
+  ) {
+    return "User never marked attendance for event";
+  }
+
+  // Add logic to update `eventsGoingTo` and `whoIsGoing` in the database.
+  const i = user.eventsGoingTo.indexOf(eventId);
+  const j = event.whoIsGoing.indexOf(userId);
+  user.eventsGoingTo.splice(i, 1);
+  event.whoIsGoing.splice(j, 1);
+
+  // Update events table
+  const eventParams = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+    ExpressionAttributeValues: {
+      ":whoIsGoing": event.whoIsGoing,
+    },
+  };
+
+  try {
+    await db.update(eventParams).promise();
+  } catch (err) {
+    console.error("Error unmarking attendance from event:", err);
+    return `Error unmarking attendance from event: ${err}`;
+  }
+
+  // Update users table
+  const userParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression: "SET eventsGoingTo = :eventsGoingTo",
+    ExpressionAttributeValues: {
+      ":eventsGoingTo": user.eventsGoingTo,
+    },
+  };
+
+  try {
+    await db.update(userParams).promise();
+  } catch (err) {
+    console.error("Error unmarking attendance from event:", err);
+    return `Error unmarking attendance from event: ${err}`;
+  }
+  return null;
+}
+
+app.post("/cancel-going-to-event", async (req, res) => {
+  const { userId, eventId } = req.body;
+  const result = await cancelGoingToEvent(userId, eventId);
+  if (result) {
+    return res.status(404).send(result);
+  }
+  res.status(200).send(`User ${userId} no longer going to event ${eventId}`);
+});
 
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
 });
 
 app.get("/", (req, res) => {
-  res
-    .status(200)
-    .send(
-      "Hello Serverless APIGW with Application Load-Balanced Fargate Service!"
-    );
+  res.status(200).send("Healthy!");
 });
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);
 });
-
-
-

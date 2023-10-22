@@ -26,8 +26,10 @@ const MainNavigator = () => {
             <Tab.Navigator
                 initialRouteName="Feed"
                 screenOptions={{
-                keyboardHidesTabBar: true,
-                tabBarShowLabel: false
+                  keyboardHidesTabBar: true,
+                  tabBarShowLabel: false,
+                  tabBarActiveTintColor: "#D99BFF",
+                  tabBarInactiveTintColor: "#777777"
                 }}
             >
                 <Tab.Screen

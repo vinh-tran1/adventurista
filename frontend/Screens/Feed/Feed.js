@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import EventPost from "./EventPost"
+import Post from "./Post";
+import FeedFixedTop from "./FeedFixedTop";
 
 // fetch posts api
 // const [posts, setPosts] = useState(null);
@@ -26,43 +27,44 @@ import EventPost from "./EventPost"
 const DATA = [
   {
     id: '1',
-    title: 'Title 1',
-    caption: 'Caption 1',
-    img: 'https://images.squarespace-cdn.com/content/v1/57a370e9e58c6272ab5b8ec5/1626906851291-4C5JJ2DX37YWQ3TW0EC1/20210721_152538967_iOS.jpg'
+    title: 'Hallowoads',
+    location: '300 York St, New Haven',
+    date: 'Wed, Oct 25',
+    time: '10:30 PM',
+    caption: "This is a description of the event. Buy tickets on Toad's website!",
+    tags: ['club', 'yale', 'holiday'],
+    img: 'https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg',
+    createdBy: 'Nikhil'
   },
   {
     id: '2',
-    title: 'Title 2',
-    caption: 'Caption 2',
-    img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG'
-  },
-  {
-    id: '3',
-    title: 'Title 3',
-    caption: 'Caption 3',
-    img: 'https://csasquash.com/wp-content/uploads/02068_MTB_2022_MCSANTC_2022-02-19-1024x682.jpg'
-  },
+    title: 'Night Markets',
+    location: 'Chapel St, New Haven',
+    date: 'Wed, Oct 25',
+    time: '10:30 PM',
+    caption: 'Food, food, and more food. Come to Chapel Street for the best street food market in New Haven!',
+    tags: ['pop-up', 'yale', 'food'],
+    img: 'https://s.hdnux.com/photos/01/34/46/27/24274379/3/1200x0.jpg',
+    createdBy: 'Vinh'
+  }
 ];
 
 const Feed = () => {
   return (
     <SafeAreaView style={styles.container}>
-     {/* fixed top menu */}
-      <View style={styles.header}>
-        <Image style={styles.logo} source={require('../../assets/logo.png')}/>
-      </View>
-      <View style={styles.topBar}>
-        <Text>Location and Search Here</Text>
-      </View>
-
-       {/* rendering posts */}
+      <FeedFixedTop />
       <FlatList
         data={DATA}
         renderItem={({ item }) => 
-          <EventPost 
+          <Post 
             title={item.title} 
+            location={item.location}
+            date={item.date}
+            time={item.time}
             caption={item.caption} 
+            tags={item.tags}
             img={item.img}
+            createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
@@ -75,22 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff'
-  },
-  header: {
-    marginTop: 10,
-    paddingHorizontal: 20,
-    paddingBottom: 5,
-    borderBottomWidth: 0.25
-  },
-  topBar: {
-    paddingHorizontal: 20,
-    marginVertical: 20,
-    justifyContent: "center"
-  },
-  logo: {
-    height: 60,
-    width: 200,
-  },
+  }
 });
 
 export default Feed;
