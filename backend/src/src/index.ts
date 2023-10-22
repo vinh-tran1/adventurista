@@ -136,56 +136,6 @@ app.post("/event/create", async (req, res) => {
   res.status(201).send(result);
 });
 
-async function updateEventWhoIsGoing(event: Event): Promise<Event | string> {
-  const params = {
-    TableName: EVENTS_TABLE_NAME,
-    Key: {
-      [EVENTS_PRIMARY_KEY]: event.eventId,
-    },
-    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
-    ExpressionAttributeValues: {
-      ":whoIsGoing": event.whoIsGoing,
-    },
-  };
-
-  try {
-    await db.update(params).promise();
-    return event;
-  } catch (err) {
-    console.error("Error updating event:", err);
-    return "Error updating event";
-  }
-}
-
-app.post("/event/going/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  const event = await getEvent(eventId);
-
-  if (typeof event === null) {
-    return res.status(400).send("Event does not exist");
-  }
-
-  event.whoIsGoing.push(req.body.userId);
-
-  const result = await updateEventWhoIsGoing(event);
-  if (typeof result === "string") {
-    return res.status(400).send(result);
-  }
-
-  res.status(200).send(result);
-});
-
-app.get("/event/going/:eventId", async (req, res) => {
-  const { eventId } = req.params;
-  const event = await getEvent(eventId);
-
-  if (typeof event === null) {
-    return res.status(400).send("Event does not exist");
-  }
-
-  res.status(200).send(event.whoIsGoing);
-});
-
 async function getUser(userId: string): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -308,28 +258,61 @@ app.post("/friend-request", async (req, res) => {
 async function blockUser(
   blockerId: string,
   blockedUserId: string
-): Promise<string> {
+): Promise<User | null> {
   const blocker: User | null = await getUser(blockerId);
 
   if (!blocker) {
-    return "User not found";
+    return null;
   }
 
   // Add logic to update `blockedUsers` in the database.
   blocker.blockedUsers.push(blockedUserId);
 
   // Save updated user back to the database.
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: blocker.userId,
+    },
+    UpdateExpression: "SET blockedUsers = :blockedUsers",
+    ExpressionAttributeValues: {
+      ":blockedUsers": blocker.blockedUsers,
+    },
+  };
 
-  return "User blocked";
+  try {
+    await db.update(params).promise();
+    return blocker;
+  } catch (err) {
+    console.error("Error blocking user:", err);
+    return null;
+  }
 }
 
 app.post("/block-user", async (req, res) => {
   const { blockerId, blockedUserId } = req.body;
   const result = await blockUser(blockerId, blockedUserId);
+  if (!result) {
+    return res.status(404).send("Blocking user not found");
+  }
   res.status(200).send(result);
 });
 
-async function goingToEvent(userId: string, eventId: string): Promise<string> {
+app.get("/who-is-going", async (req, res) => {
+  const { eventId } = req.body;
+  const event = await getEvent(eventId);
+
+  if (typeof event === null) {
+    return res.status(400).send("Event does not exist");
+  }
+
+  res.status(200).send(event.whoIsGoing);
+});
+
+async function goingToEvent(
+  userId: string,
+  eventId: string
+): Promise<string | null> {
   const user: User | null = await getUser(userId);
   const event: Event | null = await getEvent(eventId);
 
@@ -341,15 +324,53 @@ async function goingToEvent(userId: string, eventId: string): Promise<string> {
   user.eventsGoingTo.push(eventId);
   event.whoIsGoing.push(userId);
 
-  // Save updated user and event back to the database.
+  // Update events table
+  const eventParams = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+    ExpressionAttributeValues: {
+      ":whoIsGoing": event.whoIsGoing,
+    },
+  };
 
-  return "Marked as going to the event";
+  try {
+    await db.update(eventParams).promise();
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return `Error updating event: ${err}`;
+  }
+
+  // Update users table
+  const userParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression: "SET eventsGoingTo = :eventsGoingTo",
+    ExpressionAttributeValues: {
+      ":eventsGoingTo": user.eventsGoingTo,
+    },
+  };
+
+  try {
+    await db.update(userParams).promise();
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return `Error updating user: ${err}`;
+  }
+  return null;
 }
 
 app.post("/going-to-event", async (req, res) => {
   const { userId, eventId } = req.body;
   const result = await goingToEvent(userId, eventId);
-  res.status(200).send(result);
+  if (result) {
+    return res.status(404).send(result);
+  }
+  res.status(200).send(`User ${userId} going to event ${eventId}`);
 });
 
 app.get("/posts", (req, res) => {
