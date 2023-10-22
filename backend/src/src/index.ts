@@ -293,6 +293,80 @@ app.post("/friend-request", async (req, res) => {
   res.status(200).send(result);
 });
 
+async function unaddFriend(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.friends.includes(requestId) ||
+    !requestee.friends.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove friend from each other's list
+  const i = requester.friends.indexOf(requestId);
+  const j = requestee.friends.indexOf(requesterId);
+  requester.friends.splice(i, 1);
+  requestee.friends.splice(j, 1);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET friends = :friends",
+    ExpressionAttributeValues: {
+      ":friends": requester.friends,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error unadding friend:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET friends = :friends",
+    ExpressionAttributeValues: {
+      ":friends": requestee.friends,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error unadding friend:", err);
+    return null;
+  }
+
+  return "Friend unadd processed";
+}
+
+app.post("/friend-request/unadd", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await unaddFriend(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend unadd unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
 async function acceptFriendRequest(
   requesterId: string,
   requestId: string
@@ -350,7 +424,7 @@ async function acceptFriendRequest(
     UpdateExpression: "SET requests.incoming = :incoming, friends = :friends",
     ExpressionAttributeValues: {
       ":incoming": requestee.requests.incoming,
-      ":friends": requester.friends,
+      ":friends": requestee.friends,
     },
   };
 
@@ -459,6 +533,10 @@ async function blockUser(
     return null;
   }
 
+  if (blocker.blockedUsers.includes(blockedUserId)) {
+    return null;
+  }
+
   // Add logic to update `blockedUsers` in the database.
   blocker.blockedUsers.push(blockedUserId);
 
@@ -488,6 +566,53 @@ app.post("/block-user", async (req, res) => {
   const result = await blockUser(blockerId, blockedUserId);
   if (!result) {
     return res.status(404).send("Blocking user not found");
+  }
+  res.status(200).send(result);
+});
+
+async function unblockUser(
+  unblockerId: string,
+  blockedUserId: string
+): Promise<User | null> {
+  const blocker: User | null = await getUser(unblockerId);
+
+  if (!blocker) {
+    return null;
+  }
+
+  if (!blocker.blockedUsers.includes(blockedUserId)) {
+    return null;
+  }
+
+  const i = blocker.blockedUsers.indexOf(blockedUserId);
+  blocker.blockedUsers.splice(i, 1);
+
+  // Save updated user back to the database.
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: blocker.userId,
+    },
+    UpdateExpression: "SET blockedUsers = :blockedUsers",
+    ExpressionAttributeValues: {
+      ":blockedUsers": blocker.blockedUsers,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return blocker;
+  } catch (err) {
+    console.error("Error unblocking user:", err);
+    return null;
+  }
+}
+
+app.post("/unblock-user", async (req, res) => {
+  const { unblockerId, blockedUserId } = req.body;
+  const result = await unblockUser(unblockerId, blockedUserId);
+  if (!result) {
+    return res.status(404).send("Unblocking user not found");
   }
   res.status(200).send(result);
 });
