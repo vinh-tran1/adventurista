@@ -122,8 +122,11 @@ app.post("/event/create", async (req, res) => {
     postingUserId: req.body.postingUserId,
     blockedUsers: [],
     photo: "",
-    whoIsGoing: [],
+    whoIsGoing: [req.body.postingUserId],
   };
+
+  const user = await getUser(event.postingUserId);
+  event.blockedUsers = user.blockedUsers;
 
   const result = await createEvent(event);
   if (typeof result === "string") {
@@ -131,6 +134,56 @@ app.post("/event/create", async (req, res) => {
   }
 
   res.status(201).send(result);
+});
+
+async function updateEventWhoIsGoing(event: Event): Promise<Event | string> {
+  const params = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+    ExpressionAttributeValues: {
+      ":whoIsGoing": event.whoIsGoing,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return event;
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return "Error updating event";
+  }
+}
+
+app.post("/event/going/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const event = await getEvent(eventId);
+
+  if (typeof event === null) {
+    return res.status(400).send("Event does not exist");
+  }
+
+  event.whoIsGoing.push(req.body.userId);
+
+  const result = await updateEventWhoIsGoing(event);
+  if (typeof result === "string") {
+    return res.status(400).send(result);
+  }
+
+  res.status(200).send(result);
+});
+
+app.get("/event/going/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const event = await getEvent(eventId);
+
+  if (typeof event === null) {
+    return res.status(400).send("Event does not exist");
+  }
+
+  res.status(200).send(event.whoIsGoing);
 });
 
 async function getUser(userId: string): Promise<User | null> {
