@@ -231,13 +231,13 @@ app.get("/event/:eventId", async (req, res) => {
 async function sendFriendRequest(
   requesterId: string,
   requestId: string
-): Promise<string> {
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
 
   if (!requester || !requestee) {
-    return "User not found";
+    return null;
   }
 
   // Add logic to update `requests` in the database.
@@ -245,6 +245,41 @@ async function sendFriendRequest(
   requestee.requests.incoming.push(requesterId);
 
   // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error friend requesting user:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error friend requesting user:", err);
+    return null;
+  }
 
   return "Friend request sent";
 }
@@ -252,6 +287,165 @@ async function sendFriendRequest(
 app.post("/friend-request", async (req, res) => {
   const { requesterId, requestId } = req.body;
   const result = await sendFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend request unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
+async function acceptFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.requests.outgoing.includes(requestId) ||
+    !requestee.requests.incoming.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove incoming and outgoing requests
+  const i = requester.requests.outgoing.indexOf(requestId);
+  const j = requestee.requests.incoming.indexOf(requesterId);
+  requester.requests.outgoing.splice(i, 1);
+  requestee.requests.incoming.splice(j, 1);
+
+  // Add to friends list
+  requester.friends.push(requestId);
+  requestee.friends.push(requesterId);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing, friends = :friends",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+      ":friends": requester.friends,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming, friends = :friends",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+      ":friends": requester.friends,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  return "Friend request accepted";
+}
+
+app.post("/friend-request/accept", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await acceptFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res
+      .status(404)
+      .send("Friend request acceptance unable to be processed");
+  }
+  res.status(200).send(result);
+});
+
+async function denyFriendRequest(
+  requesterId: string,
+  requestId: string
+): Promise<string | null> {
+  // Fetch users from a database.
+  const requester: User | null = await getUser(requesterId);
+  const requestee: User | null = await getUser(requestId);
+
+  if (!requester || !requestee) {
+    return null;
+  }
+
+  if (
+    !requester.requests.outgoing.includes(requestId) ||
+    !requestee.requests.incoming.includes(requesterId)
+  ) {
+    return null;
+  }
+
+  // Remove incoming and outgoing requests
+  const i = requester.requests.outgoing.indexOf(requestId);
+  const j = requestee.requests.incoming.indexOf(requesterId);
+  requester.requests.outgoing.splice(i, 1);
+  requestee.requests.incoming.splice(j, 1);
+
+  // Save updated users back to the database.
+  const requesterParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requester.userId,
+    },
+    UpdateExpression: "SET requests.outgoing = :outgoing",
+    ExpressionAttributeValues: {
+      ":outgoing": requester.requests.outgoing,
+    },
+  };
+
+  try {
+    await db.update(requesterParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  const requesteeParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: requestee.userId,
+    },
+    UpdateExpression: "SET requests.incoming = :incoming",
+    ExpressionAttributeValues: {
+      ":incoming": requestee.requests.incoming,
+    },
+  };
+
+  try {
+    await db.update(requesteeParams).promise();
+  } catch (err) {
+    console.error("Error accepting friend request:", err);
+    return null;
+  }
+
+  return "Friend request denied";
+}
+
+app.post("/friend-request/deny", async (req, res) => {
+  const { requesterId, requestId } = req.body;
+  const result = await denyFriendRequest(requesterId, requestId);
+  if (!result) {
+    return res.status(404).send("Friend request denial unable to be processed");
+  }
   res.status(200).send(result);
 });
 
@@ -318,6 +512,13 @@ async function goingToEvent(
 
   if (!user || !event) {
     return "User or Event not found";
+  }
+
+  if (
+    event.whoIsGoing.includes(userId) &&
+    user.eventsGoingTo.includes(eventId)
+  ) {
+    return "User is already going to event";
   }
 
   // Add logic to update `eventsGoingTo` and `whoIsGoing` in the database.
