@@ -699,6 +699,79 @@ app.post("/going-to-event", async (req, res) => {
   res.status(200).send(`User ${userId} going to event ${eventId}`);
 });
 
+async function cancelGoingToEvent(
+  userId: string,
+  eventId: string
+): Promise<string | null> {
+  const user: User | null = await getUser(userId);
+  const event: Event | null = await getEvent(eventId);
+
+  if (!user || !event) {
+    return "User or Event not found";
+  }
+
+  if (
+    !event.whoIsGoing.includes(userId) ||
+    !user.eventsGoingTo.includes(eventId)
+  ) {
+    return "User never marked attendance for event";
+  }
+
+  // Add logic to update `eventsGoingTo` and `whoIsGoing` in the database.
+  const i = user.eventsGoingTo.indexOf(eventId);
+  const j = event.whoIsGoing.indexOf(userId);
+  user.eventsGoingTo.splice(i, 1);
+  event.whoIsGoing.splice(j, 1);
+
+  // Update events table
+  const eventParams = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+    ExpressionAttributeValues: {
+      ":whoIsGoing": event.whoIsGoing,
+    },
+  };
+
+  try {
+    await db.update(eventParams).promise();
+  } catch (err) {
+    console.error("Error unmarking attendance from event:", err);
+    return `Error unmarking attendance from event: ${err}`;
+  }
+
+  // Update users table
+  const userParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression: "SET eventsGoingTo = :eventsGoingTo",
+    ExpressionAttributeValues: {
+      ":eventsGoingTo": user.eventsGoingTo,
+    },
+  };
+
+  try {
+    await db.update(userParams).promise();
+  } catch (err) {
+    console.error("Error unmarking attendance from event:", err);
+    return `Error unmarking attendance from event: ${err}`;
+  }
+  return null;
+}
+
+app.post("/cancel-going-to-event", async (req, res) => {
+  const { userId, eventId } = req.body;
+  const result = await cancelGoingToEvent(userId, eventId);
+  if (result) {
+    return res.status(404).send(result);
+  }
+  res.status(200).send(`User ${userId} no longer going to event ${eventId}`);
+});
+
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
 });
