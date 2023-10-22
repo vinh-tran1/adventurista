@@ -1,6 +1,6 @@
 import { View, Text, Image, ImageBackground, StyleSheet} from 'react-native';
 
-const Post = props => {
+const EventPost = props => {
     return (
         <View style={styles.postContainer}>
             <ImageBackground source={{uri: props.img}} style={styles.postTop}>
@@ -41,4 +41,5 @@ const Post = props => {
     }
   });
   
-  export default Post;
+  export default EventPost;
+  

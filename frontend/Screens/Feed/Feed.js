@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Post from "../../Components/Post";
+import EventPost from "./EventPost"
 
 // fetch posts api
 // const [posts, setPosts] = useState(null);
@@ -59,12 +59,13 @@ const Feed = () => {
       <FlatList
         data={DATA}
         renderItem={({ item }) => 
-          <Post 
+          <EventPost 
             title={item.title} 
             caption={item.caption} 
             img={item.img}
           />}
         keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
