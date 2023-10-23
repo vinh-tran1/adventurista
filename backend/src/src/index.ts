@@ -617,11 +617,62 @@ app.post("/unblock-user", async (req, res) => {
   res.status(200).send(result);
 });
 
+app.get("/events-going-to", async (req, res) => {
+  const { userId } = req.body;
+  const user: User | null = await getUser(userId);
+
+  if (!user) {
+    return res.status(404).send("User does not exist");
+  }
+
+  const events: Event[] = [];
+  user.eventsGoingTo.forEach(async (eventId) => {
+    const event: Event | null = await getEvent(eventId);
+
+    if (event) {
+      events.push(event);
+    }
+  });
+
+  res.status(200).send(events);
+});
+
+app.get("/events-going-to-ids", async (req, res) => {
+  const { userId } = req.body;
+  const user: User | null = await getUser(userId);
+
+  if (!user) {
+    return res.status(404).send("User does not exist");
+  }
+
+  res.status(200).send(user.eventsGoingTo);
+});
+
 app.get("/who-is-going", async (req, res) => {
   const { eventId } = req.body;
   const event = await getEvent(eventId);
 
-  if (typeof event === null) {
+  if (!event) {
+    return res.status(400).send("Event does not exist");
+  }
+
+  const users: User[] = [];
+  event.whoIsGoing.forEach(async (userId) => {
+    const user: User | null = await getUser(userId);
+
+    if (user) {
+      users.push(user);
+    }
+  });
+
+  res.status(200).send(users);
+});
+
+app.get("/who-is-going-ids", async (req, res) => {
+  const { eventId } = req.body;
+  const event = await getEvent(eventId);
+
+  if (!event) {
     return res.status(400).send("Event does not exist");
   }
 
