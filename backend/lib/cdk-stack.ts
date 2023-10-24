@@ -15,8 +15,8 @@ import path = require("path");
 import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement, Effect, AnyPrincipal } from "aws-cdk-lib/aws-iam";
 import {
-  BlockPublicAccess,
-  BucketEncryption,
+  // BlockPublicAccess,
+  // BucketEncryption,
   Bucket,
 } from "aws-cdk-lib/aws-s3";
 
@@ -28,11 +28,11 @@ export class CdkStack extends Stack {
     const BUCKET_NAME = "user-profile-picture-bucket";
 
     const profPicBucket = new Bucket(this, "profPicBucket", {
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      // blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       bucketName: BUCKET_NAME,
-      encryption: BucketEncryption.KMS_MANAGED,
+      // encryption: BucketEncryption.KMS_MANAGED,
       enforceSSL: true,
-      publicReadAccess: false,
+      publicReadAccess: true, // false
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
       versioned: false,
       autoDeleteObjects: true,
@@ -94,6 +94,8 @@ export class CdkStack extends Stack {
             USERS_TABLE_NAME: usersTable.tableName,
             EVENTS_PRIMARY_KEY: "eventId",
             EVENTS_TABLE_NAME: eventsTable.tableName,
+            PROFILE_PICTURE_BUCKET_NAME: profPicBucket.bucketName,
+            region: process.env.CDK_DEFAULT_REGION!,
           },
         },
       }
@@ -102,29 +104,31 @@ export class CdkStack extends Stack {
     // Add bucket policy to restrict access to VPC
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.DENY,
+        // effect: Effect.DENY,
+		effect: Effect.ALLOW,
         resources: [profPicBucket.bucketArn],
         actions: ["s3:ListBucket"],
         principals: [new AnyPrincipal()],
-        conditions: {
-          StringNotEquals: {
-            "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
-          },
-        },
+        // conditions: {
+        //   StringNotEquals: {
+        //     "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
+        //   },
+        // },
       })
     );
 
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.DENY,
+        // effect: Effect.DENY,
+		effect: Effect.ALLOW,
         resources: [profPicBucket.arnForObjects("*")],
         actions: ["s3:PutObject", "s3:GetObject"], // no permanent delete; we will soft delete
         principals: [new AnyPrincipal()],
-        conditions: {
-          StringNotEquals: {
-            "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
-          },
-        },
+        // conditions: {
+        //   StringNotEquals: {
+        //     "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
+        //   },
+        // },
       })
     );
 
@@ -151,7 +155,7 @@ export class CdkStack extends Stack {
     // R/W permissions for Fargate
     profPicBucket.grantReadWrite(fargate.taskDefinition.taskRole);
     usersTable.grantReadWriteData(fargate.taskDefinition.taskRole);
-	eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
+    eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
 
     // API Gateway
     const httpVpcLink = new CfnResource(this, "HttpVpcLink", {

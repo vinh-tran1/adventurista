@@ -1,5 +1,5 @@
 import express from "express";
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB, S3 } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
@@ -10,14 +10,71 @@ const USERS_PRIMARY_KEY = process.env.USERS_PRIMARY_KEY || "";
 const EVENTS_TABLE_NAME = process.env.EVENTS_TABLE_NAME || "";
 const EVENTS_PRIMARY_KEY = process.env.EVENTS_PRIMARY_KEY || "";
 
+// s3 bucket IDs
+const PROF_PIC_BUCKET = process.env.PROFILE_PICTURE_BUCKET_NAME || "";
+
 // db set-up
 const db = new DynamoDB.DocumentClient();
+
+// S3 set-up
+const s3 = new S3();
 
 const app = express();
 const port = 80;
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// begin S3 testing
+const URL_EXPIRATION_SECONDS = 300;
+
+const getUploadURL = async function () {
+  const randomID = uuidv4();
+  const Key = `${randomID}.jpg`;
+
+  // Get signed URL from S3
+  const s3Params = {
+    Bucket: PROF_PIC_BUCKET,
+    Key,
+    Expires: URL_EXPIRATION_SECONDS,
+    ContentType: "image/jpeg",
+
+    // This ACL makes the uploaded object publicly readable. You must also uncomment
+    // the extra permission for the Lambda function in the SAM template.
+
+    // ACL: 'public-read'
+  };
+
+  console.log("Params: ", s3Params);
+  const uploadURL = await s3.getSignedUrlPromise("putObject", s3Params);
+
+  return JSON.stringify({
+    uploadURL: uploadURL,
+    Key,
+  });
+};
+
+// testing upload image to s3
+app.get("/putobject", async (req, res) => {
+  const url = await getUploadURL();
+  return res.status(200).send(url);
+});
+
+app.get("/getobject", async (req, res) => {
+  const params = {
+    Bucket: PROF_PIC_BUCKET,
+    Key: req.body.Key,
+  };
+
+  try {
+    const data = await s3.getObject(params).promise();
+    // const dataContent = data.Body.toString("utf-8");
+    return res.status(200).send({ body: data.Body });
+  } catch (err) {
+    return res.send(err);
+  }
+});
+// end s3 testing
 
 // schema
 type User = {
@@ -57,71 +114,79 @@ type Event = {
 const saltRounds = 10;
 
 async function hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, saltRounds);
+  return bcrypt.hash(password, saltRounds);
 }
 
-async function comparePassword(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash);
+async function comparePassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
+  return bcrypt.compare(password, hash);
 }
 
 async function emailExists(email: string): Promise<boolean> {
   const params = {
-      TableName: USERS_TABLE_NAME,
-      Key: {
-          [USERS_PRIMARY_KEY]: email,  // Assuming USERS_PRIMARY_KEY is now set to "email"
-      },
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
+    },
   };
 
   try {
-      const result = await db.get(params).promise();
-      return !!result.Item;  // Returns true if an item exists, false otherwise
+    const result = await db.get(params).promise();
+    return !!result.Item; // Returns true if an item exists, false otherwise
   } catch (err) {
-      console.error("Error checking email:", err);
-      return false;  // Default to false on error
+    console.error("Error checking email:", err);
+    return false; // Default to false on error
   }
 }
 
-async function createUser(email: string, firstName: string, lastName: string, password: string): Promise<User | string> {
+async function createUser(
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string
+): Promise<User | string> {
   // Check if email already exists
   if (await emailExists(email)) {
-      return "Email already in use";
+    return "Email already in use";
   }
-    // Hash the password
+  // Hash the password
   const hashedPassword = await hashPassword(password);
 
   const user: User = {
-      email: email,
-      userId: uuidv4(),
-      firstName: firstName,
-      lastName: lastName,
-      hashedPassword: hashedPassword,
-      primaryLocation: "",
-      blockedUsers: [],
-      interests: [],
-      friends: [],
-      requests: {
-        outgoing: [],
-        incoming: [],
-      },
-      groups: [],
-      eventsOwned: [],
-      eventsGoingTo: [],
-      eventsNotGoingTo: [],
-      messages: [],
-      profilePictureUrl: "",
+    email: email,
+    userId: uuidv4(),
+    firstName: firstName,
+    lastName: lastName,
+    hashedPassword: hashedPassword,
+    primaryLocation: "",
+    blockedUsers: [],
+    interests: [],
+    friends: [],
+    requests: {
+      outgoing: [],
+      incoming: [],
+    },
+    groups: [],
+    eventsOwned: [],
+    eventsGoingTo: [],
+    eventsNotGoingTo: [],
+    messages: [],
+    profilePictureUrl: "",
   };
 
   const params = {
-      TableName: USERS_TABLE_NAME,
-      Item: user,
+    TableName: USERS_TABLE_NAME,
+    Item: user,
   };
 
   try {
-      await db.put(params).promise();
-      return user;
+    await db.put(params).promise();
+    return user;
   } catch (err) {
-      console.error("Error creating user:", err);
-      return "Error creating user";
+    console.error("Error creating user:", err);
+    return "Error creating user";
   }
 }
 app.post("/auth/create-user", async (req, res) => {
@@ -129,7 +194,7 @@ app.post("/auth/create-user", async (req, res) => {
 
   const result = await createUser(email, firstName, lastName, password);
   if (typeof result === "string") {
-      return res.status(400).send(result);
+    return res.status(400).send(result);
   }
 
   res.status(201).send(result);
@@ -138,42 +203,42 @@ app.post("/auth/create-user", async (req, res) => {
 async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
-      TableName: USERS_TABLE_NAME,
-      Key: {
-          [USERS_PRIMARY_KEY]: email,  // Assuming USERS_PRIMARY_KEY is now set to "email"
-      },
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
+    },
   };
 
   try {
-      const result = await db.get(params).promise();
-      const user = result.Item as User;
+    const result = await db.get(params).promise();
+    const user = result.Item as User;
 
-      if (!user) return false;
+    if (!user) return false;
 
-      // Compare the password with the hashed password
-      const isPasswordValid = await comparePassword(password, user.hashedPassword);
-      if (!isPasswordValid) return false;
+    // Compare the password with the hashed password
+    const isPasswordValid = await comparePassword(
+      password,
+      user.hashedPassword
+    );
+    if (!isPasswordValid) return false;
 
-      return user;
+    return user;
   } catch (err) {
-      console.error("Error during sign-in:", err);
-      return false;
+    console.error("Error during sign-in:", err);
+    return false;
   }
 }
-
 
 app.post("/auth/sign-in", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await signIn(email, password);
   if (!user) {
-      return res.status(400).send("Invalid credentials");
+    return res.status(400).send("Invalid credentials");
   }
 
   res.status(200).send(user);
 });
-
-
 
 async function createEvent(event: Event): Promise<Event | string> {
   if (!event.time || !event.location || !event.postingUserId) {
