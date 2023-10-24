@@ -35,10 +35,6 @@ const Signup = ({ navigation }) => {
         <TextInput value={name} onChangeText={(text) => setName(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Username</Text>
-        <TextInput value={username} onChangeText={(text) => setUsername(text)} style={styles.input} />
-      </View>
-      <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
         <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
       </View>
