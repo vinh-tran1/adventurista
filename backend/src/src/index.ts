@@ -21,6 +21,7 @@ app.use(express.json());
 
 // schema
 type User = {
+  email: string;
   userId: string;
   firstName: string;
   lastName: string;
@@ -63,11 +64,33 @@ async function comparePassword(password: string, hash: string): Promise<boolean>
     return bcrypt.compare(password, hash);
 }
 
-async function createUser(firstName: string, lastName: string, password: string): Promise<User | string> {
-  // Hash the password
+async function emailExists(email: string): Promise<boolean> {
+  const params = {
+      TableName: USERS_TABLE_NAME,
+      Key: {
+          [USERS_PRIMARY_KEY]: email,  // Assuming USERS_PRIMARY_KEY is now set to "email"
+      },
+  };
+
+  try {
+      const result = await db.get(params).promise();
+      return !!result.Item;  // Returns true if an item exists, false otherwise
+  } catch (err) {
+      console.error("Error checking email:", err);
+      return false;  // Default to false on error
+  }
+}
+
+async function createUser(email: string, firstName: string, lastName: string, password: string): Promise<User | string> {
+  // Check if email already exists
+  if (await emailExists(email)) {
+      return "Email already in use";
+  }
+    // Hash the password
   const hashedPassword = await hashPassword(password);
 
   const user: User = {
+      email: email,
       userId: uuidv4(),
       firstName: firstName,
       lastName: lastName,
@@ -102,9 +125,9 @@ async function createUser(firstName: string, lastName: string, password: string)
   }
 }
 app.post("/auth/create-user", async (req, res) => {
-  const { firstName, lastName, password } = req.body;
+  const { email, firstName, lastName, password } = req.body;
 
-  const result = await createUser(firstName, lastName, password);
+  const result = await createUser(email, firstName, lastName, password);
   if (typeof result === "string") {
       return res.status(400).send(result);
   }
@@ -112,20 +135,18 @@ app.post("/auth/create-user", async (req, res) => {
   res.status(201).send(result);
 });
 
-async function signIn(firstName: string, lastName: string, password: string): Promise<User | false> {
-  // Retrieve user based on name (Note: This assumes that the combination of firstName and lastName is unique)
+async function signIn(email: string, password: string): Promise<User | false> {
+  // Retrieve user based on email
   const params = {
       TableName: USERS_TABLE_NAME,
-      FilterExpression: "firstName = :firstName and lastName = :lastName",
-      ExpressionAttributeValues: {
-          ":firstName": firstName,
-          ":lastName": lastName
-      }
+      Key: {
+          [USERS_PRIMARY_KEY]: email,  // Assuming USERS_PRIMARY_KEY is now set to "email"
+      },
   };
 
   try {
-      const result = await db.scan(params).promise();
-      const user = result.Items && result.Items[0] as User;
+      const result = await db.get(params).promise();
+      const user = result.Item as User;
 
       if (!user) return false;
 
@@ -140,16 +161,18 @@ async function signIn(firstName: string, lastName: string, password: string): Pr
   }
 }
 
-app.post("/auth/sign-in", async (req, res) => {
-  const { firstName, lastName, password } = req.body;
 
-  const user = await signIn(firstName, lastName, password);
+app.post("/auth/sign-in", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await signIn(email, password);
   if (!user) {
       return res.status(400).send("Invalid credentials");
   }
 
   res.status(200).send(user);
 });
+
 
 
 async function createEvent(event: Event): Promise<Event | string> {
