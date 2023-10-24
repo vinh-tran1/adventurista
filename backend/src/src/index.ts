@@ -12,6 +12,8 @@ const EVENTS_PRIMARY_KEY = process.env.EVENTS_PRIMARY_KEY || "";
 
 // s3 bucket IDs
 const PROF_PIC_BUCKET = process.env.PROFILE_PICTURE_BUCKET_NAME || "";
+const EVENT_PIC_BUCKET = process.env.EVENT_PICTURE_BUCKET_NAME || "";
+const PRESIGNED_URL_EXPIRATION_SECONDS = 300;
 
 // db set-up
 const db = new DynamoDB.DocumentClient();
@@ -25,23 +27,17 @@ const port = 80;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// begin S3 testing
-const URL_EXPIRATION_SECONDS = 300;
-
-const getUploadURL = async function () {
+// event picture bucket read/write
+const getEventPicUploadURL = async function () {
   const randomID = uuidv4();
   const Key = `${randomID}.jpg`;
 
   // Get signed URL from S3
   const s3Params = {
-    Bucket: PROF_PIC_BUCKET,
+    Bucket: EVENT_PIC_BUCKET,
     Key,
-    Expires: URL_EXPIRATION_SECONDS,
+    Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
     ContentType: "image/jpeg",
-
-    // This ACL makes the uploaded object publicly readable. You must also uncomment
-    // the extra permission for the Lambda function in the SAM template.
-
     // ACL: 'public-read'
   };
 
@@ -54,13 +50,54 @@ const getUploadURL = async function () {
   });
 };
 
-// testing upload image to s3
-app.get("/putobject", async (req, res) => {
-  const url = await getUploadURL();
+app.get("/event-pic-presigned", async (req, res) => {
+  const url = await getEventPicUploadURL();
   return res.status(200).send(url);
 });
 
-app.get("/getobject", async (req, res) => {
+app.get("/event-pic-as-bytes", async (req, res) => {
+  const params = {
+    Bucket: EVENT_PIC_BUCKET,
+    Key: req.body.Key,
+  };
+
+  try {
+    const data = await s3.getObject(params).promise();
+    return res.status(200).send({ body: data.Body });
+  } catch (err) {
+    return res.send(err);
+  }
+});
+
+// profile picture bucket read/write
+const getProfilePicUploadURL = async function () {
+  const randomID = uuidv4();
+  const Key = `${randomID}.jpg`;
+
+  // Get signed URL from S3
+  const s3Params = {
+    Bucket: PROF_PIC_BUCKET,
+    Key,
+    Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
+    ContentType: "image/jpeg",
+    // ACL: 'public-read'
+  };
+
+  console.log("Params: ", s3Params);
+  const uploadURL = await s3.getSignedUrlPromise("putObject", s3Params);
+
+  return JSON.stringify({
+    uploadURL: uploadURL,
+    Key,
+  });
+};
+
+app.get("/profile-pic-presigned", async (req, res) => {
+  const url = await getProfilePicUploadURL();
+  return res.status(200).send(url);
+});
+
+app.get("/profile-pic-as-bytes", async (req, res) => {
   const params = {
     Bucket: PROF_PIC_BUCKET,
     Key: req.body.Key,
@@ -68,13 +105,11 @@ app.get("/getobject", async (req, res) => {
 
   try {
     const data = await s3.getObject(params).promise();
-    // const dataContent = data.Body.toString("utf-8");
     return res.status(200).send({ body: data.Body });
   } catch (err) {
     return res.send(err);
   }
 });
-// end s3 testing
 
 // schema
 type User = {
