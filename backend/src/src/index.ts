@@ -40,6 +40,8 @@ type User = {
 
 type Event = {
   eventId: string;
+  title: string;
+  description: string;
   time: string;
   location: string;
   postingUserId: string;
@@ -117,6 +119,8 @@ app.post("/user/create", async (req, res) => {
 app.post("/event/create", async (req, res) => {
   const event: Event = {
     eventId: uuidv4(),
+    title: req.body.title,
+    description: req.body.description,
     time: req.body.time,
     location: req.body.location,
     postingUserId: req.body.postingUserId,
@@ -134,6 +138,49 @@ app.post("/event/create", async (req, res) => {
   }
 
   res.status(201).send(result);
+});
+
+async function updateEvent(event: Event): Promise<Event | null> {
+  const params = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression:
+      "SET title = :title, description = :description, time = :time, location = :location",
+    ExpressionAttributeValues: {
+      ":title": event.title,
+      ":description": event.description,
+      ":time": event.time,
+      ":location": event.location,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return event;
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return null;
+  }
+}
+
+app.post("/event/update", async (req, res) => {
+  const event = await getEvent(req.body.eventId);
+  if (!event) {
+    return res.status(404).send("Event not found");
+  }
+  event.title = req.body.title;
+  event.description = req.body.description;
+  event.time = req.body.time;
+  event.location = req.body.location;
+
+  const result = updateEvent(event);
+  if (!result) {
+    return res.status(400).send("Error updating event");
+  }
+
+  res.status(200).send(result);
 });
 
 async function getUser(userId: string): Promise<User | null> {
@@ -523,6 +570,37 @@ app.post("/friend-request/deny", async (req, res) => {
   res.status(200).send(result);
 });
 
+app.get("/get-friends-of-user", async (req, res) => {
+  const { userId } = req.body;
+  const user: User | null = await getUser(userId);
+
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  const users: User[] = [];
+  user.friends.forEach(async (userId) => {
+    const user: User | null = await getUser(userId);
+
+    if (user) {
+      users.push(user);
+    }
+  });
+
+  res.status(200).send(users);
+});
+
+app.get("/get-friends-of-user-ids", async (req, res) => {
+  const { userId } = req.body;
+  const user: User | null = await getUser(userId);
+
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  res.status(200).send(user.friends);
+});
+
 async function blockUser(
   blockerId: string,
   blockedUserId: string
@@ -653,7 +731,7 @@ app.get("/who-is-going", async (req, res) => {
   const event = await getEvent(eventId);
 
   if (!event) {
-    return res.status(400).send("Event does not exist");
+    return res.status(404).send("Event does not exist");
   }
 
   const users: User[] = [];
@@ -673,7 +751,7 @@ app.get("/who-is-going-ids", async (req, res) => {
   const event = await getEvent(eventId);
 
   if (!event) {
-    return res.status(400).send("Event does not exist");
+    return res.status(404).send("Event does not exist");
   }
 
   res.status(200).send(event.whoIsGoing);
