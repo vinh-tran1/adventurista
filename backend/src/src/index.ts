@@ -79,8 +79,30 @@ async function createEvent(event: Event): Promise<Event | string> {
     Item: event,
   };
 
+  const user: User = await getUser(event.postingUserId);
+  if (!user) {
+    return "Posting user does not exist";
+  }
+
+  user.eventsOwned.push(event.eventId);
+  user.eventsGoingTo.push(event.eventId);
+
+  const userParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression:
+      "SET eventsOwned = :eventsOwned, eventsGoingTo = :eventsGoingTo",
+    ExpressionAttributeValues: {
+      ":eventsOwned": user.eventsOwned,
+      ":eventsGoingTo": user.eventsGoingTo,
+    },
+  };
+
   try {
     await db.put(params).promise();
+    await db.update(userParams).promise();
     return event;
   } catch (err) {
     console.error("Error creating event:", err);
@@ -140,6 +162,47 @@ app.post("/event/create", async (req, res) => {
   res.status(201).send(result);
 });
 
+async function updateUser(user: User): Promise<User | null> {
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression:
+      "SET primaryLocation = :primaryLocation, name = :name, interests= :interests",
+    ExpressionAttributeValues: {
+      ":primaryLocation": user.primaryLocation,
+      ":name": user.name,
+      ":interests": user.interests,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return user;
+  } catch (err) {
+    console.error("Error updating user:", err);
+    return null;
+  }
+}
+
+app.post("/update-user", async (req, res) => {
+  const user = await getUser(req.body.userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+  user.primaryLocation = req.body.primaryLocation;
+  user.name = req.body.name;
+  user.interests = req.body.interests;
+
+  const result = updateUser(user);
+  if (!result) {
+    return res.status(400).send("Error updating user");
+  }
+
+  res.status(200).send(result);
+});
+
 async function updateEvent(event: Event): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
@@ -165,7 +228,7 @@ async function updateEvent(event: Event): Promise<Event | null> {
   }
 }
 
-app.post("/event/update", async (req, res) => {
+app.post("/update-event", async (req, res) => {
   const event = await getEvent(req.body.eventId);
   if (!event) {
     return res.status(404).send("Event not found");
