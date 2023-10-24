@@ -2,6 +2,7 @@ import express from "express";
 import { DynamoDB } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import bcrypt from "bcrypt";
 
 // keys
 const USERS_TABLE_NAME = process.env.USERS_TABLE_NAME || "";
@@ -21,9 +22,11 @@ app.use(express.json());
 // schema
 type User = {
   userId: string;
+  firstName: string;
+  lastName: string;
+  hashedPassword: string;
   primaryLocation: string;
   blockedUsers: string[];
-  name: string;
   interests: string[];
   friends: string[];
   requests: {
@@ -50,24 +53,104 @@ type Event = {
   whoIsGoing: string[];
 };
 
-async function createUser(user: User): Promise<User | string> {
-  if (!user.name || !user.primaryLocation) {
-    return "Required user fields are missing";
-  }
+const saltRounds = 10;
+
+async function hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, saltRounds);
+}
+
+async function comparePassword(password: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(password, hash);
+}
+
+async function createUser(firstName: string, lastName: string, password: string): Promise<User | string> {
+  // Hash the password
+  const hashedPassword = await hashPassword(password);
+
+  const user: User = {
+      userId: uuidv4(),
+      firstName: firstName,
+      lastName: lastName,
+      hashedPassword: hashedPassword,
+      primaryLocation: "",
+      blockedUsers: [],
+      interests: [],
+      friends: [],
+      requests: {
+        outgoing: [],
+        incoming: [],
+      },
+      groups: [],
+      eventsOwned: [],
+      eventsGoingTo: [],
+      eventsNotGoingTo: [],
+      messages: [],
+      profilePictureUrl: "",
+  };
 
   const params = {
-    TableName: USERS_TABLE_NAME,
-    Item: user,
+      TableName: USERS_TABLE_NAME,
+      Item: user,
   };
 
   try {
-    await db.put(params).promise();
-    return user;
+      await db.put(params).promise();
+      return user;
   } catch (err) {
-    console.error("Error creating user:", err);
-    return "Error creating user";
+      console.error("Error creating user:", err);
+      return "Error creating user";
   }
 }
+app.post("/auth/create-user", async (req, res) => {
+  const { firstName, lastName, password } = req.body;
+
+  const result = await createUser(firstName, lastName, password);
+  if (typeof result === "string") {
+      return res.status(400).send(result);
+  }
+
+  res.status(201).send(result);
+});
+
+async function signIn(firstName: string, lastName: string, password: string): Promise<User | false> {
+  // Retrieve user based on name (Note: This assumes that the combination of firstName and lastName is unique)
+  const params = {
+      TableName: USERS_TABLE_NAME,
+      FilterExpression: "firstName = :firstName and lastName = :lastName",
+      ExpressionAttributeValues: {
+          ":firstName": firstName,
+          ":lastName": lastName
+      }
+  };
+
+  try {
+      const result = await db.scan(params).promise();
+      const user = result.Items && result.Items[0] as User;
+
+      if (!user) return false;
+
+      // Compare the password with the hashed password
+      const isPasswordValid = await comparePassword(password, user.hashedPassword);
+      if (!isPasswordValid) return false;
+
+      return user;
+  } catch (err) {
+      console.error("Error during sign-in:", err);
+      return false;
+  }
+}
+
+app.post("/auth/sign-in", async (req, res) => {
+  const { firstName, lastName, password } = req.body;
+
+  const user = await signIn(firstName, lastName, password);
+  if (!user) {
+      return res.status(400).send("Invalid credentials");
+  }
+
+  res.status(200).send(user);
+});
+
 
 async function createEvent(event: Event): Promise<Event | string> {
   if (!event.time || !event.location || !event.postingUserId) {
@@ -110,34 +193,6 @@ async function createEvent(event: Event): Promise<Event | string> {
   }
 }
 
-app.post("/user/create", async (req, res) => {
-  const user: User = {
-    userId: uuidv4(),
-    primaryLocation: req.body.primaryLocation,
-    blockedUsers: [],
-    name: req.body.name,
-    interests: req.body.interests || [],
-    friends: [],
-    requests: {
-      outgoing: [],
-      incoming: [],
-    },
-    groups: [],
-    eventsOwned: [],
-    eventsGoingTo: [],
-    eventsNotGoingTo: [],
-    messages: [],
-    profilePictureUrl: "",
-  };
-
-  const result = await createUser(user);
-  if (typeof result === "string") {
-    return res.status(400).send(result);
-  }
-
-  res.status(201).send(result);
-});
-
 app.post("/event/create", async (req, res) => {
   const event: Event = {
     eventId: uuidv4(),
@@ -169,10 +224,11 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET primaryLocation = :primaryLocation, name = :name, interests= :interests",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
     ExpressionAttributeValues: {
       ":primaryLocation": user.primaryLocation,
-      ":name": user.name,
+      ":firstName": user.firstName,
+      ":lastName": user.lastName,
       ":interests": user.interests,
     },
   };
@@ -192,7 +248,8 @@ app.post("/update-user", async (req, res) => {
     return res.status(404).send("User not found");
   }
   user.primaryLocation = req.body.primaryLocation;
-  user.name = req.body.name;
+  user.firstName = req.body.firstName;
+  user.lastName = req.body.lastName;
   user.interests = req.body.interests;
 
   const result = updateUser(user);
