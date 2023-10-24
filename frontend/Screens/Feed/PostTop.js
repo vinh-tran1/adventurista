@@ -19,7 +19,7 @@ const PostTop = (props) => {
                 <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
                     <View>
                         <View style={{ flexDirection: "row" }}>
-                            <View style={{ backgroundColor: "#D186FF", borderRadius: 20, width: 30, height: 30 }}>
+                            <View style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30 }}>
                                 <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15} />
                             </View>
                             <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24 others</Text>

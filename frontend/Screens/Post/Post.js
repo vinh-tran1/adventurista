@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, Image, TouchableOpacity, TextInput} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import UploadImage from "./UploadImage";
+import BubbleText from "../../Shared/BubbleText";
+
+const tags = ['catan', 'paddle', 'drinks', 'social',
+              'drive', 'school', 'student', 'energy',
+              'beach', 'hike', 'food', 'squash', 
+              'cs', 'games', 'dinner', 'apps',
+              'study'];
+
 
 const Post = () => {
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
   const [day, setDay] = useState("");
+  // need state for what tags
+  // do something with images
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
       {/* header */}
       <View style={styles.header}>
           <Text style={styles.headerText}>New Event</Text>
@@ -30,28 +41,63 @@ const Post = () => {
         </View>
 
         {/* image */}
-        <View style={styles.centerContainer}>
-          <View style={styles.image}>
-
-          </View>
-        </View>
+        <UploadImage />
 
         {/* text inputs */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>What?</Text>
-          <TextInput value={eventName} placeholder="Event Name" onChangeText={(text) => setEventName(text)} style={styles.input} />
+          <TextInput 
+            value={eventName} 
+            placeholder="Event Name" 
+            onChangeText={(text) => setEventName(text)} 
+            style={styles.input} 
+          />
         </View>
 
+        {/* Location */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Where?</Text>
-          <TextInput value={location} placeholder="Location" onChangeText={(text) => setLocation(text)} style={styles.input} />
+          <TextInput 
+            value={location} 
+            placeholder="Location" 
+            onChangeText={(text) => setLocation(text)} 
+            style={styles.input} 
+          />
         </View>
 
+        {/* Date */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>When</Text>
-          <TextInput value={day} placeholder="Day" onChangeText={(text) => setDay(text)} style={styles.smallInput} />
+          <Text style={styles.label}>When?</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <TextInput 
+              value={day} 
+              placeholder="Month" 
+              // onChangeText={(text) => setDay(text)} 
+              style={styles.smallInput} 
+            />
+            <TextInput 
+              value={day} 
+              placeholder="Date" 
+              // onChangeText={(text) => setDay(text)} 
+              style={styles.smallInput} 
+            />
+            <TextInput 
+              value={day} 
+              placeholder="Day" 
+              onChangeText={(text) => setDay(text)} 
+              style={styles.smallInput} 
+            />
+            <TextInput 
+              value={day} 
+              placeholder="Time" 
+              // onChangeText={(text) => setDay(text)} 
+              style={styles.smallInput} 
+            />
+          </View>
+          
         </View>
 
+        {/* Caption */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Caption</Text>
           <TextInput 
@@ -64,14 +110,41 @@ const Post = () => {
           />
         </View>
 
+        {/* Tags */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Tags (max 4)</Text>
-          
+          <View style={styles.tagContainer}>
+            {tags.map((tag, index) => {
+              return (
+                <TouchableOpacity style={{paddingVertical: 10, width: '25%'}}>
+                  <BubbleText key={index.toString()} title={tag} />
+                </TouchableOpacity>
+              )
+            })}
+          </View>
         </View>
+          
+        {/* Load More Tags */}
+        <View style={styles.moreTags}>
+            <TouchableOpacity style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+                <Text style={{fontWeight: '500', color: 'white'}}>more</Text>
+            </TouchableOpacity>
+        </View>
+
       </ScrollView> 
     </SafeAreaView>
   );
 }
+const inputStyle = {
+  paddingVertical: 10,
+  paddingLeft: 10,
+  borderWidth: 0.25,
+  borderColor: "#D186FF",
+  backgroundColor: "rgba(243, 232, 255, 0.45)",
+  marginBottom: 5,
+  borderRadius: 5,
+  color: 'gray'
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +169,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginBottom: 30
+    marginBottom: 20
   },
   navButton: {
     fontSize: 16, 
@@ -123,39 +196,29 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   input: {
-    paddingVertical: 10,
-    paddingLeft: 10,
-    borderWidth: 0.25,
-    borderColor: "#D186FF",
-    backgroundColor: "rgba(243, 232, 255, 0.45)",
-    marginBottom: 5,
-    borderRadius: 5,
-    color: 'gray'
+    ...inputStyle
   },
   smallInput: {
+    ...inputStyle,
     width: 80,
     alignContent: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
-    paddingLeft: 10,
-    borderWidth: 0.25,
-    borderColor: "#D186FF",
-    backgroundColor: "rgba(243, 232, 255, 0.45)",
-    marginBottom: 5,
-    borderRadius: 5,
-    color: 'gray'
   },
   largeInput: {
-    height: 120,
-    paddingVertical: 10,
-    paddingLeft: 10,
-    borderWidth: 0.25,
-    borderColor: "#D186FF",
-    backgroundColor: "rgba(243, 232, 255, 0.45)",
-    marginBottom: 5,
-    borderRadius: 5,
-    color: 'gray'
+    ...inputStyle,
+    height: 120
   },
+  tagContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between', // Evenly space the columns
+  },
+  moreTags: {
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginTop: 10,
+    marginBottom: 20
+  }
 });
 
 export default Post;
