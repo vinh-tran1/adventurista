@@ -1,13 +1,16 @@
 import express from "express";
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB, S3 } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
 import { Event, User } from "./models";
-import { EVENTS_TABLE_NAME, EVENTS_PRIMARY_KEY, USERS_TABLE_NAME, USERS_PRIMARY_KEY } from "./constants";
+import { EVENTS_TABLE_NAME, EVENTS_PRIMARY_KEY, USERS_TABLE_NAME, USERS_PRIMARY_KEY, EVENT_PIC_BUCKET, PRESIGNED_URL_EXPIRATION_SECONDS } from "./constants";
+
 
 // db set-up
 const db = new DynamoDB.DocumentClient();
+// S3 set-up
+const s3 = new S3();
 const router = express.Router();
 
 async function createEvent(event: Event): Promise<Event | string> {
@@ -410,5 +413,47 @@ async function getUser(userId: string): Promise<User | null> {
         return null;
     }
 }
+
+// event picture bucket read/write
+const getEventPicUploadURL = async function () {
+    const randomID = uuidv4();
+    const Key = `${randomID}.jpg`;
+  
+    // Get signed URL from S3
+    const s3Params = {
+      Bucket: EVENT_PIC_BUCKET,
+      Key,
+      Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
+      ContentType: "image/jpeg",
+      // ACL: 'public-read'
+    };
+  
+    console.log("Params: ", s3Params);
+    const uploadURL = await s3.getSignedUrlPromise("putObject", s3Params);
+  
+    return JSON.stringify({
+      uploadURL: uploadURL,
+      Key,
+    });
+  };
+  
+  router.get("/event-pic-presigned", async (req, res) => {
+    const url = await getEventPicUploadURL();
+    return res.status(200).send(url);
+  });
+  
+  router.get("/event-pic-as-bytes", async (req, res) => {
+    const params = {
+      Bucket: EVENT_PIC_BUCKET,
+      Key: req.body.Key,
+    };
+  
+    try {
+      const data = await s3.getObject(params).promise();
+      return res.status(200).send({ body: data.Body });
+    } catch (err) {
+      return res.send(err);
+    }
+  });
 
 export default router;

@@ -1,14 +1,11 @@
 import express from "express";
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB, S3 } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
 import userRoutes from "./users";
 import eventRoutes from "./events";
 
-
-// db set-up
-// const db = new DynamoDB.DocumentClient();
 
 const app = express();
 const port = 80;

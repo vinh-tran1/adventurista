@@ -1,15 +1,16 @@
 import express from "express";
-import { DynamoDB } from "aws-sdk";
+import { DynamoDB , S3} from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
 import { User } from "./models";
 import { Event } from "./models";
-import { USERS_TABLE_NAME, USERS_PRIMARY_KEY } from "./constants";
+import { USERS_TABLE_NAME, USERS_PRIMARY_KEY, PROF_PIC_BUCKET, PRESIGNED_URL_EXPIRATION_SECONDS } from "./constants";
 
 
 // db set-up
 const db = new DynamoDB.DocumentClient();
+const s3 = new S3();
 const router = express.Router();
 
 const saltRounds = 10;
@@ -618,5 +619,48 @@ router.post("/unblock-user", async (req, res) => {
     }
     res.status(200).send(result);
 });
+
+// profile picture bucket read/write
+const getProfilePicUploadURL = async function () {
+    const randomID = uuidv4();
+    const Key = `${randomID}.jpg`;
+  
+    // Get signed URL from S3
+    const s3Params = {
+      Bucket: PROF_PIC_BUCKET,
+      Key,
+      Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
+      ContentType: "image/jpeg",
+      // ACL: 'public-read'
+    };
+  
+    console.log("Params: ", s3Params);
+    const uploadURL = await s3.getSignedUrlPromise("putObject", s3Params);
+  
+    return JSON.stringify({
+      uploadURL: uploadURL,
+      Key,
+    });
+  };
+  
+  router.get("/profile-pic-presigned", async (req, res) => {
+    const url = await getProfilePicUploadURL();
+    return res.status(200).send(url);
+  });
+  
+  router.get("/profile-pic-as-bytes", async (req, res) => {
+    const params = {
+      Bucket: PROF_PIC_BUCKET,
+      Key: req.body.Key,
+    };
+  
+    try {
+      const data = await s3.getObject(params).promise();
+      return res.status(200).send({ body: data.Body });
+    } catch (err) {
+      return res.send(err);
+    }
+  });
+  
 
 export default router;
