@@ -78,8 +78,6 @@ router.post("/event/create", async (req, res) => {
     res.status(201).send(result);
 });
 
-
-
 async function getEvents(
     area: string,
     userLocation: string,
@@ -418,42 +416,42 @@ async function getUser(userId: string): Promise<User | null> {
 const getEventPicUploadURL = async function () {
     const randomID = uuidv4();
     const Key = `${randomID}.jpg`;
-  
+
     // Get signed URL from S3
     const s3Params = {
-      Bucket: EVENT_PIC_BUCKET,
-      Key,
-      Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
-      ContentType: "image/jpeg",
-      // ACL: 'public-read'
+        Bucket: EVENT_PIC_BUCKET,
+        Key,
+        Expires: PRESIGNED_URL_EXPIRATION_SECONDS,
+        ContentType: "image/jpeg",
+        // ACL: 'public-read'
     };
-  
+
     console.log("Params: ", s3Params);
     const uploadURL = await s3.getSignedUrlPromise("putObject", s3Params);
-  
+
     return JSON.stringify({
-      uploadURL: uploadURL,
-      Key,
+        uploadURL: uploadURL,
+        Key,
     });
-  };
-  
-  router.get("/event-pic-presigned", async (req, res) => {
+};
+
+router.get("/event-pic-presigned", async (req, res) => {
     const url = await getEventPicUploadURL();
     return res.status(200).send(url);
-  });
-  
-  router.get("/event-pic-as-bytes", async (req, res) => {
+});
+
+router.get("/event-pic-as-bytes", async (req, res) => {
     const params = {
-      Bucket: EVENT_PIC_BUCKET,
-      Key: req.body.Key,
+        Bucket: EVENT_PIC_BUCKET,
+        Key: req.body.Key,
     };
-  
+
     try {
-      const data = await s3.getObject(params).promise();
-      return res.status(200).send({ body: data.Body });
+        const data = await s3.getObject(params).promise();
+        return res.status(200).send({ body: data.Body });
     } catch (err) {
-      return res.send(err);
+        return res.send(err);
     }
-  });
+});
 
 export default router;
