@@ -14,6 +14,7 @@ const BubbleText = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     backgroundColor: "#EDDBFF",
     paddingHorizontal: 17.5,
     paddingVertical: 7.5,
