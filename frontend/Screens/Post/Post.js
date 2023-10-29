@@ -3,21 +3,76 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, Image, TouchableOpaci
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import UploadImage from "./UploadImage";
 import BubbleText from "../../Shared/BubbleText";
-
-const tags = ['catan', 'paddle', 'drinks', 'social',
-              'drive', 'school', 'student', 'energy',
-              'beach', 'hike', 'food', 'squash', 
-              'cs', 'games', 'dinner', 'apps',
-              'study'];
+import SelectDate from "./SelectDate";
 
 
-const Post = () => {
+
+
+const Post = ({ navigation }) => {
+  // still need camera roll integration
+  // also need navigation
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
-  const [day, setDay] = useState("");
-  // need state for what tags
-  // do something with images
+  const [selectTags, setSelectTags] = useState([]);
+  const [moreTagsClicked, setMoreTagsClicked] = useState(1);
+  
+  const tags1 = [
+    'catan', 'paddle', 'drinks', 'social',
+    'drive', 'school', 'student', 'energy',
+    'beach', 'hike', 'food', 'squash', 
+    'cs', 'games', 'dinner', 'apps'
+  ];
+  const tags2 = [
+    'travel', 'music', 'movies', 'gym',
+    'cook', 'read', 'garden', 'art',
+    'shop', 'photo', 'coding', 'sports',
+    'story', 'nature', 'write', 'fashion',
+  ];
+  const tags3 = [
+    'beach', 'dance', 'pizza', 'guitar',
+    'coding', 'coffee', 'travel', 'sports',
+    'music', 'books', 'games', 'yoga',
+    'paint', 'films', 'hiking', 'chess',
+  ];
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
+  const dates = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
+  const days = ['MON', 'TUES', 'WED', 'THUR', 'FRI', 'SAT', 'SUN'];
+  const times = [
+    "00:00", "00:30",
+    "01:00", "01:30",
+    "02:00", "02:30",
+    "03:00", "03:30",
+    "04:00", "04:30",
+    "05:00", "05:30",
+    "06:00", "06:30",
+    "07:00", "07:30",
+    "08:00", "08:30",
+    "09:00", "09:30",
+    "10:00", "10:30",
+    "11:00", "11:30",
+    "12:00", "12:30",
+    "13:00", "13:30",
+    "14:00", "14:30",
+    "15:00", "15:30",
+    "16:00", "16:30",
+    "17:00", "17:30",
+    "18:00", "18:30",
+    "19:00", "19:30",
+    "20:00", "20:30",
+    "21:00", "21:30",
+    "22:00", "22:30",
+    "23:00", "23:30"
+  ];
+  
+  const handleTagPress = (tag) => {
+    if (selectTags.includes(tag)) {
+      setSelectTags((prevTags) => prevTags.filter((selectedTag) => selectedTag !== tag));
+    } else if (selectTags.length < 3) {
+      setSelectTags((prevTags) => [...prevTags, tag]);
+    }
+    console.log(selectTags);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,32 +124,11 @@ const Post = () => {
         <View style={styles.inputContainer}>
           <Text style={styles.label}>When?</Text>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TextInput 
-              value={day} 
-              placeholder="Month" 
-              // onChangeText={(text) => setDay(text)} 
-              style={styles.smallInput} 
-            />
-            <TextInput 
-              value={day} 
-              placeholder="Date" 
-              // onChangeText={(text) => setDay(text)} 
-              style={styles.smallInput} 
-            />
-            <TextInput 
-              value={day} 
-              placeholder="Day" 
-              onChangeText={(text) => setDay(text)} 
-              style={styles.smallInput} 
-            />
-            <TextInput 
-              value={day} 
-              placeholder="Time" 
-              // onChangeText={(text) => setDay(text)} 
-              style={styles.smallInput} 
-            />
+            <SelectDate title={"Month"} data={months}/>
+            <SelectDate title={"Date"} data={dates}/>
+            <SelectDate title={"Day"} data={days}/>
+            <SelectDate title={"Time"} data={times}/>
           </View>
-          
         </View>
 
         {/* Caption */}
@@ -112,24 +146,70 @@ const Post = () => {
 
         {/* Tags */}
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Tags (max 4)</Text>
+          <Text style={styles.label}>Tags (max 3)</Text>
           <View style={styles.tagContainer}>
-            {tags.map((tag, index) => {
+            {tags1.map((tag, index) => {
+              const isSelected = selectTags.includes(tag); // Check if the tag is selected
               return (
-                <TouchableOpacity style={{paddingVertical: 10, width: '25%'}}>
-                  <BubbleText key={index.toString()} title={tag} />
+                <TouchableOpacity
+                  key={index.toString()}
+                  onPress={() => handleTagPress(tag)}
+                  style={[styles.tag, isSelected && styles.selectedTag]}
+                >
+                  <BubbleText title={tag}/>
                 </TouchableOpacity>
-              )
+              );
+            })}
+            {moreTagsClicked >= 2 && 
+              tags2.map((tag, index) => {
+              const isSelected = selectTags.includes(tag); // Check if the tag is selected
+              return (
+                <TouchableOpacity
+                  key={index.toString()}
+                  onPress={() => handleTagPress(tag)}
+                  style={[styles.tag, isSelected && styles.selectedTag]}
+                >
+                  <BubbleText title={tag}/>
+                </TouchableOpacity>
+              );
+            })}
+            {moreTagsClicked >= 3 && 
+              tags3.map((tag, index) => {
+              const isSelected = selectTags.includes(tag); // Check if the tag is selected
+              return (
+                <TouchableOpacity
+                  key={index.toString()}
+                  onPress={() => handleTagPress(tag)}
+                  style={[styles.tag, isSelected && styles.selectedTag]}
+                >
+                  <BubbleText title={tag}/>
+                </TouchableOpacity>
+              );
             })}
           </View>
         </View>
           
         {/* Load More Tags */}
+        {moreTagsClicked < 3 ?
         <View style={styles.moreTags}>
-            <TouchableOpacity style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+            <TouchableOpacity 
+              onPress = {() => setMoreTagsClicked(moreTagsClicked + 1)}
+              style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+
                 <Text style={{fontWeight: '500', color: 'white'}}>more</Text>
+
+            </TouchableOpacity>
+        </View> :
+        <View style={styles.moreTags}>
+            <TouchableOpacity 
+              onPress = {() => setMoreTagsClicked(1)}
+              style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+
+                <Text style={{fontWeight: '500', color: 'white'}}>less</Text>
+
             </TouchableOpacity>
         </View>
+        }
 
       </ScrollView> 
     </SafeAreaView>
@@ -212,6 +292,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between', // Evenly space the columns
+  },
+  tag: {
+    width: '25%',
+    paddingVertical: 10,
+  },
+  selectedTag: {
+    width: '25%',
+    paddingVertical: 10,
+    backgroundColor: '#D186FF', 
+    borderRadius: 20,
   },
   moreTags: {
     justifyContent: 'center', 
