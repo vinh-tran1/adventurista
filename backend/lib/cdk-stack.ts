@@ -14,25 +14,29 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import path = require("path");
 import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement, Effect, AnyPrincipal } from "aws-cdk-lib/aws-iam";
-import {
-  BlockPublicAccess,
-  BucketEncryption,
-  Bucket,
-} from "aws-cdk-lib/aws-s3";
+import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // S3
-    const BUCKET_NAME = "user-profile-picture-bucket";
+    const PROF_PIC_BUCKET_NAME = "user-profile-picture-bucket";
+    const EVENT_PIC_BUCKET_NAME = "event-picture-bucket";
 
     const profPicBucket = new Bucket(this, "profPicBucket", {
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      bucketName: BUCKET_NAME,
-      encryption: BucketEncryption.KMS_MANAGED,
+      bucketName: PROF_PIC_BUCKET_NAME,
       enforceSSL: true,
-      publicReadAccess: false,
+      publicReadAccess: true, // false
+      removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
+      versioned: false,
+      autoDeleteObjects: true,
+    });
+
+    const eventPicBucket = new Bucket(this, "eventPicBucket", {
+      bucketName: EVENT_PIC_BUCKET_NAME,
+      enforceSSL: true,
+      publicReadAccess: true,
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
       versioned: false,
       autoDeleteObjects: true,
@@ -94,6 +98,9 @@ export class CdkStack extends Stack {
             USERS_TABLE_NAME: usersTable.tableName,
             EVENTS_PRIMARY_KEY: "eventId",
             EVENTS_TABLE_NAME: eventsTable.tableName,
+            PROFILE_PICTURE_BUCKET_NAME: profPicBucket.bucketName,
+            EVENT_PICTURE_BUCKET_NAME: eventPicBucket.bucketName,
+            region: process.env.CDK_DEFAULT_REGION!,
           },
         },
       }
@@ -102,29 +109,37 @@ export class CdkStack extends Stack {
     // Add bucket policy to restrict access to VPC
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.DENY,
+        effect: Effect.ALLOW,
         resources: [profPicBucket.bucketArn],
         actions: ["s3:ListBucket"],
         principals: [new AnyPrincipal()],
-        conditions: {
-          StringNotEquals: {
-            "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
-          },
-        },
       })
     );
 
     profPicBucket.addToResourcePolicy(
       new PolicyStatement({
-        effect: Effect.DENY,
+        effect: Effect.ALLOW,
         resources: [profPicBucket.arnForObjects("*")],
         actions: ["s3:PutObject", "s3:GetObject"], // no permanent delete; we will soft delete
         principals: [new AnyPrincipal()],
-        conditions: {
-          StringNotEquals: {
-            "aws:sourceVpce": [s3GatewayEndpoint.vpcEndpointId],
-          },
-        },
+      })
+    );
+
+    eventPicBucket.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: [eventPicBucket.bucketArn],
+        actions: ["s3:ListBucket"],
+        principals: [new AnyPrincipal()],
+      })
+    );
+
+    eventPicBucket.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        resources: [eventPicBucket.arnForObjects("*")],
+        actions: ["s3:PutObject", "s3:GetObject"], // no permanent delete; we will soft delete
+        principals: [new AnyPrincipal()],
       })
     );
 
@@ -150,8 +165,9 @@ export class CdkStack extends Stack {
 
     // R/W permissions for Fargate
     profPicBucket.grantReadWrite(fargate.taskDefinition.taskRole);
+    eventPicBucket.grantReadWrite(fargate.taskDefinition.taskRole);
     usersTable.grantReadWriteData(fargate.taskDefinition.taskRole);
-	eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
+    eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
 
     // API Gateway
     const httpVpcLink = new CfnResource(this, "HttpVpcLink", {
