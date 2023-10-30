@@ -67,6 +67,7 @@ const Feed = () => {
             createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
