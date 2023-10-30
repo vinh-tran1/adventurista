@@ -13,19 +13,31 @@ import swaggerOptions from "./swaggerDefinitions";
 const app = express();
 const port = 80;
 
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
 });
 
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Returns a health check
+ *     description: A sanity check
+ *     responses:
+ *       200:
+ *         description: Greeting message
+ */
 app.get("/", (req, res) => {
   res.status(200).send("Healthy!");
 });

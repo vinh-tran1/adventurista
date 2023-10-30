@@ -6,11 +6,12 @@ const swaggerDefinition: Options = {
     info: {
       title: 'Adventurista API',
       version: '1.0.0',
-      description: 'This is the documentation for our API.',
+      description: 'This is the documentation for our app',
     },
     basePath: '/v1',
   },
-  apis: ['./events.ts', './users.ts'], // Adjust the path to where your route files are
+  // go to the users.ts and events.ts files to see the paths
+  apis: ['./users.ts', './events.ts', "*.ts", "./*.ts"],
 };
 
 export default swaggerDefinition;

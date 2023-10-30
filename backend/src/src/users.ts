@@ -14,6 +14,176 @@ const s3 = new S3();
 const router = express.Router();
 
 const saltRounds = 10;
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     type: "object"
+ *     required:
+ *       - "email"
+ *       - "userId"
+ *       - "firstName"
+ *       - "lastName"
+ *       - "hashedPassword"
+ *       - "primaryLocation"
+ *       - "blockedUsers"
+ *       - "interests"
+ *       - "friends"
+ *       - "requests"
+ *       - "groups"
+ *       - "eventsOwned"
+ *       - "eventsGoingTo"
+ *       - "eventsNotGoingTo"
+ *       - "messages"
+ *       - "profilePictureUrl"
+ *     properties:
+ *       email:
+ *         type: "string"
+ *       userId:
+ *         type: "string"
+ *       firstName:
+ *         type: "string"
+ *       lastName:
+ *         type: "string"
+ *       hashedPassword:
+ *         type: "string"
+ *       primaryLocation:
+ *         type: "string"
+ *       blockedUsers:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       interests:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       friends:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       requests:
+ *         type: "object"
+ *         properties:
+ *           outgoing:
+ *             type: "array"
+ *             items:
+ *               type: "string"
+ *           incoming:
+ *             type: "array"
+ *             items:
+ *               type: "string"
+ *       groups:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       eventsOwned:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       eventsGoingTo:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       eventsNotGoingTo:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       messages:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       profilePictureUrl:
+ *         type: "string"
+ *
+ *   Event:
+ *     type: "object"
+ *     required:
+ *       - "eventId"
+ *       - "title"
+ *       - "description"
+ *       - "time"
+ *       - "location"
+ *       - "postingUserId"
+ *       - "blockedUsers"
+ *       - "photo"
+ *       - "whoIsGoing"
+ *     properties:
+ *       eventId:
+ *         type: "string"
+ *       title:
+ *         type: "string"
+ *       description:
+ *         type: "string"
+ *       time:
+ *         type: "string"
+ *       location:
+ *         type: "string"
+ *       postingUserId:
+ *         type: "string"
+ *       blockedUsers:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *       photo:
+ *         type: "string"
+ *       whoIsGoing:
+ *         type: "array"
+ *         items:
+ *           type: "string"
+ *   Credentials:
+ *     type: "object"
+ *     required:
+ *       - "email"
+ *       - "password"
+ *     properties:
+ *       email:
+ *         type: "string"
+ *       password:
+ *         type: "string"
+ *
+ *   FriendRequest:
+ *     type: "object"
+ *     required:
+ *       - "requesterId"
+ *       - "requestId"
+ *     properties:
+ *       requesterId:
+ *         type: "string"
+ *       requestId:
+ *         type: "string"
+ *
+ *   UserId:
+ *     type: "object"
+ *     required:
+ *       - "userId"
+ *     properties:
+ *       userId:
+ *         type: "string"
+ *
+ *   BlockUnblockRequest:
+ *     type: "object"
+ *     required:
+ *       - "blockerId"
+ *       - "blockedUserId"
+ *     properties:
+ *       blockerId:
+ *         type: "string"
+ *       blockedUserId:
+ *         type: "string"
+ *
+ *   ProfilePicKey:
+ *     type: "object"
+ *     required:
+ *       - "Key"
+ *     properties:
+ *       Key:
+ *         type: "string"
+ */
+
+
+router.get("/sanity-check", async (req, res) => {
+    res.status(200).send("Healthy!");
+});
 
 /**
  * @swagger
@@ -129,35 +299,6 @@ async function getUser(userId: string): Promise<User | null> {
     }
 }
 
-/**
- * @swagger
- * /{userId}:
- *   get:
- *     summary: "Get user by ID"
- *     description: "Returns a single user based on their ID"
- *     operationId: "getUser"
- *     produces:
- *       - "application/json"
- *     parameters:
- *       - in: "path"
- *         name: "userId"
- *         description: "ID of the user to return"
- *         required: true
- *         type: "string"
- *     responses:
- *       "200":
- *         description: "Successful operation"
- *       "404":
- *         description: "User not found"
- */
-router.get("/:userId", async (req, res) => {
-    const { userId } = req.params;
-    const user = await getUser(userId);
-    if (!user) {
-        return res.status(404).send("User not found");
-    }
-    res.status(200).send(user);
-});
 
 async function updateUser(user: User): Promise<User | null> {
     const params = {
@@ -979,169 +1120,33 @@ async function createUser(email: string, firstName: string, lastName: string, pa
 
 /**
  * @swagger
- * definitions:
- *   User:
- *     type: "object"
- *     required:
- *       - "email"
- *       - "userId"
- *       - "firstName"
- *       - "lastName"
- *       - "hashedPassword"
- *       - "primaryLocation"
- *       - "blockedUsers"
- *       - "interests"
- *       - "friends"
- *       - "requests"
- *       - "groups"
- *       - "eventsOwned"
- *       - "eventsGoingTo"
- *       - "eventsNotGoingTo"
- *       - "messages"
- *       - "profilePictureUrl"
- *     properties:
- *       email:
+ * /{userId}:
+ *   get:
+ *     summary: "Get user by ID"
+ *     description: "Returns a single user based on their ID"
+ *     operationId: "getUser"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *       - in: "path"
+ *         name: "userId"
+ *         description: "ID of the user to return"
+ *         required: true
  *         type: "string"
- *       userId:
- *         type: "string"
- *       firstName:
- *         type: "string"
- *       lastName:
- *         type: "string"
- *       hashedPassword:
- *         type: "string"
- *       primaryLocation:
- *         type: "string"
- *       blockedUsers:
- *         type: "array"
- *         items:
- *           type: "string"
- *       interests:
- *         type: "array"
- *         items:
- *           type: "string"
- *       friends:
- *         type: "array"
- *         items:
- *           type: "string"
- *       requests:
- *         type: "object"
- *         properties:
- *           outgoing:
- *             type: "array"
- *             items:
- *               type: "string"
- *           incoming:
- *             type: "array"
- *             items:
- *               type: "string"
- *       groups:
- *         type: "array"
- *         items:
- *           type: "string"
- *       eventsOwned:
- *         type: "array"
- *         items:
- *           type: "string"
- *       eventsGoingTo:
- *         type: "array"
- *         items:
- *           type: "string"
- *       eventsNotGoingTo:
- *         type: "array"
- *         items:
- *           type: "string"
- *       messages:
- *         type: "array"
- *         items:
- *           type: "string"
- *       profilePictureUrl:
- *         type: "string"
- *
- *   Event:
- *     type: "object"
- *     required:
- *       - "eventId"
- *       - "title"
- *       - "description"
- *       - "time"
- *       - "location"
- *       - "postingUserId"
- *       - "blockedUsers"
- *       - "photo"
- *       - "whoIsGoing"
- *     properties:
- *       eventId:
- *         type: "string"
- *       title:
- *         type: "string"
- *       description:
- *         type: "string"
- *       time:
- *         type: "string"
- *       location:
- *         type: "string"
- *       postingUserId:
- *         type: "string"
- *       blockedUsers:
- *         type: "array"
- *         items:
- *           type: "string"
- *       photo:
- *         type: "string"
- *       whoIsGoing:
- *         type: "array"
- *         items:
- *           type: "string"
- *  *   Credentials:
- *     type: "object"
- *     required:
- *       - "email"
- *       - "password"
- *     properties:
- *       email:
- *         type: "string"
- *       password:
- *         type: "string"
- *
- *   FriendRequest:
- *     type: "object"
- *     required:
- *       - "requesterId"
- *       - "requestId"
- *     properties:
- *       requesterId:
- *         type: "string"
- *       requestId:
- *         type: "string"
- *
- *   UserId:
- *     type: "object"
- *     required:
- *       - "userId"
- *     properties:
- *       userId:
- *         type: "string"
- *
- *   BlockUnblockRequest:
- *     type: "object"
- *     required:
- *       - "blockerId"
- *       - "blockedUserId"
- *     properties:
- *       blockerId:
- *         type: "string"
- *       blockedUserId:
- *         type: "string"
- *
- *   ProfilePicKey:
- *     type: "object"
- *     required:
- *       - "Key"
- *     properties:
- *       Key:
- *         type: "string"
+ *     responses:
+ *       "200":
+ *         description: "Successful operation"
+ *       "404":
+ *         description: "User not found"
  */
+router.get("/:userId", async (req, res) => {
+    const { userId } = req.params;
+    const user = await getUser(userId);
+    if (!user) {
+        return res.status(404).send("User not found");
+    }
+    res.status(200).send(user);
+});
 
 
 export default router;
