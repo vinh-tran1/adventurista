@@ -16,7 +16,7 @@ const Post = (props) => {
     const nikhil = {
         name: "NIKHIL",
         age: "20",
-        profile_pic: "https://s3-alpha-sig.figma.com/img/edb3/46d3/2adf1807f740c8910597c89296e9c084?Expires=1698624000&Signature=c1t8WQjA4vUry14J6SQERaQuiQnECHKHCbDC6FXWZaK0Zc6M5B54y83suE~XT2GEnr3WMk2yxlQhiX24bh41Qejks5N5jlDrdeGpiSILqV5a6CB-hsQEP0SB~t3OHyrkfzG~4O3GDGYJUqGsHwe9IQqBarIZ2aTDvwRlvk0WR0GfBvzFkbtVL6zRdQ70Y0206kf0tJonChhZYeu66GXCLwJ4pBsmmloqgNdbX2b98IBrWySep2uWzIoEIFMwJhVxPD5vUY0rNX0LENoynLoO-xPmp1kPCONyjbCfGbJy3bWS3wHlZxY9~4BXdQUNve0qF6jDYmWX46IKofSSZD3iyQ__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4",
+        profile_pic: "https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_400_400/0/1643655075770?e=1704326400&v=beta&t=1K3-4rPZswziH2cbOMNbOB0-6Oq6g2xeCkFs1zPpX_A",
         interests: ["squash", "catan", "south bay"],
         from: "toronto, canada"
     }
