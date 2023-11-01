@@ -33,3 +33,17 @@ export interface Event {
     whoIsGoing: string[];
 };
 
+export interface GroupChat {
+    groupId: string;
+    name: string;
+    event_id: string;
+    user_ids: string[];
+}
+
+export interface Message {
+    messageId: string;
+    groupId: string;
+    userId: string;
+    content: string;
+    timestamp: string;
+}

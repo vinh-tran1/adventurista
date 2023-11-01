@@ -11,7 +11,7 @@ const swaggerDefinition: Options = {
     basePath: '/v1',
   },
   // go to the users.ts and events.ts files to see the paths
-  apis: ['./users.ts', './events.ts', "*.ts", "./*.ts"],
+  apis: ['./users.ts', './events.ts', "*.ts", "./*.ts, ./messages.ts, ./swaggerDefinitions.ts, ./index.ts"],
 };
 
 export default swaggerDefinition;
