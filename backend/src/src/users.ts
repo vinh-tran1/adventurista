@@ -10,6 +10,7 @@ import {
   USERS_PRIMARY_KEY,
   PROF_PIC_BUCKET,
   PRESIGNED_URL_EXPIRATION_SECONDS,
+  USERS_SECONDARY_KEY,
 } from "./constants";
 
 // db set-up
@@ -227,14 +228,17 @@ async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
-    Key: {
-      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
+    IndexName: USERS_SECONDARY_KEY,
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
     },
   };
 
   try {
-    const result = await db.get(params).promise();
-    const user = result.Item as User;
+    const result = await db.query(params).promise();
+    if (result.Count != 1) return false;
+    const user = result.Items[0] as User;
 
     if (!user) return false;
 
@@ -243,12 +247,13 @@ async function signIn(email: string, password: string): Promise<User | false> {
       password,
       user.hashedPassword
     );
+
     if (!isPasswordValid) return false;
 
     return user;
   } catch (err) {
     console.error("Error during sign-in:", err);
-    return false;
+    return err;
   }
 }
 
@@ -1066,14 +1071,16 @@ async function comparePassword(
 async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
-    Key: {
-      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
+    IndexName: USERS_SECONDARY_KEY,
+    KeyConditionExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
     },
   };
 
   try {
-    const result = await db.get(params).promise();
-    return !!result.Item; // Returns true if an item exists, false otherwise
+    const result = await db.query(params).promise();
+    return result.Count > 0;
   } catch (err) {
     console.error("Error checking email:", err);
     return false; // Default to false on error

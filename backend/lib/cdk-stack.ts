@@ -73,6 +73,14 @@ export class CdkStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
     });
 
+    usersTable.addGlobalSecondaryIndex({
+      indexName: "emailId",
+      partitionKey: {
+        name: "email",
+        type: AttributeType.STRING,
+      },
+    });
+
     const eventsTable = new Table(this, "events", {
       partitionKey: {
         name: "eventId",
@@ -116,6 +124,7 @@ export class CdkStack extends Stack {
           image: ContainerImage.fromAsset(path.join(__dirname, "../src/")),
           environment: {
             USERS_PRIMARY_KEY: "userId",
+			USERS_SECONDARY_KEY: "emailId",
             USERS_TABLE_NAME: usersTable.tableName,
             EVENTS_PRIMARY_KEY: "eventId",
             EVENTS_TABLE_NAME: eventsTable.tableName,
@@ -174,8 +183,9 @@ export class CdkStack extends Stack {
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
+		  "dynamodb:Query",
         ],
-        resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`],
+        resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`, `${usersTable.tableArn}/index/*`],
         conditions: {
           ArnEquals: {
             "aws:PrincipalArn": `${fargate.taskDefinition.taskRole.roleArn}`,
