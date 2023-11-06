@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import axios from "axios";
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -12,14 +13,27 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    dispatch(setUserInfo({
-      id: '',
-      name: '',
-      email: email,
-      username: '',
-      phone_number: '',
-    }));
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("https://qcdg4r1mc9.execute-api.us-east-1.amazonaws.com/auth/sign-in", {
+        email: email,
+        password: password
+      });
+      if (response.status === 200) {
+        dispatch(setUserInfo({
+          id: '',
+          first_name: '',
+          last_name: '',
+          email: email,
+        }));
+        console.log("Login successful!");
+      } else {
+        console.log("Error logging in with this email");
+      }
+    } catch (err) {
+      console.log(err);
+      console.log("An error occurred while loggin in with this account. Please try again.");
+    }
   }
 
   return (
