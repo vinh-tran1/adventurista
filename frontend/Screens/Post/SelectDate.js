@@ -1,24 +1,19 @@
-import React, {useState, useEffect, useRef} from 'react';
 import SelectDropdown from 'react-native-select-dropdown'
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const SelectDate = ({ title, data }) => {
-    const [selectedItem, setSelectedItem] = useState(title);
-
-    const handleSelection = (selectedItem) => {
-        setSelectedItem(selectedItem);
-        console.log(selectedItem);
+const SelectDate = ({ title, data, func }) => {
+  
+  const handleSelection = (selectedItem) => {
+        func(selectedItem);
       };
       
     return (
         <View style={styles.dropdownsRow}>
              <SelectDropdown
                 data={data}
-                // defaultValueByIndex={1}
-                // defaultValue={'Egypt'}
                 onSelect={handleSelection}
-                defaultButtonText={selectedItem}
+                defaultButtonText={title}
                 buttonTextAfterSelection={(selectedItem) => {
                     return selectedItem;
                 }}

@@ -11,7 +11,7 @@ const FeedFixedTop = () => {
       </View>
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.location}>
-          <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-pin" size={20} />
+          <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
           <Text style={{ marginTop: 2, fontSize: 13 }}>New Haven, CT</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{ marginTop: 7.5 }}>
