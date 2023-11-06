@@ -13,15 +13,15 @@ import swaggerOptions from "./swaggerDefinitions";
 const app = express();
 const port = 80;
 
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
 app.use("/messages", messageRoutes);
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 app.get("/posts", (req, res) => {
   res.status(200).send("posts API");
@@ -37,6 +37,10 @@ app.get("/posts", (req, res) => {
  *       200:
  *         description: Greeting message
  */
+
+app.get("/health", (req, res) => {
+  res.status(200).send("Healthy!");
+});
 app.get("/", (req, res) => {
   res.status(200).send("Healthy!");
 });

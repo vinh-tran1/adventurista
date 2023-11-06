@@ -14,7 +14,12 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import path = require("path");
 import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement, Effect, AnyPrincipal } from "aws-cdk-lib/aws-iam";
-import { Bucket, ObjectOwnership, BucketAccessControl } from "aws-cdk-lib/aws-s3";
+import {
+  Bucket,
+  ObjectOwnership,
+  BucketAccessControl,
+} from "aws-cdk-lib/aws-s3";
+import { Cors } from "aws-cdk-lib/aws-apigateway";
 
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
