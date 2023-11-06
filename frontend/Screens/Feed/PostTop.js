@@ -11,7 +11,7 @@ const PostTop = (props) => {
             <View style={styles.postHeader}>
                 <Text style={{fontSize: 28, fontWeight: "bold"}}>{title}</Text>
                 <View style={styles.locationContainer}>
-                    <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-pin" size={15} />
+                    <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={15} />
                     <Text style={{ fontWeight: "bold", fontSize: 12 }}>{location}</Text>
                 </View>
             </View>
