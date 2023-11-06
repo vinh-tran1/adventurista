@@ -12,7 +12,7 @@ const UserTop = (props) => {
             <View style={styles.bottomContent}>
                 <View style={{ flexDirection: "row" }}>
                     <View>
-                        <TouchableOpacity style={{ backgroundColor: "#D186FF", borderRadius: 20, width: 30, height: 30 }}>
+                        <TouchableOpacity style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30 }}>
                             <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15} />
                         </TouchableOpacity>
                         <Text style={{ color: "white", fontWeight: "bold", fontSize: 12, marginTop: 5 }}>10 mutual friends</Text>

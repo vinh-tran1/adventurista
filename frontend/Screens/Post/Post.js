@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, Image, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import UploadImage from "./UploadImage";
-import BubbleText from "../../Shared/BubbleText";
 import SelectDate from "./SelectDate";
-
-
-
+import Tags from "./Tags";
 
 const Post = ({ navigation }) => {
   // still need camera roll integration
-  // also need navigation
+  const [image, setImage] = useState("");
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
+  const [month, setMonth] = useState("");
+  const [date, setDate] = useState("");
+  const [day, setDay] = useState("");
+  const [time, setTime] = useState("");
   const [selectTags, setSelectTags] = useState([]);
   const [moreTagsClicked, setMoreTagsClicked] = useState(1);
   
@@ -30,7 +31,7 @@ const Post = ({ navigation }) => {
     'story', 'nature', 'write', 'fashion',
   ];
   const tags3 = [
-    'beach', 'dance', 'pizza', 'guitar',
+    'poetry', 'dance', 'pizza', 'guitar',
     'coding', 'coffee', 'travel', 'sports',
     'music', 'books', 'games', 'yoga',
     'paint', 'films', 'hiking', 'chess',
@@ -65,6 +66,29 @@ const Post = ({ navigation }) => {
     "23:00", "23:30"
   ];
   
+  const handleImage = (img) => {
+    setImage(img);
+  };
+  const handleMonth = (val) => {
+    setMonth(val);
+    console.log(val);
+  };
+  const handleDate = (val) => {
+    setDate(val);
+    console.log(val);
+  };
+  const handleDay = (val) => {
+    setDay(val);
+    console.log(val);
+  };
+  const handleTime = (val) => {
+    setTime(val);
+    console.log(val);
+  };
+  const handleSelectTags = (tag) => {
+    return selectTags.includes(tag);
+  };
+
   const handleTagPress = (tag) => {
     if (selectTags.includes(tag)) {
       setSelectTags((prevTags) => prevTags.filter((selectedTag) => selectedTag !== tag));
@@ -74,147 +98,187 @@ const Post = ({ navigation }) => {
     console.log(selectTags);
   };
 
+  const handleClear = () => {
+    setImage("");
+    setEventName("");
+    setLocation("");
+    setCaption("");
+    setCaption("");
+    setMonth("");
+    setDate("");
+    setDay("");
+    setTime("");
+    setSelectTags("");
+    setMoreTagsClicked(1);
+  };
+
+  const handlePost = () => {
+    const data = {
+      name: eventName,
+      location: location, 
+      caption: caption,
+      date: day + ", " + date + month,
+      time: time,
+      tags: selectTags,
+      img: image
+    };
+
+    // in the then part of the post request
+    navigation.navigate('Feed Main')
+
+  };
+
+  /*
+  const requestOptions = { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(json) 
+  }; 
+
+  const postEvent = async (data) => {
+    try {
+    const apiUrl = 'https://example.com/api/posts'; // Replace with your API endpoint
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any additional headers if needed
+      },
+      body: JSON.stringify(postData), // Convert JavaScript object to JSON string
+    });
+
+    if (response.ok) {
+      // Post request was successful
+      const responseData = await response.json(); // Parse the JSON response
+      console.log('Post uploaded successfully:', responseData);
+      // Handle the response data as needed
+    } 
+    else {
+      // Post request failed
+      console.error('Error uploading post:', response.status);
+      // Handle error response status
+    }
+    } catch (error) {
+    // An error occurred during the request
+    console.error('Error uploading post:', error);
+    // Handle the error
+  }
+  */
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-      {/* header */}
-      <View style={styles.header}>
-          <Text style={styles.headerText}>New Event</Text>
-        </View>
+        {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.innerContainer}> */}
 
-        {/* nav buttons on top bar */}
-        <View style={styles.topBar}>
-          <TouchableOpacity >
-            <Text style={styles.navButton}>Exit</Text>
-          </TouchableOpacity>
-
-          <Text style={{fontSize:20, fontWeight: "600"}}>Event Details</Text>
-
-          <TouchableOpacity style={styles.navButton}>
-            <Text style={styles.navButton}>Post</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* image */}
-        <UploadImage />
-
-        {/* text inputs */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>What?</Text>
-          <TextInput 
-            value={eventName} 
-            placeholder="Event Name" 
-            onChangeText={(text) => setEventName(text)} 
-            style={styles.input} 
-          />
-        </View>
-
-        {/* Location */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Where?</Text>
-          <TextInput 
-            value={location} 
-            placeholder="Location" 
-            onChangeText={(text) => setLocation(text)} 
-            style={styles.input} 
-          />
-        </View>
-
-        {/* Date */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>When?</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <SelectDate title={"Month"} data={months}/>
-            <SelectDate title={"Date"} data={dates}/>
-            <SelectDate title={"Day"} data={days}/>
-            <SelectDate title={"Time"} data={times}/>
-          </View>
-        </View>
-
-        {/* Caption */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Caption</Text>
-          <TextInput 
-            value={caption} 
-            placeholder="Describe the event!" 
-            multiline={true}
-            numberOfLines={5}
-            onChangeText={(text) => setCaption(text)} 
-            style={styles.largeInput} 
-          />
-        </View>
-
-        {/* Tags */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Tags (max 3)</Text>
-          <View style={styles.tagContainer}>
-            {tags1.map((tag, index) => {
-              const isSelected = selectTags.includes(tag); // Check if the tag is selected
-              return (
-                <TouchableOpacity
-                  key={index.toString()}
-                  onPress={() => handleTagPress(tag)}
-                  style={[styles.tag, isSelected && styles.selectedTag]}
-                >
-                  <BubbleText title={tag}/>
+            {/* header */}
+              <View style={styles.header}>
+                <Text style={styles.headerText}>New Event</Text>
+                <TouchableOpacity style={{marginTop: 6}}>
+                  <FontAwesomeIcon icon="fa-gear" size={25} />
                 </TouchableOpacity>
-              );
-            })}
-            {moreTagsClicked >= 2 && 
-              tags2.map((tag, index) => {
-              const isSelected = selectTags.includes(tag); // Check if the tag is selected
-              return (
-                <TouchableOpacity
-                  key={index.toString()}
-                  onPress={() => handleTagPress(tag)}
-                  style={[styles.tag, isSelected && styles.selectedTag]}
-                >
-                  <BubbleText title={tag}/>
+              </View>
+
+              {/* nav buttons on top bar */}
+              <View style={styles.topBar}>
+                <TouchableOpacity onPress={handleClear}>
+                  <Text style={styles.navButton}>Clear</Text>
                 </TouchableOpacity>
-              );
-            })}
-            {moreTagsClicked >= 3 && 
-              tags3.map((tag, index) => {
-              const isSelected = selectTags.includes(tag); // Check if the tag is selected
-              return (
-                <TouchableOpacity
-                  key={index.toString()}
-                  onPress={() => handleTagPress(tag)}
-                  style={[styles.tag, isSelected && styles.selectedTag]}
-                >
-                  <BubbleText title={tag}/>
+
+                <Text style={{fontSize:20, fontWeight: "600"}}>Event Details</Text>
+
+                <TouchableOpacity onPress={handlePost} style={styles.navButton}>
+                  <Text style={styles.navButton}>Post</Text>
                 </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-          
-        {/* Load More Tags */}
-        {moreTagsClicked < 3 ?
-        <View style={styles.moreTags}>
-            <TouchableOpacity 
-              onPress = {() => setMoreTagsClicked(moreTagsClicked + 1)}
-              style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+              </View>
 
-                <Text style={{fontWeight: '500', color: 'white'}}>more</Text>
+              {/* image */}
+              <UploadImage img={handleImage}/>
 
-            </TouchableOpacity>
-        </View> :
-        <View style={styles.moreTags}>
-            <TouchableOpacity 
-              onPress = {() => setMoreTagsClicked(1)}
-              style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+              {/* text inputs */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>What?</Text>
+                <TextInput 
+                  value={eventName} 
+                  placeholder="Event Name" 
+                  onChangeText={(text) => setEventName(text)} 
+                  style={styles.input} 
+                />
+              </View>
 
-                <Text style={{fontWeight: '500', color: 'white'}}>less</Text>
+              {/* Location */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Where?</Text>
+                <TextInput 
+                  value={location} 
+                  placeholder="Location" 
+                  onChangeText={(text) => setLocation(text)} 
+                  style={styles.input} 
+                />
+              </View>
 
-            </TouchableOpacity>
-        </View>
-        }
+              {/* Date */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>When?</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <SelectDate title={"Month"} data={months} func={handleMonth}/>
+                  <SelectDate title={"Date"} data={dates} func={handleDate}/>
+                  <SelectDate title={"Day"} data={days} func={handleDay}/>
+                  <SelectDate title={"Time"} data={times} func={handleTime}/>
+                </View>
+              </View>
 
+              {/* Caption */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Caption</Text>
+                <TextInput 
+                  value={caption} 
+                  placeholder="Describe the event!" 
+                  multiline={true}
+                  maxLength={100}
+                  numberOfLines={5}
+                  onChangeText={(text) => setCaption(text)} 
+                  style={styles.largeInput} 
+                />
+              </View>
+
+              {/* Tags */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Tags (max 3)</Text>
+                <View style={styles.tagContainer}>
+                  <Tags tags={tags1} select={handleSelectTags} press={handleTagPress}/>
+                  {moreTagsClicked >= 2 && <Tags tags={tags2} select={handleSelectTags} press={handleTagPress}/>}
+                  {moreTagsClicked >= 3 && <Tags tags={tags3} select={handleSelectTags} press={handleTagPress}/>}
+                </View>
+              </View>
+              
+              {/* Load More Tags */}
+              {moreTagsClicked < 3 ?
+              <View style={styles.moreTags}>
+                  <TouchableOpacity 
+                    onPress = {() => setMoreTagsClicked(moreTagsClicked + 1)}
+                    style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+                      <Text style={{fontWeight: '500', color: 'white'}}>more</Text>
+                  </TouchableOpacity>
+              </View> :
+              <View style={styles.moreTags}>
+                  <TouchableOpacity 
+                    onPress = {() => setMoreTagsClicked(1)}
+                    style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
+                      <Text style={{fontWeight: '500', color: 'white'}}>less</Text>
+                  </TouchableOpacity>
+              </View>
+              }
+            {/* </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView> */}
       </ScrollView> 
     </SafeAreaView>
   );
-}
+};
+
 const inputStyle = {
   paddingVertical: 10,
   paddingLeft: 10,
@@ -231,6 +295,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff'
   },
+  // innerContainer: {
+  //   flex: 1,
+  //   justifyContent: 'space-around'
+  // },
   header: {
     marginVertical: 15,
     paddingHorizontal: 20,
