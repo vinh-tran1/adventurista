@@ -8,14 +8,13 @@ const swaggerDefinition: Options = {
       version: "1.0.0",
       description: "This is the documentation for our app",
     },
-    basePath: "/v1",
+    servers: [{ url: '/v1' }],
   },
-  // go to the users.ts and events.ts files to see the paths
   apis: [
     "./users.ts",
     "./events.ts",
-    "*.ts",
-    "./*.ts, ./messages.ts, ./swaggerDefinitions.ts, ./index.ts",
+    "./messages.ts",
+    // Add other .ts files as needed
   ],
 };
 

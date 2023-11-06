@@ -224,6 +224,68 @@ router.post("/auth/create-user", async (req, res) => {
   res.status(201).send(result);
 });
 
+/**
+ * @swagger
+ * /auth/update-user-age-interests:
+ *   post:
+ *     summary: "Update a user's age and interests"
+ *     description: "Updates the age and interests of an existing user"
+ *     operationId: "updateUserAgeInterests"
+ *     consumes:
+ *       - "application/json"
+ *     produces:
+ *       - "application/json"
+ *     parameters:
+ *       - in: "body"
+ *         name: "body"
+ *         description: "Object containing the user's new age and interests"
+ *         required: true
+ *         schema:
+ *           type: "object"
+ *           required:
+ *             - "userId"
+ *             - "age"
+ *             - "interests"
+ *           properties:
+ *             userId:
+ *               type: "string"
+ *             age:
+ *               type: "integer"
+ *               format: "int32"
+ *             interests:
+ *               type: "array"
+ *               items:
+ *                 type: "string"
+ *     responses:
+ *       "200":
+ *         description: "Age and interests updated"
+ *       "400":
+ *         description: "Invalid input"
+ *       "404":
+ *         description: "User not found"
+ */
+router.post("/update-user-age-interests", async (req, res) => {
+  const { userId, age, interests } = req.body;
+
+  // First, get the user to update
+  const userToUpdate = await getUser(userId);
+  if (!userToUpdate) {
+    return res.status(404).send("User not found");
+  }
+
+  // Update the user's age and interests
+  userToUpdate.age = age; // Assuming 'age' field is added to the User interface
+  userToUpdate.interests = interests;
+
+  // Save the updated user information
+  const updateResult = await updateUser(userToUpdate);
+  if (!updateResult) {
+    return res.status(400).send("Error updating user's age and interests");
+  }
+
+  res.status(200).send(updateResult);
+});
+
 async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
