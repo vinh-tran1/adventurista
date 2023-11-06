@@ -14,20 +14,28 @@ import { HttpApi } from "@aws-cdk/aws-apigatewayv2-alpha";
 import path = require("path");
 import { Table, AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { PolicyStatement, Effect, AnyPrincipal } from "aws-cdk-lib/aws-iam";
-import { Bucket } from "aws-cdk-lib/aws-s3";
+import { Bucket, ObjectOwnership, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 
 export class CdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // S3
-    const PROF_PIC_BUCKET_NAME = "user-profile-picture-bucket";
-    const EVENT_PIC_BUCKET_NAME = "event-picture-bucket";
+    const PROF_PIC_BUCKET_NAME = "adventurista-user-profile-picture-bucket";
+    const EVENT_PIC_BUCKET_NAME = "adventurista-event-picture-bucket";
 
     const profPicBucket = new Bucket(this, "profPicBucket", {
       bucketName: PROF_PIC_BUCKET_NAME,
       enforceSSL: true,
       publicReadAccess: true, // false
+      objectOwnership: ObjectOwnership.OBJECT_WRITER,
+      blockPublicAccess: {
+        blockPublicAcls: false,
+        ignorePublicAcls: false,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      },
+      // accessControl: BucketAccessControl.PUBLIC_READ,
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
       versioned: false,
       autoDeleteObjects: true,
@@ -37,6 +45,14 @@ export class CdkStack extends Stack {
       bucketName: EVENT_PIC_BUCKET_NAME,
       enforceSSL: true,
       publicReadAccess: true,
+      objectOwnership: ObjectOwnership.OBJECT_WRITER,
+      blockPublicAccess: {
+        blockPublicAcls: false,
+        ignorePublicAcls: false,
+        blockPublicPolicy: false,
+        restrictPublicBuckets: false,
+      },
+      // accessControl: BucketAccessControl.PUBLIC_READ,
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
       versioned: false,
       autoDeleteObjects: true,
