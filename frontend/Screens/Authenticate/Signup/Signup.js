@@ -11,14 +11,15 @@ const Signup = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      const response = await axios.post("https://qcdg4r1mc9.execute-api.us-east-1.amazonaws.com/auth/create-user", {
+      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/create-user", {
         email: email,
         firstName: first,
         lastName: last,
         password: password
       });
       if (response.status === 201) {
-        navigation.navigate("Step 2", { email: email, firstName: first, lastName: last });
+        const user = response.data;
+        navigation.navigate("Step 2", { user: user });
         console.log("Account successfully created!");
       } else {
         console.log("Error creating an account with this email");

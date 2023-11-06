@@ -17,10 +17,22 @@ export const clearUser = () => {
 
 // REDUCER
 const initialState = {
-    id: '',
-    first_name: '',
-    last_name: '',
+    userId: '',
+    age: '',
+    blockedUsers: [],
     email: '',
+    eventsGoingTo: [],
+    eventsNotGoingTo: [],
+    eventsOwend: [],
+    firstName: '',
+    lastName: '',
+    friends: [],
+    groups: [],
+    interests: [],
+    messages: [],
+    primaryLocation: '',
+    profilePictureUrl: '',
+    requests: []
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -28,10 +40,23 @@ export const userReducer = (state = initialState, action) => {
         case SET_USER_INFO:
             return {
                 ...state,
-                id: action.payload._id,
-                first_name: action.payload.first_name,
-                last_name: action.payload.last_name,
+                userId: action.payload.userId,
+                age: action.payload.age,
+                blockedUsers: action.payload.blockedUsers,
                 email: action.payload.email,
+                eventsGoingTo: action.payload.eventsGoingTo,
+                eventsNotGoingTo: action.payload.eventsNotGoingTo,
+                eventsOwend: action.payload.eventsOwend,
+                firstName: action.payload.firstName,
+                lastName: action.payload.lastName,
+                friends: action.payload.friends,
+                groups: action.payload.groups,
+                interests: action.payload.interests,
+                messages: action.payload.messages,
+                primaryLocation: action.payload.primaryLocation,
+                profilePictureUrl: action.payload.profilePictureUrl,
+                requests: action.payload.requests
+
             }
         case CLEAR_USER:
             return state = initialState;
@@ -41,6 +66,5 @@ export const userReducer = (state = initialState, action) => {
 
 
 // SELECTOR
-export const selectIsLoggedIn = (state) => state.userInfo.email.length > 0;
+export const selectIsLoggedIn = (state) => state.userInfo.userId.length > 0;
 export const selectUserInfo = (state) => state.userInfo;
-export const selectUserId = (state) => state.userInfo.id;
