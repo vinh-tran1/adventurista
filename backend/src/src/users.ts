@@ -378,12 +378,14 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests, profilePictureUrl = :profilePictureUrl, age = :age",
     ExpressionAttributeValues: {
       ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
       ":interests": user.interests,
+      ":profilePictureUrl": user.profilePictureUrl,
+      ":age": user.age,
     },
   };
 
@@ -1071,14 +1073,39 @@ const getProfilePicUploadURL = async function () {
  *       summary: "Get presigned URL for profile picture upload"
  *       description: "Returns a presigned URL for uploading profile picture to S3"
  *       operationId: "getProfilePicUploadURL"
+ *       consumes:
+ *         - "application/json"
  *       produces:
  *         - "application/json"
+ *       parameters:
+ *         - in: "path"
+ *           name: "userId"
+ *           description: "ID of the user to return"
+ *           required: true
+ *           type: "string"
  *       responses:
  *         "200":
  *           description: "Presigned URL generated"
+ *         "400":
+ *           description: "Presigned URL cannot be saved to user"
+ *         "404":
+ *           description: "Provided userId does not match with any user"
  */
 router.get("/profile-pic-presigned", async (req, res) => {
+  const { userId } = req.body;
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
   const url = await getProfilePicUploadURL();
+
+  user.profilePictureUrl = JSON.parse(url).Key;
+  const updateResult = await updateUser(user);
+  if (!updateResult) {
+    return res.status(400).send("Error updating user's s3 URL");
+  }
+
   return res.status(200).send(url);
 });
 /**
