@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Button } from "react-native";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import BubbleText from '../../../Shared/BubbleText';
 
 // Redux
 import { useDispatch } from "react-redux";
@@ -10,23 +12,38 @@ const Step2 = ({ navigation, route }) => {
 
   const dispatch = useDispatch();
 
-  const [interests, setInterests] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [interests, setInterests] = useState([]);
+  const [tempInterest, setTempInterest] = useState("");
+  const [age, setAge] = useState("");
 
-  const { first_name, last_name, email } = route.params;
+  const { user } = route.params;
 
   const handleCompleteSignup = async () => {
     try {
-      const response = await axios.post("https://qcdg4r1mc9.execute-api.us-east-1.amazonaws.com/auth/create-user", {
-        interests: interests,
+      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/update-user-age-interests", {
+        userId: user.userId,
         age: age,
+        interests: interests
       });
-      if (response.status === 201) {
+      if (response.status === 200) {
+        const updatedUser = response.data;
         dispatch(setUserInfo({
-          id: '',
-          first_name: first_name,
-          last_name: last_name,
-          email: email,
+            userId: updatedUser.userId,
+            age: updatedUser.age,
+            blockedUsers: updatedUser.blockedUsers,
+            email: updatedUser.email,
+            eventsGoingTo: updatedUser.eventsGoingTo,
+            eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+            eventsOwend: updatedUser.eventsOwend,
+            firstName: updatedUser.firstName,
+            lastName: updatedUser.lastName,
+            friends: updatedUser.friends,
+            groups: updatedUser.groups,
+            interests: updatedUser.interests,
+            messages: updatedUser.messages,
+            primaryLocation: updatedUser.primaryLocation,
+            profilePictureUrl: updatedUser.profilePictureUrl,
+            requests: updatedUser.requests
         }));
         console.log("Interests and age added!");
       } else {
@@ -38,12 +55,46 @@ const Step2 = ({ navigation, route }) => {
     }
   }
 
+  const handleAddInterest = () => {
+      let updated = interests;
+      updated.push(tempInterest);
+      setInterests(updated);
+      setTempInterest("");
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Date of Birth (mm/dd/yyyy)</Text>
+        <TextInput value={age} onChangeText={(text) => setAge(text)} style={styles.input} />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>What Are Your Interested In? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
+        {interests.length < 3 &&
+        <View style={{ flexDirection: "row" }}>
+            <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='nightlife, shopping, food, etc.' style={styles.input} />
+            <TouchableOpacity onPress={handleAddInterest}>
+                <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-check" size={25} />
+            </TouchableOpacity>
+        </View>
+        }
+        <View style={{ flexDirection: "row", paddingTop: 10 }}>
+            {interests.length > 0 && interests.map((tag, index) => {
+                return (
+                    <BubbleText key={index} title={tag} />
+                );
+            })}
+            {interests.length === 3 &&
+            <TouchableOpacity onPress={() => setInterests([])}>
+                <FontAwesomeIcon style={{ marginTop: 2.5, marginLeft: 15 }} icon="fa-xmark" size={25} />
+            </TouchableOpacity>
+            }
+        </View>
+      </View>
+      <View style={{ alignItems: "center", marginTop: interests.length === 3 ? 30 : 20 }}>
         <TouchableOpacity style={styles.signUpButton} onPress={handleCompleteSignup}>
           <Text style={styles.buttonText}>Complete Sign Up</Text>
         </TouchableOpacity>
@@ -61,10 +112,6 @@ const styles = StyleSheet.create({
     marginBottom: 17.5,
     alignItems: "center"
   },
-  // header: {
-  //   fontSize: 25,
-  //   fontWeight: "bold"
-  // },
   logo: {
     height: 75,
     width: 250,
@@ -83,11 +130,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.25,
     borderColor: "#717171",
     marginBottom: 5,
-    borderRadius: 10
-  },
-  buttonContainer: {
-    alignItems: "center",
-    marginTop: 20,
+    borderRadius: 10,
+    width: 250
   },
   signUpButton: {
     backgroundColor: "#CA75FF",

@@ -15,16 +15,29 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://qcdg4r1mc9.execute-api.us-east-1.amazonaws.com/auth/sign-in", {
+      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/sign-in", {
         email: email,
         password: password
       });
       if (response.status === 200) {
+        const user = response.data;
         dispatch(setUserInfo({
-          id: '',
-          first_name: '',
-          last_name: '',
-          email: email,
+          userId: user.userId,
+          age: user.age,
+          blockedUsers: user.blockedUsers,
+          email: user.email,
+          eventsGoingTo: user.eventsGoingTo,
+          eventsNotGoingTo: user.eventsNotGoingTo,
+          eventsOwend: user.eventsOwend,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          friends: user.friends,
+          groups: user.groups,
+          interests: user.interests,
+          messages: user.messages,
+          primaryLocation: user.primaryLocation,
+          profilePictureUrl: user.profilePictureUrl,
+          requests: user.requests
         }));
         console.log("Login successful!");
       } else {
