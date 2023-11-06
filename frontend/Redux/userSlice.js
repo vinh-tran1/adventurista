@@ -18,10 +18,9 @@ export const clearUser = () => {
 // REDUCER
 const initialState = {
     id: '',
-    name: '',
+    first_name: '',
+    last_name: '',
     email: '',
-    username: '',
-    phone_number: '',
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -30,10 +29,9 @@ export const userReducer = (state = initialState, action) => {
             return {
                 ...state,
                 id: action.payload._id,
-                name: action.payload.name,
+                first_name: action.payload.first_name,
+                last_name: action.payload.last_name,
                 email: action.payload.email,
-                username: action.payload.username,
-                phone_number: action.payload.phone_number,
             }
         case CLEAR_USER:
             return state = initialState;

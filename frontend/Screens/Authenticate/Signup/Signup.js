@@ -1,28 +1,32 @@
 import React, { useState } from "react";
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-
-// Redux
-import { useDispatch } from "react-redux";
-import { setUserInfo } from "../../../Redux/userSlice";
+import axios from "axios";
 
 const Signup = ({ navigation }) => {
 
-  const dispatch = useDispatch();
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
 
-  const handleSignup = () => {
-    dispatch(setUserInfo({
-      id: '',
-      name: name,
-      email: email,
-      username: username,
-      phone_number: phone,
-    }));
+  const handleSignup = async () => {
+    try {
+      const response = await axios.post("https://qcdg4r1mc9.execute-api.us-east-1.amazonaws.com/auth/create-user", {
+        email: email,
+        firstName: first,
+        lastName: last,
+        password: password
+      });
+      if (response.status === 201) {
+        navigation.navigate("Step 2", { email: email, firstName: first, lastName: last });
+        console.log("Account successfully created!");
+      } else {
+        console.log("Error creating an account with this email");
+      }
+    } catch (err) {
+      console.log(err);
+      console.log("An error occurred while creating the account. Please try again.");
+    }
   }
 
   return (
@@ -31,20 +35,20 @@ const Signup = ({ navigation }) => {
         <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput value={name} onChangeText={(text) => setName(text)} style={styles.input} />
+        <Text style={styles.label}>First Name</Text>
+        <TextInput value={first} onChangeText={(text) => setFirst(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Password</Text>
-        <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
+        <Text style={styles.label}>Last Name</Text>
+        <TextInput value={last} onChangeText={(text) => setLast(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>
         <TextInput value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Phone Number</Text>
-        <TextInput value={phone} onChangeText={(text) => setPhone(text)} style={styles.input} />
+        <Text style={styles.label}>Password</Text>
+        <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.signUpButton} onPress={handleSignup}>
