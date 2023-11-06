@@ -30,8 +30,8 @@ export interface Event {
   location: string;
   postingUserId: string;
   blockedUsers: string[];
-  photo: string;
   whoIsGoing: string[];
+  eventPictureUrl: string;
 }
 
 export interface GroupChat {

@@ -378,13 +378,11 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests, profilePictureUrl = :profilePictureUrl, age = :age",
+      "SET firstName = :firstName, lastName = :lastName, interests = :interests, age = :age",
     ExpressionAttributeValues: {
-      ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
       ":interests": user.interests,
-      ":profilePictureUrl": user.profilePictureUrl,
       ":age": user.age,
     },
   };
@@ -1066,6 +1064,28 @@ const getProfilePicUploadURL = async function () {
     Key,
   });
 };
+
+async function updateUserProfilePicture(user: User): Promise<User | null> {
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: user.userId,
+    },
+    UpdateExpression: "SET profilePictureUrl = :profilePictureUrl",
+    ExpressionAttributeValues: {
+      ":profilePictureUrl": user.profilePictureUrl,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return user;
+  } catch (err) {
+    console.error("Error updating user:", err);
+    return null;
+  }
+}
+
 /**
  * @swagger
  * /profile-pic-presigned:
@@ -1101,7 +1121,7 @@ router.get("/profile-pic-presigned", async (req, res) => {
   const url = await getProfilePicUploadURL();
 
   user.profilePictureUrl = JSON.parse(url).Key;
-  const updateResult = await updateUser(user);
+  const updateResult = await updateUserProfilePicture(user);
   if (!updateResult) {
     return res.status(400).send("Error updating user's s3 URL");
   }

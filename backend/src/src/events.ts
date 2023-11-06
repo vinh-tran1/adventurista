@@ -69,8 +69,8 @@ router.post("/event/create", async (req, res) => {
     location: req.body.location,
     postingUserId: req.body.postingUserId,
     blockedUsers: [],
-    photo: "",
     whoIsGoing: [req.body.postingUserId],
+    eventPictureUrl: "",
   };
 
   const user = await getUser(event.postingUserId);
@@ -439,8 +439,41 @@ const getEventPicUploadURL = async function () {
   });
 };
 
+async function updateEventPicture(event: Event): Promise<Event | null> {
+  const params = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: event.eventId,
+    },
+    UpdateExpression: "SET eventPictureUrl = :eventPictureUrl",
+    ExpressionAttributeValues: {
+      ":eventPictureUrl": event.eventPictureUrl,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return event;
+  } catch (err) {
+    console.error("Error updating event:", err);
+    return null;
+  }
+}
+
 router.get("/event-pic-presigned", async (req, res) => {
+  const { eventId } = req.body;
+  const event = await getEvent(eventId);
+  if (!event) {
+    return res.status(404).send("Event not found");
+  }
+
   const url = await getEventPicUploadURL();
+
+  event.eventPictureUrl = JSON.parse(url).Key;
+  const updateResult = await updateEventPicture(event);
+  if (!updateResult) {
+    return res.status(400).send("Error updating event's s3 URL");
+  }
   return res.status(200).send(url);
 });
 
