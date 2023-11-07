@@ -71,7 +71,7 @@ router.post("/event/create", async (req, res) => {
     postingUserId: req.body.postingUserId,
     blockedUsers: [],
     whoIsGoing: [req.body.postingUserId],
-    eventPictureUrl: "",
+    eventPictureUrl: req.body.eventPictureUrl,
     tags: req.body.tags,
   };
 

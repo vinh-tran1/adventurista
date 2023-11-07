@@ -135,9 +135,12 @@ const Post = ({ navigation }) => {
         title: eventName,
         description: caption,
         date: day + ", " + date + month,
+        date: day + ", " + date + month,
         time: '00/00/0000-00:00:00',
         location: location, 
         postingUserId: user.userId,
+        time: time,
+        tags: selectTags,
         time: time,
         tags: selectTags,
         eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
