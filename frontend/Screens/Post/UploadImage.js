@@ -2,6 +2,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, Image, TouchableOpaci
 
 const UploadImage = ( {img} ) => {
     // const uri = 'https://user-profile-picture-bucket.s3.amazonaws.com/2730e74f-5d85-4b02-9bf6-abb8f75e7a21.jpg';
+    const image = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
     return (
         <View style={styles.centerContainer}>
           <Text style={{marginBottom: 5}}>add image</Text>

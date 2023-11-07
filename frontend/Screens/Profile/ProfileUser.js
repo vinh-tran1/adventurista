@@ -38,7 +38,7 @@ const ProfileUser = () => {
       name: 'squash5'
     }
   ];
-  const interests = ['catan', 'drinks', 'paddle'];
+  // const interests = ['catan', 'drinks', 'paddle'];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,6 +82,7 @@ const ProfileUser = () => {
             <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>{user.primaryLocation}</Text>
           </View>
           <Text style={{marginTop: 5, fontSize: 16}}>The Earth’s rotation really makes my day</Text>
+
           <View style={styles.tagContainer}>
             {user.interests.map((tag, index) => {
                 return (
@@ -96,7 +97,7 @@ const ProfileUser = () => {
       <View style={styles.sectionContainer}>
         <View style={styles.sectionHeader}>
            <Text style={styles.sectionText}>My Groups</Text>
-           <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity>
+           {/* <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity> */}
         </View>
        
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -106,11 +107,13 @@ const ProfileUser = () => {
         </ScrollView>
       </View>
 
+      <View style={{borderBottomWidth: 0.25}}></View>
+
       {/* my events */}
       <View style={styles.sectionContainer}>
         <View style={styles.sectionHeader}>
            <Text style={styles.sectionText}>My Events</Text>
-           <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity>
+           {/* <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity> */}
         </View>
       </View>
 
@@ -144,11 +147,11 @@ const styles = StyleSheet.create({
     height: 108
   },
   bioBanner: {
-    height: 100,
+    height: 130,
     borderBottomWidth: 0.25,
     top: 90,
     paddingHorizontal: 20,
-    marginBottom: 90
+    marginBottom: 90,
   },
   profilePic: {
     height: 150,
@@ -161,9 +164,9 @@ const styles = StyleSheet.create({
     borderColor: "#EDDBFF"
   },
   bubble: {
-    height: 50,
-    width: 50,
-    borderRadius: 50/2, 
+    height: 45,
+    width: 45,
+    borderRadius: 45/2, 
     borderWidth: 1,
     borderColor: "gray",
     backgroundColor: "#fff",
@@ -171,8 +174,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // position: "absolute",
-    top: 78,
-    left: 6
+    top: 100,
+    left: 15
   },
   bubbleRow: {
     position: "absolute",
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     marginVertical: 10,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   sectionHeader: {
     flexDirection: 'row',

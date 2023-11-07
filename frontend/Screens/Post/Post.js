@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import UploadImage from "./UploadImage";
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
+// Redux
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
+  // Redux
+  const user = useSelector(selectUserInfo);
   // still need camera roll integration
   const [image, setImage] = useState("");
   const [eventName, setEventName] = useState("");
@@ -18,6 +24,8 @@ const Post = ({ navigation }) => {
   const [selectTags, setSelectTags] = useState([]);
   const [moreTagsClicked, setMoreTagsClicked] = useState(1);
   
+  //const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
+
   const tags1 = [
     'catan', 'paddle', 'drinks', 'social',
     'drive', 'school', 'student', 'energy',
@@ -112,20 +120,42 @@ const Post = ({ navigation }) => {
     setMoreTagsClicked(1);
   };
 
-  const handlePost = () => {
-    const data = {
-      name: eventName,
-      location: location, 
-      caption: caption,
-      date: day + ", " + date + month,
-      time: time,
-      tags: selectTags,
-      img: image
-    };
-
-    // in the then part of the post request
-    navigation.navigate('Feed Main')
-
+  const handlePost = async () => {
+    // const data = {
+    //   name: eventName,
+    //   location: location, 
+    //   caption: caption,
+    //   date: day + ", " + date + month,
+    //   time: time,
+    //   tags: selectTags,
+    //   img: img
+    // };
+    try {
+      const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
+        title: eventName,
+        description: caption,
+        
+        // date: day + ", " + date + month,
+        time: '00/00/0000-00:00:00',
+        location: location, 
+        postingUserId: user.userId,
+        //time: time,
+        //tags: selectTags,
+        blockedUsers: [],
+        whoIsGoing: [user.userId],
+        eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
+      });
+      if (response.status === 201) {
+      // in the then part of the post request
+      navigation.navigate('Feed Main');
+      console.log("sucessfully created event!");
+      } else {
+        console.log("error in creating event");
+      }  
+    } catch (err) {
+      console.log(err);
+      console.log("An error occured for creating events. Please try again");
+    }
   };
 
   /*
