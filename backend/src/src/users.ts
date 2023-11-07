@@ -264,8 +264,8 @@ router.post("/auth/create-user", async (req, res) => {
  *       "404":
  *         description: "User not found"
  */
-router.post("/update-user-age-interests", async (req, res) => {
-  const { userId, age, interests } = req.body;
+router.post("/update-user-age-interests-location", async (req, res) => {
+  const { userId, age, interests, primaryLocation } = req.body;
 
   // First, get the user to update
   const userToUpdate = await getUser(userId);
@@ -276,6 +276,7 @@ router.post("/update-user-age-interests", async (req, res) => {
   // Update the user's age and interests
   userToUpdate.age = age; // Assuming 'age' field is added to the User interface
   userToUpdate.interests = interests;
+  userToUpdate.primaryLocation = primaryLocation;
 
   // Save the updated user information
   const updateResult = await updateUser(userToUpdate);
@@ -378,8 +379,9 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET firstName = :firstName, lastName = :lastName, interests = :interests, age = :age",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests = :interests, age = :age",
     ExpressionAttributeValues: {
+      ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
       ":interests": user.interests,
