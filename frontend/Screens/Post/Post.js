@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import UploadImage from "./UploadImage";
+import * as ImagePicker from "expo-image-picker";
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
@@ -73,6 +73,18 @@ const Post = ({ navigation }) => {
     "22:00", "22:30",
     "23:00", "23:30"
   ];
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
   
   const handleImage = (img) => {
     setImage(img);
@@ -143,10 +155,12 @@ const Post = ({ navigation }) => {
         //tags: selectTags,
         blockedUsers: [],
         whoIsGoing: [user.userId],
-        eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
+        eventPictureUrl: image
+        // eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
       });
       if (response.status === 201) {
       // in the then part of the post request
+      handleClear();
       navigation.navigate('Feed Main');
       console.log("sucessfully created event!");
       } else {
@@ -225,7 +239,17 @@ const Post = ({ navigation }) => {
               </View>
 
               {/* image */}
-              <UploadImage img={handleImage}/>
+              <View style={styles.centerContainer}>
+                <View style={styles.image}>
+                  <TouchableOpacity onPress={pickImage}>
+                    {image.length === 0 ?
+                    <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                    :
+                    <ImageBackground style={styles.image} source={{uri: image}} />
+                    }
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               {/* text inputs */}
               <View style={styles.inputContainer}>
@@ -359,7 +383,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(243, 232, 255, 0.45)',
+    borderWidth: 0.25,
+    borderColor: "#D186FF",
     height: 110,
     width: 110
   },
