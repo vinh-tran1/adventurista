@@ -21,10 +21,11 @@ const Step2 = ({ navigation, route }) => {
 
   const handleCompleteSignup = async () => {
     try {
-      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/update-user-age-interests", {
+      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/update-user-age-interests-location", {
         userId: user.userId,
         age: age,
-        interests: interests
+        interests: interests,
+        primaryLocation: location
       });
       if (response.status === 200) {
         const updatedUser = response.data;
@@ -80,9 +81,9 @@ const Step2 = ({ navigation, route }) => {
         <Text style={styles.label}>What Are Your Interested In? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
         {interests.length < 3 &&
         <View style={{ flexDirection: "row" }}>
-            <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='nightlife, shopping, food, etc.' style={styles.input} />
+            <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.input} />
             <TouchableOpacity onPress={handleAddInterest}>
-                <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-check" size={25} />
+                <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-add" size={25} />
             </TouchableOpacity>
         </View>
         }

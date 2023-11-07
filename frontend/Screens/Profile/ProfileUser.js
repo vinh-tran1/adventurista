@@ -79,7 +79,7 @@ const ProfileUser = () => {
           <Text style={{fontSize: 20, fontWeight: '700'}}>{user.firstName} {user.lastName}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6}}>
             <FontAwesomeIcon icon="location-dot" color="#D186FF"/>  
-            <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>Toronto, Canada</Text>
+            <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>{user.primaryLocation}</Text>
           </View>
           <Text style={{marginTop: 5, fontSize: 16}}>The Earth’s rotation really makes my day</Text>
           <View style={styles.tagContainer}>
