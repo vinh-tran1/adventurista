@@ -1,9 +1,16 @@
-import { SET_USER_INFO, CLEAR_USER } from './constants';
+import { SET_USER_INFO, CLEAR_USER, SET_NEW_POST } from './constants';
 
 // ACTIONS
 export const setUserInfo = (payload) => {
     return {
         type: SET_USER_INFO,
+        payload
+    }
+}
+
+export const setNewPost = (payload) => {
+    return {
+        type: SET_NEW_POST,
         payload
     }
 }
@@ -17,6 +24,7 @@ export const clearUser = () => {
 
 // REDUCER
 const initialState = {
+    newPost: false,
     userId: '',
     age: '',
     blockedUsers: [],
@@ -60,6 +68,11 @@ export const userReducer = (state = initialState, action) => {
             }
         case CLEAR_USER:
             return state = initialState;
+        case SET_NEW_POST:
+            return {
+                ...state,
+                newPost: action.payload
+            }
     }
     return state;
 }
@@ -68,3 +81,4 @@ export const userReducer = (state = initialState, action) => {
 // SELECTOR
 export const selectIsLoggedIn = (state) => state.userInfo.userId.length > 0;
 export const selectUserInfo = (state) => state.userInfo;
+export const selectNewPost = (state) => state.newPost;

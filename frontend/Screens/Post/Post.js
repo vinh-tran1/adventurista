@@ -6,11 +6,12 @@ import * as ImagePicker from "expo-image-picker";
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
   // Redux
+  const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
   // still need camera roll integration
   const [image, setImage] = useState("");
@@ -146,20 +147,16 @@ const Post = ({ navigation }) => {
       const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
         title: eventName,
         description: caption,
-        
-        // date: day + ", " + date + month,
-        time: '00/00/0000-00:00:00',
+        date: day + ", " + month + " " + date,
+        time: time,
         location: location, 
         postingUserId: user.userId,
-        //time: time,
-        //tags: selectTags,
-        blockedUsers: [],
-        whoIsGoing: [user.userId],
-        eventPictureUrl: image
-        // eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
+        tags: selectTags,
+        eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
       // in the then part of the post request
+      dispatch(setNewPost(true));
       handleClear();
       navigation.navigate('Feed Main');
       console.log("sucessfully created event!");
@@ -171,44 +168,6 @@ const Post = ({ navigation }) => {
       console.log("An error occured for creating events. Please try again");
     }
   };
-
-  /*
-  const requestOptions = { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify(json) 
-  }; 
-
-  const postEvent = async (data) => {
-    try {
-    const apiUrl = 'https://example.com/api/posts'; // Replace with your API endpoint
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Include any additional headers if needed
-      },
-      body: JSON.stringify(postData), // Convert JavaScript object to JSON string
-    });
-
-    if (response.ok) {
-      // Post request was successful
-      const responseData = await response.json(); // Parse the JSON response
-      console.log('Post uploaded successfully:', responseData);
-      // Handle the response data as needed
-    } 
-    else {
-      // Post request failed
-      console.error('Error uploading post:', response.status);
-      // Handle error response status
-    }
-    } catch (error) {
-    // An error occurred during the request
-    console.error('Error uploading post:', error);
-    // Handle the error
-  }
-  */
 
   return (
     <SafeAreaView style={styles.container}>
@@ -438,3 +397,4 @@ const styles = StyleSheet.create({
 });
 
 export default Post;
+

@@ -3,25 +3,10 @@ import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity,
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Post from "./Post";
 import FeedFixedTop from "./FeedFixedTop";
-
-// fetch posts api
-// const [posts, setPosts] = useState(null);
-// useEffect(() => {
-//   // Function to make the GET request
-//   const getPosts = async () => {
-//     try {
-//       const response = await fetch(url);
-//       const jsonData = await response.json();
-
-//       // Update state with the fetched data
-//       setPosts(jsonData);
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   };
-
-//   getPosts();
-// }, []); 
+import axios from 'axios';
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost } from '../../Redux/userSlice';
 
 // sample posts data
 const DATA = [
@@ -50,21 +35,65 @@ const DATA = [
 ];
 
 const Feed = () => {
+  //const user = useSelector(selectUserInfo);
+  const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
+
+  // useEffect(() => {
+  //       axios
+  //         .get(
+  //           "https://drip-email-scraping-service-koh2hxfdwq-uw.a.run.app/closet",
+  //           {
+  //             params: { email: email },
+  //           }
+  //         )
+  //         .then((response) => {
+  //           setItems(response.data);
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //         });
+  //     }, []);
+
+  const newPost = useSelector(selectNewPost);
+  const dispatch = useDispatch();  
+  console.log(newPost)  
+
+  // fetch posts api
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    // console.log(user.userId)
+    axios.get(url) 
+      // {
+      //   params: { userId: user.userId },
+      // }
+    .then((response) => {
+      //console.log(response.data)
+      setPosts(response.data);
+      dispatch(setNewPost(false));
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  }, [newPost]);
+
   return (
     <SafeAreaView style={styles.container}>
       <FeedFixedTop />
       <FlatList
-        data={DATA}
+        data={posts}
         renderItem={({ item }) => 
           <Post 
-            title={item.title} 
-            location={item.location}
             date={item.date}
+            location={item.location}
+            // img={'https://adventurista-event-picture-bucket.s3.amazonaws.com/' + item.eventPictureUrl}
+            img={item.eventPictureUrl}
+            createdBy={item.postingUserId}
             time={item.time}
-            caption={item.caption} 
+            caption={item.description}
             tags={item.tags}
-            img={item.img}
-            createdBy={item.createdBy}
+            title={item.title} 
+            //createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}

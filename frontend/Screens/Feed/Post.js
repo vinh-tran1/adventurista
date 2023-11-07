@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import Swiper from 'react-native-swiper';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -6,10 +6,13 @@ import PostTop from "./PostTop";
 import PostBottom from "./PostBottom";
 import UserTop from "./UserTop";
 import UserBottom from "./UserBottom";
+import axios from 'axios';
 
 const Post = (props) => {
-
+    const [userName, setUserName] = useState("")
     const { title, location, caption, img, createdBy, date, time, tags } = props;
+
+    const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
 
     const [activeSlide, setActiveSlide] = useState(0);
 
@@ -48,6 +51,18 @@ const Post = (props) => {
         }
       };
 
+    useEffect(() => {
+    // console.log(user.userId)
+    axios.get(url + createdBy) 
+    .then((response) => {
+        setUserName(response.data.firstName);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
+    }, []);
+
     return (
         <View>
             <Swiper
@@ -64,7 +79,7 @@ const Post = (props) => {
                             title={title} 
                             location={location} 
                             img={img} 
-                            createdBy={createdBy} 
+                            createdBy={userName} 
                             date={date} 
                             time={time} 
                         />
