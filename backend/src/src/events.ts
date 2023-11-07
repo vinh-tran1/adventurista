@@ -92,12 +92,12 @@ async function getEvents(
 ): Promise<Event[]> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
-    FilterExpression:
-      "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
-    ExpressionAttributeValues: {
-      ":area": area,
-      ":userId": user.userId,
-    },
+    // FilterExpression:
+    //   "area = :area AND poster <> :userId AND NOT contains (blockedUsers, :userId)",
+    // ExpressionAttributeValues: {
+    //   ":area": area,
+    //   ":userId": user.userId,
+    // },
   };
 
   try {
@@ -110,8 +110,8 @@ async function getEvents(
 }
 
 router.get("/events", async (req, res) => {
-  const { area, userLocation, distance, userId } = req.query;
-  const user = await getUser(userId as string);
+  const { area, userLocation, distance, userId } = req.body;
+  const user = await getUser(userId);
   if (!user) {
     return res.status(404).send("User not found");
   }

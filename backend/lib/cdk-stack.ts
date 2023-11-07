@@ -206,6 +206,7 @@ export class CdkStack extends Stack {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem",
 		  "dynamodb:Query",
+		  "dynamodb:Scan",
         ],
         resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`, `${usersTable.tableArn}/index/*`, `${messagesTable.tableArn}`, `${groupchatsTable.tableArn}`],
         conditions: {
