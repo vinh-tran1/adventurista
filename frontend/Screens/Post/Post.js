@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import UploadImage from "./UploadImage";
+import * as ImagePicker from "expo-image-picker";
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
   // Redux
+  const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
   // still need camera roll integration
   const [image, setImage] = useState("");
@@ -73,6 +74,18 @@ const Post = ({ navigation }) => {
     "22:00", "22:30",
     "23:00", "23:30"
   ];
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      handleImage(result.assets[0].uri);
+    }
+  };
   
   const handleImage = (img) => {
     setImage(img);
@@ -134,18 +147,17 @@ const Post = ({ navigation }) => {
       const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
         title: eventName,
         description: caption,
-        date: day + ", " + date + month,
-        date: day + ", " + date + month,
-        time: '00/00/0000-00:00:00',
+        date: day + ", " + month + " " + date,
+        time: time,
         location: location, 
         postingUserId: user.userId,
-        time: time,
         tags: selectTags,
-        time: time,
-        tags: selectTags,
-        eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
+        eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
+      // in the then part of the post request
+      dispatch(setNewPost(true));
+      handleClear();
       navigation.navigate('Feed Main');
       console.log("sucessfully created event!");
       } else {
@@ -186,7 +198,17 @@ const Post = ({ navigation }) => {
               </View>
 
               {/* image */}
-              <UploadImage img={handleImage}/>
+              <View style={styles.centerContainer}>
+                <View style={styles.image}>
+                  <TouchableOpacity onPress={pickImage}>
+                    {image.length === 0 ?
+                    <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                    :
+                    <ImageBackground style={styles.image} source={{uri: image}} />
+                    }
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               {/* text inputs */}
               <View style={styles.inputContainer}>
@@ -320,7 +342,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    backgroundColor: 'gray',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(243, 232, 255, 0.45)',
+    borderWidth: 0.25,
+    borderColor: "#D186FF",
     height: 110,
     width: 110
   },
@@ -371,3 +397,4 @@ const styles = StyleSheet.create({
 });
 
 export default Post;
+

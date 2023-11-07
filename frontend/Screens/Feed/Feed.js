@@ -5,8 +5,8 @@ import Post from "./Post";
 import FeedFixedTop from "./FeedFixedTop";
 import axios from 'axios';
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost } from '../../Redux/userSlice';
 
 // sample posts data
 const DATA = [
@@ -54,6 +54,10 @@ const Feed = () => {
   //         });
   //     }, []);
 
+  const newPost = useSelector(selectNewPost);
+  const dispatch = useDispatch();  
+  console.log(newPost)  
+
   // fetch posts api
   const [posts, setPosts] = useState([]);
   useEffect(() => {
@@ -65,12 +69,13 @@ const Feed = () => {
     .then((response) => {
       //console.log(response.data)
       setPosts(response.data);
+      dispatch(setNewPost(false));
     })
     .catch((error) => {
       console.log(error);
     });
 
-  }, []);
+  }, [newPost]);
 
   return (
     <SafeAreaView style={styles.container}>

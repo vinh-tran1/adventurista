@@ -30,6 +30,7 @@ const Step2 = ({ navigation, route }) => {
       if (response.status === 200) {
         const updatedUser = response.data;
         dispatch(setUserInfo({
+            newPost: false,
             userId: updatedUser.userId,
             age: updatedUser.age,
             blockedUsers: updatedUser.blockedUsers,

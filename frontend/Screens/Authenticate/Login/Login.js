@@ -22,6 +22,7 @@ const Login = ({ navigation }) => {
       if (response.status === 200) {
         const user = response.data;
         dispatch(setUserInfo({
+          newPost: false,
           userId: user.userId,
           age: user.age,
           blockedUsers: user.blockedUsers,
