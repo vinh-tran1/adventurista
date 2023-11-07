@@ -134,19 +134,15 @@ const Post = ({ navigation }) => {
       const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
         title: eventName,
         description: caption,
-        
-        // date: day + ", " + date + month,
+        date: day + ", " + date + month,
         time: '00/00/0000-00:00:00',
         location: location, 
         postingUserId: user.userId,
-        //time: time,
-        //tags: selectTags,
-        blockedUsers: [],
-        whoIsGoing: [user.userId],
+        time: time,
+        tags: selectTags,
         eventPictureUrl: 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg'
       });
       if (response.status === 201) {
-      // in the then part of the post request
       navigation.navigate('Feed Main');
       console.log("sucessfully created event!");
       } else {

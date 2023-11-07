@@ -35,9 +35,8 @@ const DATA = [
 ];
 
 const Feed = () => {
-  const user = useSelector(selectUserInfo);
+  //const user = useSelector(selectUserInfo);
   const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
-
 
   // useEffect(() => {
   //       axios
@@ -56,7 +55,7 @@ const Feed = () => {
   //     }, []);
 
   // fetch posts api
-  const [posts, setPosts] = useState(null);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     // console.log(user.userId)
     axios.get(url) 
@@ -64,12 +63,14 @@ const Feed = () => {
       //   params: { userId: user.userId },
       // }
     .then((response) => {
+      //console.log(response.data)
       setPosts(response.data);
     })
     .catch((error) => {
       console.log(error);
     });
-  }, []); 
+
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,11 +81,11 @@ const Feed = () => {
           <Post 
             date={item.date}
             location={item.location}
-            eventPictureUrl={item.img}
-            postingUserId={user.userId}
+            // img={'https://adventurista-event-picture-bucket.s3.amazonaws.com/' + item.eventPictureUrl}
+            img={item.eventPictureUrl}
+            createdBy={item.postingUserId}
             time={item.time}
-            caption={item.caption} 
-            description={item.tags}
+            caption={item.description}
             tags={item.tags}
             title={item.title} 
             //createdBy={item.createdBy}
