@@ -158,44 +158,6 @@ const Post = ({ navigation }) => {
     }
   };
 
-  /*
-  const requestOptions = { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify(json) 
-  }; 
-
-  const postEvent = async (data) => {
-    try {
-    const apiUrl = 'https://example.com/api/posts'; // Replace with your API endpoint
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Include any additional headers if needed
-      },
-      body: JSON.stringify(postData), // Convert JavaScript object to JSON string
-    });
-
-    if (response.ok) {
-      // Post request was successful
-      const responseData = await response.json(); // Parse the JSON response
-      console.log('Post uploaded successfully:', responseData);
-      // Handle the response data as needed
-    } 
-    else {
-      // Post request failed
-      console.error('Error uploading post:', response.status);
-      // Handle error response status
-    }
-    } catch (error) {
-    // An error occurred during the request
-    console.error('Error uploading post:', error);
-    // Handle the error
-  }
-  */
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>

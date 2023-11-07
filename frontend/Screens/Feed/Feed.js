@@ -3,25 +3,10 @@ import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity,
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Post from "./Post";
 import FeedFixedTop from "./FeedFixedTop";
-
-// fetch posts api
-// const [posts, setPosts] = useState(null);
-// useEffect(() => {
-//   // Function to make the GET request
-//   const getPosts = async () => {
-//     try {
-//       const response = await fetch(url);
-//       const jsonData = await response.json();
-
-//       // Update state with the fetched data
-//       setPosts(jsonData);
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//     }
-//   };
-
-//   getPosts();
-// }, []); 
+import axios from 'axios';
+// Redux
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../../Redux/userSlice';
 
 // sample posts data
 const DATA = [
@@ -50,21 +35,59 @@ const DATA = [
 ];
 
 const Feed = () => {
+  const user = useSelector(selectUserInfo);
+  const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
+
+
+  // useEffect(() => {
+  //       axios
+  //         .get(
+  //           "https://drip-email-scraping-service-koh2hxfdwq-uw.a.run.app/closet",
+  //           {
+  //             params: { email: email },
+  //           }
+  //         )
+  //         .then((response) => {
+  //           setItems(response.data);
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //         });
+  //     }, []);
+
+  // fetch posts api
+  const [posts, setPosts] = useState(null);
+  useEffect(() => {
+    // console.log(user.userId)
+    axios.get(url) 
+      // {
+      //   params: { userId: user.userId },
+      // }
+    .then((response) => {
+      setPosts(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }, []); 
+
   return (
     <SafeAreaView style={styles.container}>
       <FeedFixedTop />
       <FlatList
-        data={DATA}
+        data={posts}
         renderItem={({ item }) => 
           <Post 
-            title={item.title} 
-            location={item.location}
             date={item.date}
+            location={item.location}
+            eventPictureUrl={item.img}
+            postingUserId={user.userId}
             time={item.time}
             caption={item.caption} 
+            description={item.tags}
             tags={item.tags}
-            img={item.img}
-            createdBy={item.createdBy}
+            title={item.title} 
+            //createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
