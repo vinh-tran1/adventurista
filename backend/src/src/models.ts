@@ -26,11 +26,13 @@ export interface Event {
   eventId: string;
   title: string;
   description: string;
+  date: string;
   time: string;
   location: string;
   postingUserId: string;
   blockedUsers: string[];
   whoIsGoing: string[];
+  tags: string[];
   eventPictureUrl: string;
 }
 

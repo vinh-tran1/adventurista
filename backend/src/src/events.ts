@@ -65,12 +65,14 @@ router.post("/event/create", async (req, res) => {
     eventId: uuidv4(),
     title: req.body.title,
     description: req.body.description,
+    date: req.body.date,
     time: req.body.time,
     location: req.body.location,
     postingUserId: req.body.postingUserId,
     blockedUsers: [],
     whoIsGoing: [req.body.postingUserId],
     eventPictureUrl: "",
+    tags: req.body.tags,
   };
 
   const user = await getUser(event.postingUserId);
@@ -84,12 +86,11 @@ router.post("/event/create", async (req, res) => {
   res.status(201).send(result);
 });
 
-async function getEvents(
-  area: string,
-  userLocation: string,
-  distance: number,
-  user: User
-): Promise<Event[]> {
+async function getEvents(): Promise<Event[]> {
+  // area: string,
+  // userLocation: string,
+  // distance: number,
+  // user: User
   const params = {
     TableName: EVENTS_TABLE_NAME,
     // FilterExpression:
@@ -110,17 +111,16 @@ async function getEvents(
 }
 
 router.get("/events", async (req, res) => {
-  const { area, userLocation, distance, userId } = req.body;
-  const user = await getUser(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-  const events = await getEvents(
-    area as string,
-    userLocation as string,
-    parseInt(distance as string),
-    user
-  );
+  // const { area, userLocation, distance, userId } = req.body;
+  // const user = await getUser(userId);
+  // if (!user) {
+  //   return res.status(404).send("User not found");
+  // }
+  const events = await getEvents();
+  // area as string,
+  // userLocation as string,
+  // parseInt(distance as string),
+  // user
   res.status(200).send(events);
 });
 
