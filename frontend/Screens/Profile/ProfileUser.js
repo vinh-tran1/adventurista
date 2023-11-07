@@ -6,7 +6,14 @@ import BubbleText from "../../Shared/BubbleText";
 import Bubble from "./Bubble";
 import MyEvents from "./MyEvents";
 
+// Redux
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../../Redux/userSlice';
+
 const ProfileUser = () => {
+
+  const user = useSelector(selectUserInfo);
+
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
   const groupData = [
@@ -38,7 +45,7 @@ const ProfileUser = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
       {/* header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Nikhil</Text>
+          <Text style={styles.headerText}>{user.firstName}</Text>
           <TouchableOpacity style={{marginTop: 6}}>
             <FontAwesomeIcon icon="fa-gear" size={25} />
           </TouchableOpacity>
@@ -69,30 +76,19 @@ const ProfileUser = () => {
 
         {/* bottom half */}
         <View style={styles.bioBanner}>
-          <Text style={{fontSize: 20, fontWeight: '700'}}>Nikhil Ismail</Text>
+          <Text style={{fontSize: 20, fontWeight: '700'}}>{user.firstName} {user.lastName}</Text>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6}}>
             <FontAwesomeIcon icon="location-dot" color="#D186FF"/>  
             <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>Toronto, Canada</Text>
           </View>
           <Text style={{marginTop: 5, fontSize: 16}}>The Earth’s rotation really makes my day</Text>
-                
-        </View>
-      </View>
-      
-      
-
-      {/* my interests */}
-      <View style={styles.sectionContainer}>
-        <View style={styles.sectionHeader}>
-           <Text style={styles.sectionText}>My Interests</Text>
-           <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity>
-        </View>
-        <View style={styles.tagContainer}>
-          {interests.map((tag, index) => {
-              return (
-                  <BubbleText key={index.toString()} title={tag} />
-              )
-          })}
+          <View style={styles.tagContainer}>
+            {user.interests.map((tag, index) => {
+                return (
+                    <BubbleText key={index.toString()} title={tag} />
+                )
+            })}
+          </View>
         </View>
       </View>
 

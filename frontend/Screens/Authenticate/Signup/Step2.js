@@ -15,6 +15,7 @@ const Step2 = ({ navigation, route }) => {
   const [interests, setInterests] = useState([]);
   const [tempInterest, setTempInterest] = useState("");
   const [age, setAge] = useState("");
+  const [location, setLocation] = useState("");
 
   const { user } = route.params;
 
@@ -70,6 +71,10 @@ const Step2 = ({ navigation, route }) => {
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date of Birth (mm/dd/yyyy)</Text>
         <TextInput value={age} onChangeText={(text) => setAge(text)} style={styles.input} />
+      </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Where Are You From?</Text>
+        <TextInput value={location} onChangeText={(text) => setLocation(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>What Are Your Interested In? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
