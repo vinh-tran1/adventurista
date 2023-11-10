@@ -153,6 +153,8 @@ export class CdkStack extends Stack {
             PROFILE_PICTURE_BUCKET_NAME: profPicBucket.bucketName,
             EVENT_PICTURE_BUCKET_NAME: eventPicBucket.bucketName,
             region: process.env.CDK_DEFAULT_REGION!,
+			PROFILE_PICTURE_BUCKET_URI: `https://${profPicBucket.bucketName}.s3.amazonaws.com/`,
+			EVENT_PICTURE_BUCKET_URI: `https://${eventPicBucket.bucketName}.s3.amazonaws.com/`,
           },
         },
       }

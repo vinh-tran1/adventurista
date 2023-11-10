@@ -11,6 +11,7 @@ import {
   USERS_PRIMARY_KEY,
   EVENT_PIC_BUCKET,
   PRESIGNED_URL_EXPIRATION_SECONDS,
+  EVENT_PIC_BUCKET_URI,
 } from "./constants";
 
 // db set-up
@@ -447,7 +448,7 @@ async function updateEventPicture(event: Event): Promise<Event | null> {
     },
     UpdateExpression: "SET eventPictureUrl = :eventPictureUrl",
     ExpressionAttributeValues: {
-      ":eventPictureUrl": event.eventPictureUrl,
+      ":eventPictureUrl": `${EVENT_PIC_BUCKET_URI}${event.eventPictureUrl}`,
     },
   };
 
