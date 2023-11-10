@@ -1097,6 +1097,7 @@ async function createUser(email: string, firstName: string, lastName: string, pa
             incoming: [],
         },
         groups: [],
+        eventsSeen: [],
         eventsOwned: [],
         eventsGoingTo: [],
         eventsNotGoingTo: [],
