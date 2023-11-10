@@ -1115,51 +1115,6 @@ async function emailExists(email: string): Promise<boolean> {
   }
 }
 
-<<<<<<< Updated upstream
-async function createUser(email: string, firstName: string, lastName: string, password: string): Promise<User | string> {
-    // Check if email already exists
-    if (await emailExists(email)) {
-        return "Email already in use";
-    }
-    // Hash the password
-    const hashedPassword = await hashPassword(password);
-
-    const user: User = {
-        email: email,
-        userId: uuidv4(),
-        firstName: firstName,
-        lastName: lastName,
-        hashedPassword: hashedPassword,
-        primaryLocation: "",
-        blockedUsers: [],
-        interests: [],
-        friends: [],
-        requests: {
-            outgoing: [],
-            incoming: [],
-        },
-        groups: [],
-        eventsSeen: [],
-        eventsOwned: [],
-        eventsGoingTo: [],
-        eventsNotGoingTo: [],
-        messages: [],
-        profilePictureUrl: "",
-    };
-
-    const params = {
-        TableName: USERS_TABLE_NAME,
-        Item: user,
-    };
-
-    try {
-        await db.put(params).promise();
-        return user;
-    } catch (err) {
-        console.error("Error creating user:", err);
-        return "Error creating user";
-    }
-=======
 async function createUser(
   email: string,
   firstName: string,
@@ -1188,6 +1143,7 @@ async function createUser(
       incoming: [],
     },
     groups: [],
+    eventsSeen: [],
     eventsOwned: [],
     eventsGoingTo: [],
     eventsNotGoingTo: [],
@@ -1207,7 +1163,6 @@ async function createUser(
     console.error("Error creating user:", err);
     return "Error creating user";
   }
->>>>>>> Stashed changes
 }
 
 /**
