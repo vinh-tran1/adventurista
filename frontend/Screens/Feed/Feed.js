@@ -62,7 +62,7 @@ const Feed = () => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     // console.log(user.userId)
-    axios.get(url) 
+    axios.get(url)
       // {
       //   params: { userId: user.userId },
       // }
