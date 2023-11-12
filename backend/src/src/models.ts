@@ -15,6 +15,7 @@ export interface User {
     incoming: string[];
   };
   groups: string[];
+  eventsSeen: string[];
   eventsOwned: string[];
   eventsGoingTo: string[];
   eventsNotGoingTo: string[];
