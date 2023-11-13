@@ -16,6 +16,7 @@ export interface User {
   };
   groups: string[];
   eventsSeen: string[];
+  eventsSaved: string[];
   eventsOwned: string[];
   eventsGoingTo: string[];
   eventsNotGoingTo: string[];
