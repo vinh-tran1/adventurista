@@ -1,6 +1,6 @@
 import { Options } from "swagger-jsdoc";
 
-const swaggerDefinition: Options = {
+const definition = {
   openapi: '3.0.0',
   info: {
     title: 'User Event Management API',
@@ -921,4 +921,9 @@ const swaggerDefinition: Options = {
   },
 };
 
-export default swaggerDefinition;
+const options: Options = {
+  definition,
+  apis: ['../src/**/*.ts'],
+};
+
+export default options;

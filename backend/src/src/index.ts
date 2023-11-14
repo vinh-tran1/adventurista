@@ -8,7 +8,7 @@ import eventRoutes from "./events";
 import messageRoutes from "./messages";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import swaggerDefinition from "./swaggerDefinitions";
+import options from "./swaggerDefinitions";
 
 const app = express();
 const port = 80;
@@ -20,7 +20,7 @@ app.use("/users", userRoutes);
 app.use("/events", eventRoutes);
 app.use("/messages", messageRoutes);
 
-const swaggerSpec = swaggerJsdoc(swaggerDefinition);
+const swaggerSpec = swaggerJsdoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/posts", (req, res) => {
