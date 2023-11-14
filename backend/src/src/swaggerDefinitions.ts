@@ -787,6 +787,8 @@ const definition = {
           'friends',
           'requests',
           'groups',
+          'eventsSeen',
+          'eventsSaved',
           'eventsOwned',
           'eventsGoingTo',
           'eventsNotGoingTo',
@@ -826,6 +828,14 @@ const definition = {
             },
           },
           groups: {
+            type: 'array',
+            items: { type: 'string' },
+          },
+          eventsSeen: {
+            type: 'array',
+            items: { type: 'string' },
+          },
+          eventsSaved: {
             type: 'array',
             items: { type: 'string' },
           },
