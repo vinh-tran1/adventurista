@@ -926,7 +926,15 @@ const definition = {
         properties: {
           Key: { type: 'string' },
         },
-      }
+      },
+      CancelGoingToEventRequest: {
+        type: 'object',
+        required: ['userId', 'eventId'],
+        properties: {
+          userId: { type: 'string' },
+          eventId: { type: 'string' },
+        },
+      },
     },
   },
 };
