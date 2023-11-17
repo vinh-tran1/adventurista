@@ -30,9 +30,12 @@ Using React Native, our app is able to run on both iOS and Android.
 - **API Gateway** for the public endpoint and routing API calls to the Node.js server(s)
 
 ## Testing
-- Backend (Jest)
-- Coverage: ~~%
-	- CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
-	- Events Unit Tests
-	- Users Unit Tests
-	- Messages Unit Tests
+### Backend (Jest)
+- CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
+	- Coverage: 100%
+- Events Unit Tests
+	- Coverage: ~~%
+- Users Unit Tests
+	- Coverage: ~~%
+- Messages Unit Tests
+	- Coverage: ~~%
