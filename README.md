@@ -28,3 +28,11 @@ Using React Native, our app is able to run on both iOS and Android.
 - **DynamoDB** for persistent data storage. We will have different tables for users, events, friends, etc.
 - **S3** for storing images
 - **API Gateway** for the public endpoint and routing API calls to the Node.js server(s)
+
+## Testing
+- Backend (Jest)
+- Coverage: ~~%
+	- CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
+	- Events Unit Tests
+	- Users Unit Tests
+	- Messages Unit Tests
