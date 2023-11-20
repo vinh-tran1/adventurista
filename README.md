@@ -1,5 +1,10 @@
 # Adventurista (F23)
-Social Connectivity App For Travel
+### Social Connectivity App For Travel
+
+<p align="center">
+  <img src="frontend/assets/logo.png" width="350" title="logo">
+  [Tech Stack](#-Technology-Stack) | [Structure](#-Code-Structure) | [Deployment](#-Deployment) | [Testing](#-Testing)
+</p>
 
 ## Summary
 **Adventurista** is a mobile app designed to tackle the challenges of travel coordination, planning, and meeting new people. The platform allows users to post upcoming adventure plans and join other people’s events within their travel location – fostering seamless friendships, expanding their global network, and making memorable travel experiences.
@@ -19,7 +24,7 @@ Our mobile app is built using a DERN stack along with Amazon Web Services.
 
 1. DERN Stack
 - **Frontend**: React Native, Redux
-- **Backend**: Node.js, Express.js, DynamoDB (Database)
+- **Backend**: Node.js, Express.js, DynamoDB
 
 Using React Native, our app is able to run on both iOS and Android.
 
@@ -34,22 +39,27 @@ Using React Native, our app is able to run on both iOS and Android.
 - `frontend/Navigators/`: React Native stack navigation for major screens
 - `frontend/Redux/`: Redux for global state
 - `frontend/Screens/`: Folders for the major screens
-- 'frontend/Shared/`: Reusable components
-- 'frontend/assets/`: images
+- `frontend/Shared/`: Reusable components
+- `frontend/assets/`: images
 
 ### Backend
 - ~~
 
 ## Deployment
 ### Locally
-#### Frontend
-- navigate to `frontend/`
-- install packages: `npm install`
-- run native app: `npm start`
+**Frontend**
+```
+# navigate to frontend
+cd frontend
+# install dependencies
+npm install
+# run app
+npm start
+```
 - optional: download Expo Go on mobile to view app on mobile device
 
-#### Backend
-- navigate to ~~
+**Backend**
+
 
 ## Testing
 ### Frontend (~~)
