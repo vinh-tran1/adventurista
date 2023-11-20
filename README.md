@@ -29,7 +29,37 @@ Using React Native, our app is able to run on both iOS and Android.
 - **S3** for storing images
 - **API Gateway** for the public endpoint and routing API calls to the Node.js server(s)
 
+## Code Structure
+### Frontend
+- `frontend/Navigators/`: React Native stack navigation for major screens
+- `frontend/Redux/`: Redux for global state
+- `frontend/Screens/`: Folders for the major screens
+- 'frontend/Shared/`: Reusable components
+- 'frontend/assets/`: images
+
+### Backend
+- ~~
+
+## Deployment
+### Locally
+#### Frontend
+- navigate to `frontend/`
+- install packages: `npm install`
+- run native app: `npm start`
+- optional: download Expo Go on mobile to view app on mobile device
+
+#### Backend
+- navigate to ~~
+
 ## Testing
+### Frontend (~~)
+- ~~
+  	- Coverage: ~~%
+- ~~
+  	- Coverage: ~~%
+- ~~
+  	- Coverage: ~~%
+  	  
 ### Backend (Jest)
 - CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
 	- Coverage: 100%
