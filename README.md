@@ -6,13 +6,19 @@
   Social Connectivity App
 </h1>
 
+<h3 align="center">Summary</h3>
+
+<p align="center">
+Adventurista is a mobile app designed to tackle the challenges of travel coordination, planning, and meeting new people. The platform allows users to post upcoming adventure plans and join other people’s events within their travel location – fostering seamless friendships, expanding their global network, and making memorable travel experiences.
+</p>
+
+<p align="center">by Patrick S, Nikhil I, Ej W, Vinh T, Akshay K</p>
+
 <div align="center">
-
-[Tech Stack](#-Technology-Stack) •
-[Structure](#-Code-Structure) •
-[Deployment](#-Deployment) •
-[Testing](#-Testing)
-
+	[Tech Stack](#technology-Stack) |
+	[Structure](#code-structure) |
+	[Deployment](#deployment) |
+	[Testing](#testing)
 </div>
 
 ## Summary
