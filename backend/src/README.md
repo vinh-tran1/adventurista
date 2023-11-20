@@ -12,6 +12,6 @@ npm run start
 Run the following to start the server on container port 80:
 
 ```bash
-docker build . -t ts-express
-docker run -p 80:80 --name ts-app ts-express
+docker build . -t ts-adventurista
+docker run -p 80:80 --name adventurista ts-adventurista
 ```

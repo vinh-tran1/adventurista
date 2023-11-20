@@ -91,8 +91,8 @@ npm run start
 ```bash
 # navigate to backend/src/
 cd backend/src
-docker build . -t ts-express
-docker run -p 80:80 --name ts-app ts-express
+docker build . -t ts-adventurista
+docker run -p 80:80 --name adventurista ts-adventurista
 ```
 - Note that any local deployment of the backend will not function fully, as DynamoDB + S3 instances cannot be connected to. This deployment simply replicates what will be run on an instance within Fargate
 
