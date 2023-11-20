@@ -1,10 +1,19 @@
 # Adventurista (F23)
-### Social Connectivity App For Travel
+### 
+<h1 align="center">
+  <img src="frontend/assets/logo.png" width="400" />
+  <br/>
+  Social Connectivity App
+</h1>
 
-<p align="center">
-  <img src="frontend/assets/logo.png" width="350" title="logo">
-  [Tech Stack](#-Technology-Stack) | [Structure](#-Code-Structure) | [Deployment](#-Deployment) | [Testing](#-Testing)
-</p>
+<div align="center">
+
+[Tech Stack](#-Technology-Stack) •
+[Structure](#-Code-Structure) •
+[Deployment](#-Deployment) •
+[Testing](#-Testing)
+
+</div>
 
 ## Summary
 **Adventurista** is a mobile app designed to tackle the challenges of travel coordination, planning, and meeting new people. The platform allows users to post upcoming adventure plans and join other people’s events within their travel location – fostering seamless friendships, expanding their global network, and making memorable travel experiences.
@@ -48,15 +57,16 @@ Using React Native, our app is able to run on both iOS and Android.
 ## Deployment
 ### Locally
 **Frontend**
-```
+
+```bash
 # navigate to frontend
-cd frontend
+$ cd frontend
 # install dependencies
-npm install
+$ npm install
 # run app
-npm start
+$ npm start
 ```
-- optional: download Expo Go on mobile to view app on mobile device
+optional: download Expo Go on mobile to view app on mobile device
 
 **Backend**
 
