@@ -21,7 +21,6 @@ export const clearUser = () => {
     }
 }
 
-
 // REDUCER
 const initialState = {
     newPost: false,
@@ -66,8 +65,10 @@ export const userReducer = (state = initialState, action) => {
                 requests: action.payload.requests
 
             }
+            
         case CLEAR_USER:
             return state = initialState;
+
         case SET_NEW_POST:
             return {
                 ...state,

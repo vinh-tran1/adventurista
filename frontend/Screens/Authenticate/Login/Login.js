@@ -8,14 +8,16 @@ import { setUserInfo } from "../../../Redux/userSlice";
 
 const Login = ({ navigation }) => {
 
+  const API_URL = process.env.AWS_API_URL + 'users/auth/sign-in';
+  // const API_URL = 'https://8ly1bceyw5.execute-api.us-east-1.amazonaws.com/users/auth/sign-in'
   const dispatch = useDispatch();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/sign-in", {
+      // const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/sign-in", {
+        const response = await axios.post(API_URL, {
         email: email,
         password: password
       });
@@ -46,7 +48,7 @@ const Login = ({ navigation }) => {
       }
     } catch (err) {
       console.log(err);
-      console.log("An error occurred while loggin in with this account. Please try again.");
+      console.log("An error occurred while logging in with this account. Please try again.");
     }
   }
 

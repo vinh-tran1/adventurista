@@ -10,10 +10,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
-  // Redux
+  
+  const API_URL = process.env.AWS_API_URL + 'events/event/create';
+
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
-  // still need camera roll integration
+
   const [image, setImage] = useState("");
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
@@ -46,7 +48,7 @@ const Post = ({ navigation }) => {
     'paint', 'films', 'hiking', 'chess',
   ];
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
-  const dates = Array.from({ length: 31 }, (_, index) => (index + 1).toString());
+  const dates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
   const days = ['MON', 'TUES', 'WED', 'THUR', 'FRI', 'SAT', 'SUN'];
   const times = [
     "00:00", "00:30",
@@ -134,17 +136,9 @@ const Post = ({ navigation }) => {
   };
 
   const handlePost = async () => {
-    // const data = {
-    //   name: eventName,
-    //   location: location, 
-    //   caption: caption,
-    //   date: day + ", " + date + month,
-    //   time: time,
-    //   tags: selectTags,
-    //   img: img
-    // };
     try {
-      const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
+      // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
+        const response = await axios.post(API_URL, {
         title: eventName,
         description: caption,
         date: day + ", " + month + " " + date,
@@ -155,17 +149,16 @@ const Post = ({ navigation }) => {
         eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
-      // in the then part of the post request
-      dispatch(setNewPost(true));
-      handleClear();
-      navigation.navigate('Feed Main');
-      console.log("sucessfully created event!");
+        dispatch(setNewPost(true));
+        handleClear();
+        navigation.navigate('Feed Main');
+        console.log("sucessfully created event!");
       } else {
         console.log("error in creating event");
       }  
     } catch (err) {
-      console.log(err);
-      console.log("An error occured for creating events. Please try again");
+        console.log(err);
+        console.log("An error occured for creating events. Please try again");
     }
   };
 

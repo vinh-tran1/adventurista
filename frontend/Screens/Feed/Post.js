@@ -12,7 +12,8 @@ const Post = (props) => {
     const [userName, setUserName] = useState("")
     const { title, location, caption, img, createdBy, date, time, tags } = props;
 
-    const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
+    // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
+    const API_URL = process.env.AWS_API_URL + 'users/';
 
     const [activeSlide, setActiveSlide] = useState(0);
 
@@ -52,13 +53,13 @@ const Post = (props) => {
       };
 
     useEffect(() => {
-    // console.log(user.userId)
-    axios.get(url + createdBy) 
-    .then((response) => {
-        setUserName(response.data.firstName);
-    })
-    .catch((error) => {
-        console.log(error);
+        // console.log(user.userId)
+        axios.get(API_URL + createdBy) 
+        .then((response) => {
+            setUserName(response.data.firstName);
+        })
+        .catch((error) => {
+            console.log(error);
     });
 
     }, []);

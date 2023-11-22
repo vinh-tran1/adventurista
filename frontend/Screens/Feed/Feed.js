@@ -35,8 +35,9 @@ const DATA = [
 ];
 
 const Feed = () => {
-  //const user = useSelector(selectUserInfo);
-  const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
+  // const user = useSelector(selectUserInfo);
+  // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
+  const API_URL = process.env.AWS_API_URL + 'events/events'
 
   // useEffect(() => {
   //       axios
@@ -61,21 +62,15 @@ const Feed = () => {
   // fetch posts api
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    // console.log(user.userId)
-    axios.get(url)
-      // {
-      //   params: { userId: user.userId },
-      // }
+    axios.get(API_URL)
     .then((response) => {
-      //console.log(response.data)
       setPosts(response.data);
-      dispatch(setNewPost(false));
+      // dispatch(setNewPost(false));
     })
     .catch((error) => {
       console.log(error);
     });
-
-  }, [newPost]);
+  }, [newPost])
 
   return (
     <SafeAreaView style={styles.container}>
