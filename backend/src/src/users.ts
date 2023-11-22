@@ -1097,7 +1097,11 @@ async function comparePassword(
   password: string,
   hash: string
 ): Promise<boolean> {
-  return bcrypt.compare(password, hash);
+  // turn password into hash and compare
+  const new_hash = await hashPassword(password);
+  // make sure to use === instead of ==
+  return new_hash === hash;
+  // return bcrypt.compare(password, hash);
 }
 
 async function emailExists(email: string): Promise<boolean> {
