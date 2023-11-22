@@ -13,7 +13,6 @@ import {
   PROF_PIC_BUCKET,
   PRESIGNED_URL_EXPIRATION_SECONDS,
   PROF_PIC_BUCKET_URI,
-  USERS_SECONDARY_KEY,
 } from "./constants";
 
 // db set-up
@@ -231,17 +230,14 @@ async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
-    IndexName: USERS_SECONDARY_KEY,
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": email,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
     },
   };
 
   try {
-    const result = await db.query(params).promise();
-    if (result.Count != 1) return false;
-    const user = result.Items[0] as User;
+    const result = await db.get(params).promise();
+    const user = result.Item as User;
 
     if (!user) return false;
 
@@ -1102,25 +1098,23 @@ async function comparePassword(
   hash: string
 ): Promise<boolean> {
   // turn password into hash and compare
-  // const new_hash = await hashPassword(password);
+  const new_hash = await hashPassword(password);
   // make sure to use === instead of ==
-  // return new_hash === hash;
-  return bcrypt.compare(password, hash);
+  return new_hash === hash;
+  // return bcrypt.compare(password, hash);
 }
 
 async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
-    IndexName: USERS_SECONDARY_KEY,
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": email,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
     },
   };
 
   try {
-    const result = await db.query(params).promise();
-    return result.Count > 0;
+    const result = await db.get(params).promise();
+    return !!result.Item; // Returns true if an item exists, false otherwise
   } catch (err) {
     console.error("Error checking email:", err);
     return false; // Default to false on error
@@ -1328,12 +1322,12 @@ async function deleteUser(userId: string): Promise<string> {
   }
 
   // Remove the user from their friends' friends lists
-  const friendsUpdatePromises = userToDelete.friends.map((friendId) =>
+  const friendsUpdatePromises = userToDelete.friends.map(friendId =>
     updateUserFriendsList(friendId, userId)
   );
 
   // Remove the user from the events they are going to
-  const eventsUpdatePromises = userToDelete.eventsGoingTo.map((eventId) =>
+  const eventsUpdatePromises = userToDelete.eventsGoingTo.map(eventId =>
     updateEventAttendeesList(eventId, userId)
   );
 
@@ -1358,10 +1352,7 @@ async function deleteUser(userId: string): Promise<string> {
 }
 
 // Helper function to update a user's friends list
-async function updateUserFriendsList(
-  friendId: string,
-  userIdToRemove: string
-): Promise<void> {
+async function updateUserFriendsList(friendId: string, userIdToRemove: string): Promise<void> {
   const friend: User | null = await getUser(friendId);
   if (friend) {
     const index = friend.friends.indexOf(userIdToRemove);
@@ -1400,10 +1391,7 @@ async function getEvent(eventId: string): Promise<Event | null> {
 }
 
 // Helper function to update an event's attendees list
-async function updateEventAttendeesList(
-  eventId: string,
-  userIdToRemove: string
-): Promise<void> {
+async function updateEventAttendeesList(eventId: string, userIdToRemove: string): Promise<void> {
   const event: Event | null = await getEvent(eventId); // Implement this function to retrieve an event
   if (event) {
     const index = event.whoIsGoing.indexOf(userIdToRemove);
@@ -1412,7 +1400,7 @@ async function updateEventAttendeesList(
       const updateParams = {
         TableName: EVENTS_TABLE_NAME, // Replace with your actual table name for events
         Key: {
-          eventId: eventId,
+          'eventId': eventId,
         },
         UpdateExpression: "SET whoIsGoing = :whoIsGoing",
         ExpressionAttributeValues: {
@@ -1430,5 +1418,6 @@ router.delete("/:userId", async (req, res) => {
   const result = await deleteUser(userId);
   res.status(200).send(result);
 });
+
 
 export default router;

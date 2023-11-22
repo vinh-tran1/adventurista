@@ -227,7 +227,10 @@ router.post("/auth/create-user", async (req, res) => {
   res.status(201).send(result);
 });
 
-async function signIn(email: string, password: string): Promise<User | false> {
+async function signIn(
+  email: string,
+  password: string
+): Promise<User | false | string> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -243,19 +246,19 @@ async function signIn(email: string, password: string): Promise<User | false> {
     if (result.Count != 1) return false;
     const user = result.Items[0] as User;
 
-    if (!user) return false;
+    if (!user) return "user not found";
 
     // Compare the password with the hashed password
     const isPasswordValid = await comparePassword(
       password,
       user.hashedPassword
     );
-    if (!isPasswordValid) return false;
+    if (!isPasswordValid) return "password invalid";
 
     return user;
   } catch (err) {
     console.error("Error during sign-in:", err);
-    return false;
+    return err;
   }
 }
 
@@ -287,9 +290,9 @@ router.post("/auth/sign-in", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await signIn(email, password);
-  if (!user) {
-    return res.status(400).send("Invalid credentials");
-  }
+  // if (!user) {
+  //   return res.status(400).send("Invalid credentials");
+  // }
 
   res.status(200).send(user);
 });

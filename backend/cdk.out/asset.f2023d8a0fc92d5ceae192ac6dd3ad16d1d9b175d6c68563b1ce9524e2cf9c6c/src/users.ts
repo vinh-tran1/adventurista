@@ -231,17 +231,14 @@ async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
-    IndexName: USERS_SECONDARY_KEY,
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": email,
+    Key: {
+      [USERS_SECONDARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
     },
   };
 
   try {
-    const result = await db.query(params).promise();
-    if (result.Count != 1) return false;
-    const user = result.Items[0] as User;
+    const result = await db.get(params).promise();
+    const user = result.Item as User;
 
     if (!user) return false;
 
@@ -1102,25 +1099,23 @@ async function comparePassword(
   hash: string
 ): Promise<boolean> {
   // turn password into hash and compare
-  // const new_hash = await hashPassword(password);
+  const new_hash = await hashPassword(password);
   // make sure to use === instead of ==
-  // return new_hash === hash;
-  return bcrypt.compare(password, hash);
+  return new_hash === hash;
+  // return bcrypt.compare(password, hash);
 }
 
 async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
-    IndexName: USERS_SECONDARY_KEY,
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": email,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
     },
   };
 
   try {
-    const result = await db.query(params).promise();
-    return result.Count > 0;
+    const result = await db.get(params).promise();
+    return !!result.Item; // Returns true if an item exists, false otherwise
   } catch (err) {
     console.error("Error checking email:", err);
     return false; // Default to false on error

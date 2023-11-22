@@ -227,7 +227,10 @@ router.post("/auth/create-user", async (req, res) => {
   res.status(201).send(result);
 });
 
-async function signIn(email: string, password: string): Promise<User | false> {
+async function signIn(
+  email: string,
+  password: string
+): Promise<User | false | string> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -287,9 +290,9 @@ router.post("/auth/sign-in", async (req, res) => {
   const { email, password } = req.body;
 
   const user = await signIn(email, password);
-  if (!user) {
-    return res.status(400).send("Invalid credentials");
-  }
+  // if (!user) {
+  //   return res.status(400).send("Invalid credentials");
+  // }
 
   res.status(200).send(user);
 });
@@ -1102,25 +1105,23 @@ async function comparePassword(
   hash: string
 ): Promise<boolean> {
   // turn password into hash and compare
-  // const new_hash = await hashPassword(password);
+  const new_hash = await hashPassword(password);
   // make sure to use === instead of ==
-  // return new_hash === hash;
-  return bcrypt.compare(password, hash);
+  return new_hash === hash;
+  // return bcrypt.compare(password, hash);
 }
 
 async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
-    IndexName: USERS_SECONDARY_KEY,
-    KeyConditionExpression: "email = :email",
-    ExpressionAttributeValues: {
-      ":email": email,
+    Key: {
+      [USERS_PRIMARY_KEY]: email, // Assuming USERS_PRIMARY_KEY is now set to "email"
     },
   };
 
   try {
-    const result = await db.query(params).promise();
-    return result.Count > 0;
+    const result = await db.get(params).promise();
+    return !!result.Item; // Returns true if an item exists, false otherwise
   } catch (err) {
     console.error("Error checking email:", err);
     return false; // Default to false on error
