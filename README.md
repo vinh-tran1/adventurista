@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="frontend/assets/logo.png" width="400" />
+  <img src="frontend/assets/white-bg-logo.png" width="400" />
   <br/>
   a social connectivity app
 </h1>
