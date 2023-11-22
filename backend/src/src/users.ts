@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 import { User } from "./models";
 import { Event } from "./models";
 import {
+  EVENTS_TABLE_NAME,
+  EVENTS_PRIMARY_KEY,
   USERS_TABLE_NAME,
   USERS_PRIMARY_KEY,
   PROF_PIC_BUCKET,
@@ -1306,5 +1308,112 @@ router.post("/events/save/:userId/:eventId", async (req, res) => {
     res.status(500).send("Error saving event to profile");
   }
 });
+
+// Function to delete a user from the database, along with all references in friends' lists and events.
+async function deleteUser(userId: string): Promise<string> {
+  const userToDelete: User | null = await getUser(userId);
+
+  if (!userToDelete) {
+    return "User not found";
+  }
+
+  // Remove the user from their friends' friends lists
+  const friendsUpdatePromises = userToDelete.friends.map(friendId =>
+    updateUserFriendsList(friendId, userId)
+  );
+
+  // Remove the user from the events they are going to
+  const eventsUpdatePromises = userToDelete.eventsGoingTo.map(eventId =>
+    updateEventAttendeesList(eventId, userId)
+  );
+
+  // Wait for all updates to be processed
+  await Promise.all([...friendsUpdatePromises, ...eventsUpdatePromises]);
+
+  // Finally, delete the user
+  const deleteParams = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: userId,
+    },
+  };
+
+  try {
+    await db.delete(deleteParams).promise();
+    return "User successfully deleted";
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    return "Error deleting user";
+  }
+}
+
+// Helper function to update a user's friends list
+async function updateUserFriendsList(friendId: string, userIdToRemove: string): Promise<void> {
+  const friend: User | null = await getUser(friendId);
+  if (friend) {
+    const index = friend.friends.indexOf(userIdToRemove);
+    if (index > -1) {
+      friend.friends.splice(index, 1);
+      const updateParams = {
+        TableName: USERS_TABLE_NAME,
+        Key: {
+          [USERS_PRIMARY_KEY]: friendId,
+        },
+        UpdateExpression: "SET friends = :friends",
+        ExpressionAttributeValues: {
+          ":friends": friend.friends,
+        },
+      };
+      await db.update(updateParams).promise();
+    }
+  }
+}
+
+async function getEvent(eventId: string): Promise<Event | null> {
+  const params = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      [EVENTS_PRIMARY_KEY]: eventId,
+    },
+  };
+
+  try {
+    const result = await db.get(params).promise();
+    return result.Item as Event;
+  } catch (err) {
+    console.error("Error getting event:", err);
+    return null;
+  }
+}
+
+// Helper function to update an event's attendees list
+async function updateEventAttendeesList(eventId: string, userIdToRemove: string): Promise<void> {
+  const event: Event | null = await getEvent(eventId); // Implement this function to retrieve an event
+  if (event) {
+    const index = event.whoIsGoing.indexOf(userIdToRemove);
+    if (index > -1) {
+      event.whoIsGoing.splice(index, 1);
+      const updateParams = {
+        TableName: EVENTS_TABLE_NAME, // Replace with your actual table name for events
+        Key: {
+          'eventId': eventId,
+        },
+        UpdateExpression: "SET whoIsGoing = :whoIsGoing",
+        ExpressionAttributeValues: {
+          ":whoIsGoing": event.whoIsGoing,
+        },
+      };
+      await db.update(updateParams).promise();
+    }
+  }
+}
+
+// Delete a user from the database
+router.delete("/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const result = await deleteUser(userId);
+  res.status(200).send(result);
+});
+
 
 export default router;

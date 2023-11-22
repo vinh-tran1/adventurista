@@ -533,4 +533,68 @@ router.get("/event-pic-as-bytes", async (req, res) => {
   }
 });
 
+// Function to delete an event from the database, along with all references in attendees' lists of events they are going to.
+async function deleteEvent(eventId: string): Promise<string> {
+  const eventToDelete: Event | null = await getEvent(eventId);
+
+  if (!eventToDelete) {
+    return "Event not found";
+  }
+
+  // Remove the event from each attendee's list of events they are going to
+  const attendeesUpdatePromises = eventToDelete.whoIsGoing.map(attendeeId =>
+    updateUserEventsList(attendeeId, eventId)
+  );
+
+  // Wait for all updates to be processed
+  await Promise.all(attendeesUpdatePromises);
+
+  // Finally, delete the event
+  const deleteParams = {
+    TableName: EVENTS_TABLE_NAME,
+    Key: {
+      'eventId': eventId,
+    },
+  };
+
+  try {
+    await db.delete(deleteParams).promise();
+    return "Event successfully deleted";
+  } catch (err) {
+    console.error("Error deleting event:", err);
+    return "Error deleting event";
+  }
+}
+
+// Helper function to update a user's list of events they are going to
+async function updateUserEventsList(userId: string, eventIdToRemove: string): Promise<void> {
+  const user: User | null = await getUser(userId);
+  if (user) {
+    const index = user.eventsGoingTo.indexOf(eventIdToRemove);
+    if (index > -1) {
+      user.eventsGoingTo.splice(index, 1);
+      const updateParams = {
+        TableName: USERS_TABLE_NAME,
+        Key: {
+          [USERS_PRIMARY_KEY]: userId,
+        },
+        UpdateExpression: "SET eventsGoingTo = :eventsGoingTo",
+        ExpressionAttributeValues: {
+          ":eventsGoingTo": user.eventsGoingTo,
+        },
+      };
+      await db.update(updateParams).promise();
+    }
+  }
+}
+
+router.delete("/event/:eventId", async (req, res) => {
+  const { eventId } = req.params;
+  const result = await deleteEvent(eventId);
+  if (result !== "Event successfully deleted") {
+    return res.status(400).send(result);
+  }
+  res.status(200).send(result);
+});
+
 export default router;
