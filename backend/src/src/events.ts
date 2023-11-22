@@ -87,6 +87,47 @@ router.post("/event/create", async (req, res) => {
   res.status(201).send(result);
 });
 
+// TODO: TO BE USED FOR THE /EVENTS ENDPOINT -- AKSHAY use this to filter events by distance (need to grab their current coordinates)
+type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+function calculateDistance(location1: Coordinates, location2: Coordinates, unit: 'km' | 'mi'): number {
+  const earthRadius = {
+      km: 6371,
+      mi: 3959
+  };
+
+  const dLat = degreesToRadians(location2.latitude - location1.latitude);
+  const dLon = degreesToRadians(location2.longitude - location1.longitude);
+
+  const lat1 = degreesToRadians(location1.latitude);
+  const lat2 = degreesToRadians(location2.latitude);
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return earthRadius[unit] * c;
+}
+
+// Helper function to convert degrees to radians
+function degreesToRadians(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
+
+// Example usage:
+const location1: Coordinates = { latitude: 52.516275, longitude: 13.377704 };
+const location2: Coordinates = { latitude: 48.856614, longitude: 2.352222 };
+
+const distanceInKm = calculateDistance(location1, location2, 'km');
+console.log(`Distance in kilometers: ${distanceInKm}`);
+
+const distanceInMi = calculateDistance(location1, location2, 'mi');
+console.log(`Distance in miles: ${distanceInMi}`);
+
+
 async function getEvents(): Promise<Event[]> {
   // area: string,
   // userLocation: string,
