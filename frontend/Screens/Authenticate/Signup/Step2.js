@@ -10,6 +10,8 @@ import { setUserInfo } from "../../../Redux/userSlice";
 
 const Step2 = ({ navigation, route }) => {
 
+  const API_URL = process.env.AWS_API_URL + 'users/update-user-age-interests-location';
+
   const dispatch = useDispatch();
 
   const [interests, setInterests] = useState([]);
@@ -21,7 +23,8 @@ const Step2 = ({ navigation, route }) => {
 
   const handleCompleteSignup = async () => {
     try {
-      const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/update-user-age-interests-location", {
+      // const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/update-user-age-interests-location", {
+        const response = await axios.post(API_URL, {
         userId: user.userId,
         age: age,
         interests: interests,
