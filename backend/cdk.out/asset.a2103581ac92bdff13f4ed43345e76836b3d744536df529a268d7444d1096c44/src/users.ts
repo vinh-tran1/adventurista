@@ -1206,7 +1206,7 @@ router.post("/auth/logout", (req, res) => {
 // GET /friends/mutual/:userId1/:userId2
 router.get("/friends/mutual/:userId1/:userId2", async (req, res) => {
   const { userId1, userId2 } = req.params;
-
+  
   try {
     const user1 = await getUser(userId1);
     const user2 = await getUser(userId2);
@@ -1215,9 +1215,7 @@ router.get("/friends/mutual/:userId1/:userId2", async (req, res) => {
       return res.status(404).send("One or both users not found");
     }
 
-    const mutualFriends = user1.friends.filter((friend) =>
-      user2.friends.includes(friend)
-    );
+    const mutualFriends = user1.friends.filter(friend => user2.friends.includes(friend));
     res.status(200).send(mutualFriends);
   } catch (error) {
     console.error("Error fetching mutual friends:", error);
@@ -1226,19 +1224,17 @@ router.get("/friends/mutual/:userId1/:userId2", async (req, res) => {
 });
 
 // Function to mark an event as seen by a user
-async function markEventAsSeen(
-  userId: string,
-  eventId: string
-): Promise<User | null> {
+async function markEventAsSeen(userId: string, eventId: string): Promise<User | null> {
+  
   const updateParams = {
     TableName: USERS_TABLE_NAME,
     Key: {
-      [USERS_PRIMARY_KEY]: userId,
+      [USERS_PRIMARY_KEY]: userId
     },
     UpdateExpression: "ADD eventsSeen :eventId",
     ExpressionAttributeValues: {
-      ":eventId": db.createSet([eventId]),
-    },
+      ":eventId": db.createSet([eventId])
+    }
   };
 
   try {
@@ -1252,19 +1248,16 @@ async function markEventAsSeen(
 }
 
 // Function to save an event to a user's profile
-async function saveEvent(
-  userId: string,
-  eventId: string
-): Promise<User | null> {
+async function saveEvent(userId: string, eventId: string): Promise<User | null> {
   const updateParams = {
     TableName: USERS_TABLE_NAME,
     Key: {
-      [USERS_PRIMARY_KEY]: userId,
+      [USERS_PRIMARY_KEY]: userId
     },
     UpdateExpression: "ADD eventsSaved :eventId",
     ExpressionAttributeValues: {
-      ":eventId": db.createSet([eventId]),
-    },
+      ":eventId": db.createSet([eventId])
+    }
   };
 
   try {
@@ -1278,32 +1271,32 @@ async function saveEvent(
 }
 
 // Mark an event as seen by a user
-router.post("/events/mark-as-seen/:userId/:eventId", async (req, res) => {
+router.post('/events/mark-as-seen/:userId/:eventId', async (req, res) => {
   const { userId, eventId } = req.params;
   try {
     const updatedUser = await markEventAsSeen(userId, eventId);
     if (!updatedUser) {
-      return res.status(404).send("User or event not found");
+      return res.status(404).send('User or event not found');
     }
-    res.status(200).send("Event marked as seen");
+    res.status(200).send('Event marked as seen');
   } catch (error) {
     console.error("Error marking event as seen:", error);
-    res.status(500).send("Error marking event as seen");
+    res.status(500).send('Error marking event as seen');
   }
 });
 
 // Save an event to a user's profile
-router.post("/events/save/:userId/:eventId", async (req, res) => {
+router.post('/events/save/:userId/:eventId', async (req, res) => {
   const { userId, eventId } = req.params;
   try {
     const updatedUser = await saveEvent(userId, eventId);
     if (!updatedUser) {
-      return res.status(404).send("User or event not found");
+      return res.status(404).send('User or event not found');
     }
-    res.status(200).send("Event saved to profile");
+    res.status(200).send('Event saved to profile');
   } catch (error) {
     console.error("Error saving event:", error);
-    res.status(500).send("Error saving event to profile");
+    res.status(500).send('Error saving event to profile');
   }
 });
 
