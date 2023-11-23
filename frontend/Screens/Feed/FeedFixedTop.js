@@ -2,12 +2,14 @@ import React from "react";
 import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-const FeedFixedTop = () => {
+const FeedFixedTop = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View style={styles.header}>
         <Image style={styles.logo} source={require('../../assets/logo.png')}/>
-        <FontAwesomeIcon style={{ marginTop: 20 }} icon="fa-bell" size={25} />
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+          <FontAwesomeIcon style={{ marginTop: 20 }} icon="fa-bell" size={25} />
+        </TouchableOpacity>
       </View>
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.location}>

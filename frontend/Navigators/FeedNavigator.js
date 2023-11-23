@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack"
 
 import Feed from '../Screens/Feed/Feed';
+import Notifications from '../Screens/Feed/Notifications/Notifications';
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,13 @@ const MyStack = () => {
             <Stack.Screen 
                 name='Feed Main'
                 component={Feed}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen 
+                name='Notifications'
+                component={Notifications}
                 options={{
                     headerShown: false,
                 }}
