@@ -82,4 +82,4 @@ export const userReducer = (state = initialState, action) => {
 // SELECTOR
 export const selectIsLoggedIn = (state) => state.userInfo.userId.length > 0;
 export const selectUserInfo = (state) => state.userInfo;
-export const selectNewPost = (state) => state.newPost;
+export const selectNewPost = (state) => state.userInfo.newPost;

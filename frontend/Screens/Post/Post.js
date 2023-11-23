@@ -11,7 +11,7 @@ import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice
 
 const Post = ({ navigation }) => {
   
-  const API_URL = process.env.AWS_API_URL + 'events/event/create';
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/create';
 
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);

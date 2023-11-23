@@ -13,7 +13,7 @@ const Post = (props) => {
     const { title, location, caption, img, createdBy, date, time, tags } = props;
 
     // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
-    const API_URL = process.env.AWS_API_URL + 'users/';
+    const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
 
     const [activeSlide, setActiveSlide] = useState(0);
 
