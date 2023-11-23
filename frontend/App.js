@@ -9,8 +9,8 @@ import store from "./Redux/store";
 // Icons
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus } from '@fortawesome/free-solid-svg-icons';
-library.add(faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus);
+import { faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus } from '@fortawesome/free-solid-svg-icons';
+library.add(faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus);
 
 export default function App() {
   return (
