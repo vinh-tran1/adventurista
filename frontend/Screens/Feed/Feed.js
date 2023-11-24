@@ -34,7 +34,7 @@ const DATA = [
   }
 ];
 
-const Feed = () => {
+const Feed = ({ navigation }) => {
   // const user = useSelector(selectUserInfo);
   // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events'
@@ -81,7 +81,7 @@ const Feed = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FeedFixedTop />
+      <FeedFixedTop navigation={navigation} />
       <FlatList
         data={posts}
         renderItem={({ item }) => 
