@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const Post = (props) => {
     const [userName, setUserName] = useState("")
-    const { eventId, title, location, caption, img, createdBy, date, time, tags } = props;
+    const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
 
     // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
     const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
@@ -83,6 +83,7 @@ const Post = (props) => {
                             createdBy={userName} 
                             date={date} 
                             time={time} 
+                            navigation={navigation}
                         />
                         <PostBottom eventId={eventId} caption={caption} tags={tags} />
                     </View>
@@ -91,6 +92,7 @@ const Post = (props) => {
                         <UserTop 
                             profile_pic={user.profile_pic} 
                             interests={user.interests}
+                            navigation={navigation}
                         />
                         <UserBottom
                             name={user.name}
@@ -102,10 +104,10 @@ const Post = (props) => {
                 </View>
                 ))}
             </Swiper>
-            <TouchableOpacity onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '75%' }}>
+            <TouchableOpacity onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '65%'}}>
                 {/* Left 1/3 of the screen is a touchable area for moving to the previous slide */}
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%' }}>
+            <TouchableOpacity onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%'}}>
                 {/* Right 1/3 of the screen is a touchable area for moving to the next slide */}
             </TouchableOpacity>
 

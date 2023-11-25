@@ -11,7 +11,8 @@ const Calendar = () => {
 
   const user = useSelector(selectUserInfo);
 
-  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to'
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
+  console.log(API_URL)
 
   const [attending, setAttending] = useState([]);
 
@@ -21,7 +22,7 @@ const Calendar = () => {
       })
       .then((response) => {
         setAttending(response.data);
-        console.log(attending);
+        console.log("attending state: " + attending);
       })
       .catch((error) => {
         console.log(error);
