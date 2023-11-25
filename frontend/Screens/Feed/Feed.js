@@ -94,7 +94,8 @@ const Feed = ({ navigation }) => {
             time={item.time}
             caption={item.description}
             tags={item.tags}
-            title={item.title} 
+            title={item.title}
+            eventId={item.eventId}
             //createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
