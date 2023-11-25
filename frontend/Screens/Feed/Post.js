@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const Post = (props) => {
     const [userName, setUserName] = useState("")
-    const { title, location, caption, img, createdBy, date, time, tags } = props;
+    const { eventId, title, location, caption, img, createdBy, date, time, tags } = props;
 
     // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
     const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
@@ -84,7 +84,7 @@ const Post = (props) => {
                             date={date} 
                             time={time} 
                         />
-                        <PostBottom caption={caption} tags={tags} />
+                        <PostBottom eventId={eventId} caption={caption} tags={tags} />
                     </View>
                     ) : (
                     <View style={styles.postContainer}>
@@ -102,12 +102,13 @@ const Post = (props) => {
                 </View>
                 ))}
             </Swiper>
-            <TouchableOpacity onPress={handleLeftTap} style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '50%' }}>
-                {/* Left half of the screen is a touchable area for moving to the previous slide */}
+            <TouchableOpacity onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '75%' }}>
+                {/* Left 1/3 of the screen is a touchable area for moving to the previous slide */}
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleRightTap} style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '50%' }}>
-                {/* Right half of the screen is a touchable area for moving to the next slide */}
+            <TouchableOpacity onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%' }}>
+                {/* Right 1/3 of the screen is a touchable area for moving to the next slide */}
             </TouchableOpacity>
+
         </View>
     )
   };
