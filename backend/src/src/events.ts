@@ -93,10 +93,14 @@ type Coordinates = {
   longitude: number;
 };
 
-function calculateDistance(location1: Coordinates, location2: Coordinates, unit: 'km' | 'mi'): number {
+function calculateDistance(
+  location1: Coordinates,
+  location2: Coordinates,
+  unit: "km" | "mi"
+): number {
   const earthRadius = {
-      km: 6371,
-      mi: 3959
+    km: 6371,
+    mi: 3959,
   };
 
   const dLat = degreesToRadians(location2.latitude - location1.latitude);
@@ -105,8 +109,9 @@ function calculateDistance(location1: Coordinates, location2: Coordinates, unit:
   const lat1 = degreesToRadians(location1.latitude);
   const lat2 = degreesToRadians(location2.latitude);
 
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return earthRadius[unit] * c;
@@ -121,12 +126,11 @@ function degreesToRadians(degrees: number): number {
 const location1: Coordinates = { latitude: 52.516275, longitude: 13.377704 };
 const location2: Coordinates = { latitude: 48.856614, longitude: 2.352222 };
 
-const distanceInKm = calculateDistance(location1, location2, 'km');
+const distanceInKm = calculateDistance(location1, location2, "km");
 console.log(`Distance in kilometers: ${distanceInKm}`);
 
-const distanceInMi = calculateDistance(location1, location2, 'mi');
+const distanceInMi = calculateDistance(location1, location2, "mi");
 console.log(`Distance in miles: ${distanceInMi}`);
-
 
 async function getEvents(): Promise<Event[]> {
   // area: string,
@@ -192,8 +196,8 @@ router.get("/event/:eventId", async (req, res) => {
   res.status(200).send(event);
 });
 
-router.get("/events-going-to", async (req, res) => {
-  const { userId } = req.body;
+router.get("/events-going-to/:userId", async (req, res) => {
+  const { userId } = req.params;
   const user: User | null = await getUser(userId);
 
   if (!user) {
@@ -212,8 +216,8 @@ router.get("/events-going-to", async (req, res) => {
   res.status(200).send(events);
 });
 
-router.get("/events-going-to-ids", async (req, res) => {
-  const { userId } = req.body;
+router.get("/events-going-to-ids/:userId", async (req, res) => {
+  const { userId } = req.params;
   const user: User | null = await getUser(userId);
 
   if (!user) {
@@ -542,7 +546,7 @@ async function deleteEvent(eventId: string): Promise<string> {
   }
 
   // Remove the event from each attendee's list of events they are going to
-  const attendeesUpdatePromises = eventToDelete.whoIsGoing.map(attendeeId =>
+  const attendeesUpdatePromises = eventToDelete.whoIsGoing.map((attendeeId) =>
     updateUserEventsList(attendeeId, eventId)
   );
 
@@ -553,7 +557,7 @@ async function deleteEvent(eventId: string): Promise<string> {
   const deleteParams = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
-      'eventId': eventId,
+      eventId: eventId,
     },
   };
 
@@ -567,7 +571,10 @@ async function deleteEvent(eventId: string): Promise<string> {
 }
 
 // Helper function to update a user's list of events they are going to
-async function updateUserEventsList(userId: string, eventIdToRemove: string): Promise<void> {
+async function updateUserEventsList(
+  userId: string,
+  eventIdToRemove: string
+): Promise<void> {
   const user: User | null = await getUser(userId);
   if (user) {
     const index = user.eventsGoingTo.indexOf(eventIdToRemove);
