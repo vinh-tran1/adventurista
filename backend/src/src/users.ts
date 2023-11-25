@@ -1522,4 +1522,75 @@ router.delete("/:userId", async (req, res) => {
   res.status(200).send(result);
 });
 
+// Endpoint to save an event to a user's profile
+router.post("/events/save/:userId/:eventId", async (req, res) => {
+  const { userId, eventId } = req.params;
+
+  // Assume a function exists to check if the event exists
+  const event = await getEvent(eventId);
+  if (!event) {
+    return res.status(404).send("Event not found");
+  }
+
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  // Assume a function exists to add the event to the user's saved events
+  const result = await saveEventToUserProfile(userId, eventId);
+  if (result) {
+    res.status(200).send({ message: "Event saved successfully" });
+  } else {
+    res.status(500).send({ message: "Failed to save event" });
+  }
+});
+
+// Function to add the event to the user's saved events
+async function saveEventToUserProfile(userId : string, eventId: string) {
+  const user = await getUser(userId);
+  if (!user.eventsSaved) {
+    user.eventsSaved = [];
+  }
+  if (user.eventsSaved.includes(eventId)) {
+    return false; // Event already saved
+  }
+  user.eventsSaved.push(eventId);
+
+  // Save the updated user profile
+  const params = {
+    TableName: USERS_TABLE_NAME,
+    Key: {
+      [USERS_PRIMARY_KEY]: userId,
+    },
+    UpdateExpression: "SET eventsSaved = :eventsSaved",
+    ExpressionAttributeValues: {
+      ":eventsSaved": user.eventsSaved,
+    },
+  };
+
+  try {
+    await db.update(params).promise();
+    return true;
+  } catch (err) {
+    console.error("Error saving event to user profile:", err);
+    return false;
+  }
+}
+
+// Endpoint to get all saved events for a user
+router.get("/events/saved/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
+  // Assume the eventsSaved attribute contains the IDs of saved events
+  const events = await Promise.all(user.eventsSaved.map(eventId => getEvent(eventId)));
+
+  res.status(200).send({ eventsSaved: events });
+});
+
 export default router;
