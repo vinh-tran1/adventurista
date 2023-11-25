@@ -58,21 +58,16 @@ const Feed = ({ navigation }) => {
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  
 
-  const state = useSelector((state) => state);
-  console.log(state);
-
+  // const state = useSelector((state) => state);
+  // console.log(state);
 
   // fetch posts api
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    console.log("BEFORE: " + newPost)
-
     axios.get(API_URL)
     .then((response) => {
       setPosts(response.data);
       dispatch(setNewPost(false));
-
-      console.log("AFTER: " + newPost);
     })
     .catch((error) => {
       console.log(error);
@@ -96,6 +91,7 @@ const Feed = ({ navigation }) => {
             tags={item.tags}
             title={item.title}
             eventId={item.eventId}
+            navigation={navigation}
             //createdBy={item.createdBy}
           />}
         keyExtractor={item => item.id}
