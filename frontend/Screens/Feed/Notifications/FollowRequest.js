@@ -41,17 +41,18 @@ const FollowRequest = ({ requesterId }) => {
 
       if (response.status == 200) {
         const updatedUser = response.data;
+
+        // redux to update friend status
+        dispatch(setUserInfo({
+          newPost: false,
+          ...updatedUser
+        }));
+
         console.log("Friend Request Accepted!")
-        console.log("updated user: " + updatedUser.requests.incoming);
+        // console.log("updated user: " + updatedUser.requests.incoming);
       } else {
         console.log("Error in accepting friend request!");
       }
-
-      // redux to update friend status
-      dispatch(setUserInfo({
-        newPost: false,
-        ...updatedUser
-      }));
 
     } catch (err) {
       console.log(err);
@@ -67,17 +68,21 @@ const FollowRequest = ({ requesterId }) => {
       });
 
       if (response.status == 200) {
+        const updatedUser = response.data;
+
+        // redux to update friend status
+        dispatch(setUserInfo({
+          newPost: false,
+          ...updatedUser
+        }));
+
+        // console.log("updated user: " + user.requests.incoming);
         console.log("Friend Request sucessfully DENIED!")
-        console.log("updated user: " + user.requests.incoming);
       } else {
         console.log("Error in denying friend request!");
       }
 
-      // redux to update friend status
-      dispatch(setUserInfo({
-        newPost: false,
-        ...user
-      }));
+      
 
     } catch (err) {
       console.log(err);

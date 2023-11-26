@@ -61,7 +61,7 @@ const FriendProfileView = ({ navigation, route }) => {
         setRequested(true);
         setFriendStatus("Requested")
         
-         // redux to update friend status 
+        // redux to update friend status 
         dispatch(setUserInfo({
           newPost: false,
           ...updatedUser

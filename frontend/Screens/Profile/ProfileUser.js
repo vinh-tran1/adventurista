@@ -10,10 +10,10 @@ import MyEvents from "./MyEvents";
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../../Redux/userSlice';
 
-const ProfileUser = () => {
+const ProfileUser = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
-  console.log(user.eventsOwned)
+  console.log(JSON.stringify(user, null, 2))
 
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
@@ -39,7 +39,10 @@ const ProfileUser = () => {
       name: 'squash5'
     }
   ];
-  // const interests = ['catan', 'drinks', 'paddle'];
+
+  const handleEditProfile = () => {
+    navigation.navigate("Edit Profile");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +64,7 @@ const ProfileUser = () => {
               <Image source={{uri: profilePic}} style={styles.profilePic}/>
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleEditProfile}>
                 <View style={styles.bubble}>
                   <FontAwesomeIcon icon="fa-pencil" size={22}/>
                 </View>

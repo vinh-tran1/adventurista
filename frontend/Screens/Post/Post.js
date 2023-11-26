@@ -7,7 +7,7 @@ import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
+import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
   
@@ -126,7 +126,6 @@ const Post = ({ navigation }) => {
     setEventName("");
     setLocation("");
     setCaption("");
-    setCaption("");
     setMonth("");
     setDate("");
     setDay("");
@@ -150,7 +149,13 @@ const Post = ({ navigation }) => {
           eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
+        const updatedUser = response.data;
+
         dispatch(setNewPost(true));
+        dispatch(setUserInfo({
+          ...updatedUser
+        }));
+
         handleClear();
         navigation.navigate('Feed Main');
         console.log("sucessfully created event!");
@@ -312,7 +317,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomWidth: 0.25,
     flexDirection: 'row',
-    justifyContent: 'center',
     justifyContent: 'space-between'
   },
   headerText: {
