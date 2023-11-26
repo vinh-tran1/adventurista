@@ -1,0 +1,45 @@
+{
+  "name": "adventurista",
+  "version": "1.0.0",
+  "description": "backend express app",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yale-swe/f23-adventurista.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "keywords": [],
+  "author": "PSebaRaj",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1473.0",
+    "bcrypt": "^5.1.1",
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.1",
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.0",
+    "@types/swagger-jsdoc": "^6.0.2",
+    "@types/swagger-ui-express": "^4.1.5",
+    "@types/uuid": "^9.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.4.4"
+  }
+}
