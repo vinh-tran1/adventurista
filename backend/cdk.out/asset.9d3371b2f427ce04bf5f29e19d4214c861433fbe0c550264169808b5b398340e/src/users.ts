@@ -318,10 +318,8 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET bio = :bio, age = :age, primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
     ExpressionAttributeValues: {
-      ":bio": user.bio,
-      ":age": user.age,
       ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
@@ -464,8 +462,6 @@ router.post("/update-user", async (req, res) => {
   user.firstName = req.body.firstName || user.firstName;
   user.lastName = req.body.lastName || user.lastName;
   user.interests = req.body.interests || user.interests;
-  user.age = req.body.age || user.age;
-  user.bio = req.body.bio || user.bio;
 
   const result = updateUser(user);
   if (!result) {
@@ -477,7 +473,7 @@ router.post("/update-user", async (req, res) => {
 async function sendFriendRequest(
   requesterId: string,
   requestId: string
-): Promise<User | null> {
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
@@ -527,8 +523,7 @@ async function sendFriendRequest(
     return null;
   }
 
-  // return "Friend request sent";
-  return requester;
+  return "Friend request sent";
 }
 
 /**
@@ -567,7 +562,7 @@ router.post("/friend-request", async (req, res) => {
 async function unaddFriend(
   requesterId: string,
   requestId: string
-): Promise<User | null> {
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
@@ -626,8 +621,7 @@ async function unaddFriend(
     return null;
   }
 
-  // return "Friend unadd processed";
-  return requester;
+  return "Friend unadd processed";
 }
 /**
  * @swagger
@@ -666,7 +660,7 @@ router.post("/friend-request/unadd", async (req, res) => {
 async function acceptFriendRequest(
   requesterId: string,
   requestId: string
-): Promise<User | null> {
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
@@ -731,8 +725,7 @@ async function acceptFriendRequest(
     return null;
   }
 
-  // return "Friend request accepted";
-  return requestee;
+  return "Friend request accepted";
 }
 /**
  * @swagger
@@ -772,7 +765,7 @@ router.post("/friend-request/accept", async (req, res) => {
 async function denyFriendRequest(
   requesterId: string,
   requestId: string
-): Promise<User | null> {
+): Promise<string | null> {
   // Fetch users from a database.
   const requester: User | null = await getUser(requesterId);
   const requestee: User | null = await getUser(requestId);
@@ -831,8 +824,7 @@ async function denyFriendRequest(
     return null;
   }
 
-  // return "Friend request denied";
-  return requestee;
+  return "Friend request denied";
 }
 /**
  * @swagger
@@ -1120,27 +1112,7 @@ async function updateProfilePicture(user: User): Promise<User | null> {
     await db.update(params).promise();
     return user;
   } catch (err) {
-    console.error("Error updating user profile picture:", err);
-    return null;
-  }
-}
-async function updateBannerImage(user: User): Promise<User | null> {
-  const params = {
-    TableName: USERS_TABLE_NAME,
-    Key: {
-      [USERS_PRIMARY_KEY]: user.userId,
-    },
-    UpdateExpression: "SET bannerImageUrl = :bannerImageUrl",
-    ExpressionAttributeValues: {
-      ":bannerImageUrl": `${PROF_PIC_BUCKET_URI}${user.bannerImageUrl}`,
-    },
-  };
-
-  try {
-    await db.update(params).promise();
-    return user;
-  } catch (err) {
-    console.error("Error updating user banner image:", err);
+    console.error("Error updating event:", err);
     return null;
   }
 }
@@ -1170,45 +1142,10 @@ router.get("/profile-pic-presigned", async (req, res) => {
   user.profilePictureUrl = JSON.parse(url).Key;
   const updateResult = await updateProfilePicture(user);
   if (!updateResult) {
-    return res
-      .status(400)
-      .send("Error updating users's s3 URL for profile picture");
+    return res.status(400).send("Error updating users's s3 URL");
   }
   return res.status(200).send(url);
 });
-
-/**
- * @swagger
- * /banner-image-presigned:
- *     get:
- *       summary: "Get presigned URL for banner image upload"
- *       description: "Returns a presigned URL for uploading banner image to S3"
- *       operationId: "getProfilePicUploadURL"
- *       produces:
- *         - "application/json"
- *       responses:
- *         "200":
- *           description: "Presigned URL generated"
- */
-router.get("/banner-image-presigned", async (req, res) => {
-  const { userId } = req.body;
-  const user = await getUser(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
-  const url = await getProfilePicUploadURL();
-
-  user.profilePictureUrl = JSON.parse(url).Key;
-  const updateResult = await updateBannerImage(user);
-  if (!updateResult) {
-    return res
-      .status(400)
-      .send("Error updating users's s3 URL for banner image");
-  }
-  return res.status(200).send(url);
-});
-
 /**
  * @swagger
  * /profile-pic-as-bytes:
@@ -1316,8 +1253,6 @@ async function createUser(
     eventsNotGoingTo: [],
     messages: [],
     profilePictureUrl: "",
-    bio: "",
-    bannerImageUrl: "",
   };
 
   const params = {
@@ -1585,79 +1520,6 @@ router.delete("/:userId", async (req, res) => {
   const { userId } = req.params;
   const result = await deleteUser(userId);
   res.status(200).send(result);
-});
-
-// Endpoint to save an event to a user's profile
-router.post("/events/save/:userId/:eventId", async (req, res) => {
-  const { userId, eventId } = req.params;
-
-  // Assume a function exists to check if the event exists
-  const event = await getEvent(eventId);
-  if (!event) {
-    return res.status(404).send("Event not found");
-  }
-
-  const user = await getUser(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
-  // Assume a function exists to add the event to the user's saved events
-  const result = await saveEventToUserProfile(userId, eventId);
-  if (result) {
-    res.status(200).send({ message: "Event saved successfully" });
-  } else {
-    res.status(500).send({ message: "Failed to save event" });
-  }
-});
-
-// Function to add the event to the user's saved events
-async function saveEventToUserProfile(userId: string, eventId: string) {
-  const user = await getUser(userId);
-  if (!user.eventsSaved) {
-    user.eventsSaved = [];
-  }
-  if (user.eventsSaved.includes(eventId)) {
-    return false; // Event already saved
-  }
-  user.eventsSaved.push(eventId);
-
-  // Save the updated user profile
-  const params = {
-    TableName: USERS_TABLE_NAME,
-    Key: {
-      [USERS_PRIMARY_KEY]: userId,
-    },
-    UpdateExpression: "SET eventsSaved = :eventsSaved",
-    ExpressionAttributeValues: {
-      ":eventsSaved": user.eventsSaved,
-    },
-  };
-
-  try {
-    await db.update(params).promise();
-    return true;
-  } catch (err) {
-    console.error("Error saving event to user profile:", err);
-    return false;
-  }
-}
-
-// Endpoint to get all saved events for a user
-router.get("/events/saved/:userId", async (req, res) => {
-  const { userId } = req.params;
-
-  const user = await getUser(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
-  // Assume the eventsSaved attribute contains the IDs of saved events
-  const events = await Promise.all(
-    user.eventsSaved.map((eventId) => getEvent(eventId))
-  );
-
-  res.status(200).send({ eventsSaved: events });
 });
 
 export default router;

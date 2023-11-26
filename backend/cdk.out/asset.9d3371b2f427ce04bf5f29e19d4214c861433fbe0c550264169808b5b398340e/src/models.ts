@@ -22,8 +22,6 @@ export interface User {
   eventsNotGoingTo: string[];
   messages: string[];
   profilePictureUrl: string;
-  bio: string;
-  bannerImageUrl: string;
 }
 
 export interface Event {

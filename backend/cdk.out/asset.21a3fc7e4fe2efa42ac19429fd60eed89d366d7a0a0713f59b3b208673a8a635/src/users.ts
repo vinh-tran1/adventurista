@@ -318,10 +318,8 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET bio = :bio, age = :age, primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
     ExpressionAttributeValues: {
-      ":bio": user.bio,
-      ":age": user.age,
       ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
@@ -464,8 +462,6 @@ router.post("/update-user", async (req, res) => {
   user.firstName = req.body.firstName || user.firstName;
   user.lastName = req.body.lastName || user.lastName;
   user.interests = req.body.interests || user.interests;
-  user.age = req.body.age || user.age;
-  user.bio = req.body.bio || user.bio;
 
   const result = updateUser(user);
   if (!result) {
@@ -1120,27 +1116,7 @@ async function updateProfilePicture(user: User): Promise<User | null> {
     await db.update(params).promise();
     return user;
   } catch (err) {
-    console.error("Error updating user profile picture:", err);
-    return null;
-  }
-}
-async function updateBannerImage(user: User): Promise<User | null> {
-  const params = {
-    TableName: USERS_TABLE_NAME,
-    Key: {
-      [USERS_PRIMARY_KEY]: user.userId,
-    },
-    UpdateExpression: "SET bannerImageUrl = :bannerImageUrl",
-    ExpressionAttributeValues: {
-      ":bannerImageUrl": `${PROF_PIC_BUCKET_URI}${user.bannerImageUrl}`,
-    },
-  };
-
-  try {
-    await db.update(params).promise();
-    return user;
-  } catch (err) {
-    console.error("Error updating user banner image:", err);
+    console.error("Error updating event:", err);
     return null;
   }
 }
@@ -1170,45 +1146,10 @@ router.get("/profile-pic-presigned", async (req, res) => {
   user.profilePictureUrl = JSON.parse(url).Key;
   const updateResult = await updateProfilePicture(user);
   if (!updateResult) {
-    return res
-      .status(400)
-      .send("Error updating users's s3 URL for profile picture");
+    return res.status(400).send("Error updating users's s3 URL");
   }
   return res.status(200).send(url);
 });
-
-/**
- * @swagger
- * /banner-image-presigned:
- *     get:
- *       summary: "Get presigned URL for banner image upload"
- *       description: "Returns a presigned URL for uploading banner image to S3"
- *       operationId: "getProfilePicUploadURL"
- *       produces:
- *         - "application/json"
- *       responses:
- *         "200":
- *           description: "Presigned URL generated"
- */
-router.get("/banner-image-presigned", async (req, res) => {
-  const { userId } = req.body;
-  const user = await getUser(userId);
-  if (!user) {
-    return res.status(404).send("User not found");
-  }
-
-  const url = await getProfilePicUploadURL();
-
-  user.profilePictureUrl = JSON.parse(url).Key;
-  const updateResult = await updateBannerImage(user);
-  if (!updateResult) {
-    return res
-      .status(400)
-      .send("Error updating users's s3 URL for banner image");
-  }
-  return res.status(200).send(url);
-});
-
 /**
  * @swagger
  * /profile-pic-as-bytes:
