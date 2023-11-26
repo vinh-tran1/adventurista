@@ -30,7 +30,7 @@ const initialState = {
     email: '',
     eventsGoingTo: [],
     eventsNotGoingTo: [],
-    eventsOwend: [],
+    eventsOwned: [],
     firstName: '',
     lastName: '',
     friends: [],

@@ -21,7 +21,7 @@ const Notifications = ({ navigation }) => {
       </View>
       <ScrollView style={{ marginTop: 20 }}>
         {user.requests.incoming.map((request, index) => (
-          <FollowRequest key={index} request={request} />
+          <FollowRequest key={index} requesterId={request} />
         ))}
       </ScrollView>
     </SafeAreaView>

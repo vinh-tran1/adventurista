@@ -17,9 +17,7 @@ const Calendar = () => {
   const [attending, setAttending] = useState([]);
 
   useEffect(() => {
-    axios.get(API_URL, {
-      data: { userId: user.userId },
-      })
+    axios.get(API_URL)
       .then((response) => {
         setAttending(response.data);
         console.log("attending state: " + attending);

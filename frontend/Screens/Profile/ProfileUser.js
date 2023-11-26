@@ -13,6 +13,7 @@ import { selectUserInfo } from '../../Redux/userSlice';
 const ProfileUser = () => {
 
   const user = useSelector(selectUserInfo);
+  console.log(user.eventsOwned)
 
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
@@ -67,9 +68,9 @@ const ProfileUser = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.bubbleRow}>
-              <Bubble value={9} name={'Events'}/>
-              <Bubble value={120} name={'Connections'}/>
-              <Bubble value={6} name={'Groups'}/>
+              <Bubble value={user.eventsOwned.length} name={'Events'}/>
+              <Bubble value={user.friends.length} name={'Connections'}/>
+              <Bubble value={user.groups.length} name={'Groups'}/>
             </View>
           </View>
         </ImageBackground>
@@ -77,11 +78,11 @@ const ProfileUser = () => {
         {/* bottom half */}
         <View style={styles.bioBanner}>
           <Text style={{fontSize: 20, fontWeight: '700'}}>{user.firstName} {user.lastName}</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6}}>
+          <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
             <FontAwesomeIcon icon="location-dot" color="#D186FF"/>  
             <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>{user.primaryLocation}</Text>
           </View>
-          <Text style={{marginTop: 5, fontSize: 16}}>The Earth’s rotation really makes my day</Text>
+          <Text style={{marginTop: 8, fontSize: 16}}>The Earth’s rotation really makes my day</Text>
 
           <View style={styles.tagContainer}>
             {user.interests.map((tag, index) => {

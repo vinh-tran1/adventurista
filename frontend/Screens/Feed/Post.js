@@ -9,7 +9,8 @@ import UserBottom from "./UserBottom";
 import axios from 'axios';
 
 const Post = (props) => {
-    const [userName, setUserName] = useState("")
+    const [poster, setPoster] = useState("");
+    // const [userName, setUserName] = useState("")
     const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
 
     // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
@@ -56,7 +57,8 @@ const Post = (props) => {
         // console.log(user.userId)
         axios.get(API_URL + createdBy) 
         .then((response) => {
-            setUserName(response.data.firstName);
+            //setUserName(response.data.firstName);
+            setPoster(response.data);
         })
         .catch((error) => {
             console.log(error);
@@ -80,7 +82,8 @@ const Post = (props) => {
                             title={title} 
                             location={location} 
                             img={img} 
-                            createdBy={userName} 
+                            createdBy={poster.firstName} 
+                            createdByObj={poster}
                             date={date} 
                             time={time} 
                             navigation={navigation}
@@ -90,6 +93,7 @@ const Post = (props) => {
                     ) : (
                     <View style={styles.postContainer}>
                         <UserTop 
+                            createdByObj={poster}
                             profile_pic={user.profile_pic} 
                             interests={user.interests}
                             navigation={navigation}

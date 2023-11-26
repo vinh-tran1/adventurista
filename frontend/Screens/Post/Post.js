@@ -135,18 +135,19 @@ const Post = ({ navigation }) => {
     setMoreTagsClicked(1);
   };
 
+  // need update state of user for events posted right
   const handlePost = async () => {
     try {
       // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
         const response = await axios.post(API_URL, {
-        title: eventName,
-        description: caption,
-        date: day + ", " + month + " " + date,
-        time: time,
-        location: location, 
-        postingUserId: user.userId,
-        tags: selectTags,
-        eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
+          title: eventName,
+          description: caption,
+          date: day + ", " + month + " " + date,
+          time: time,
+          location: location, 
+          postingUserId: user.userId,
+          tags: selectTags,
+          eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
         dispatch(setNewPost(true));

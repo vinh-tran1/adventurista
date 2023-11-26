@@ -5,11 +5,12 @@ import BubbleText from "../../Shared/BubbleText";
 
 const UserTop = (props) => {
 
-    const { profile_pic, interests, navigation } = props;
+    const { createdByObj, profile_pic, interests, navigation } = props;
+    // console.log(JSON.stringify(createdByObj))
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
-        navigation.navigate('FriendProfileView');
+        navigation.navigate('FriendProfileView', {poster: createdByObj});
     };
 
     return (

@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const PostTop = (props) => {
 
-    const { title, location, img, createdBy, date, time, navigation } = props;
+    const { title, location, img, createdBy, createdByObj, date, time, navigation } = props;
+    // console.log(createdById)
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
-        navigation.navigate('FriendProfileView');
+        navigation.navigate('FriendProfileView', {poster: createdByObj});
     };
 
     return (
