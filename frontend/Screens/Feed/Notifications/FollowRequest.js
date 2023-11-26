@@ -82,8 +82,6 @@ const FollowRequest = ({ requesterId }) => {
         console.log("Error in denying friend request!");
       }
 
-      
-
     } catch (err) {
       console.log(err);
       console.log("An error occured for denying request. Please try again");
