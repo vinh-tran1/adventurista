@@ -20,7 +20,7 @@ const db = new DynamoDB.DocumentClient();
 const s3 = new S3();
 const router = express.Router();
 
-async function createEvent(event: Event): Promise<Event | string | User> {
+async function createEvent(event: Event): Promise<Event | string> {
   if (!event.time || !event.location || !event.postingUserId) {
     return "Required event fields are missing";
   }
@@ -54,8 +54,7 @@ async function createEvent(event: Event): Promise<Event | string | User> {
   try {
     await db.put(params).promise();
     await db.update(userParams).promise();
-    return user;
-    // return event;
+    return event;
   } catch (err) {
     console.error("Error creating event:", err);
     return "Error creating event";
