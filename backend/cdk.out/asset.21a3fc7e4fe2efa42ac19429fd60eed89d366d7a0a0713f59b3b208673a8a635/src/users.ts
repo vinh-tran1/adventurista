@@ -318,13 +318,12 @@ async function updateUser(user: User): Promise<User | null> {
       [USERS_PRIMARY_KEY]: user.userId,
     },
     UpdateExpression:
-      "SET age = :age, primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
+      "SET primaryLocation = :primaryLocation, firstName = :firstName, lastName = :lastName, interests= :interests",
     ExpressionAttributeValues: {
       ":primaryLocation": user.primaryLocation,
       ":firstName": user.firstName,
       ":lastName": user.lastName,
       ":interests": user.interests,
-      ":age": user.age,
     },
   };
 
@@ -463,7 +462,6 @@ router.post("/update-user", async (req, res) => {
   user.firstName = req.body.firstName || user.firstName;
   user.lastName = req.body.lastName || user.lastName;
   user.interests = req.body.interests || user.interests;
-  user.age = req.body.age || user.age;
 
   const result = updateUser(user);
   if (!result) {
