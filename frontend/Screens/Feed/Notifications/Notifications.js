@@ -10,6 +10,7 @@ import FollowRequest from "./FollowRequest";
 const Notifications = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
+  console.log(user.requests.incoming)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -21,7 +22,7 @@ const Notifications = ({ navigation }) => {
       </View>
       <ScrollView style={{ marginTop: 20 }}>
         {user.requests.incoming.map((request, index) => (
-          <FollowRequest key={index} request={request} />
+          <FollowRequest key={index} requesterId={request} />
         ))}
       </ScrollView>
     </SafeAreaView>

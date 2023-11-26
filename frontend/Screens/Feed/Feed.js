@@ -68,6 +68,7 @@ const Feed = ({ navigation }) => {
     .then((response) => {
       setPosts(response.data);
       dispatch(setNewPost(false));
+      //console.log(JSON.stringify(posts, null, 2))
     })
     .catch((error) => {
       console.log(error);
@@ -94,7 +95,7 @@ const Feed = ({ navigation }) => {
             navigation={navigation}
             //createdBy={item.createdBy}
           />}
-        keyExtractor={item => item.id}
+        key={item => item.id}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>

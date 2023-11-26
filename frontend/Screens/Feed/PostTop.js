@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const PostTop = (props) => {
 
-    const { title, location, img, createdBy, date, time, navigation } = props;
+    const { title, location, img, createdBy, createdByObj, date, time, navigation } = props;
+    // console.log(createdById)
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
-        navigation.navigate('FriendProfileView');
+        navigation.navigate('FriendProfileView', {poster: createdByObj});
     };
 
     return (
@@ -22,21 +23,21 @@ const PostTop = (props) => {
             </View>
             <View style={styles.bottomContent}>
                 <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-                    <View>
+                    <View style={{ backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
                         <View style={{ flexDirection: "row"}}>
-                        <TouchableOpacity 
-                            style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}
-                            onPress={handleViewProfile}
-                        >
-                            <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
-                        </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}
+                                onPress={handleViewProfile}
+                            >
+                                <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
+                            </TouchableOpacity>
                             <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24 others</Text>
                         </View>
-                        <Text style={{ color: "white", fontWeight: "bold" }}>by {createdBy}</Text>
+                        <Text style={{ color: "white", fontWeight: "700", marginTop: 2 }}>by {createdBy}</Text>
                     </View>
-                    <View style={{ marginTop: 7 }}>
-                        <Text style={{ color: "white", fontWeight: "bold", fontSize: 18 }}>{date}</Text>
-                        <Text style={{ color: "white", textAlign: "center", fontSize: 15 }}>{time}</Text>
+                    <View style={{ justifyContent: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
+                        <Text style={{ color: "white", fontWeight: "800", fontSize: 18 }}>{date}</Text>
+                        <Text style={{ color: "white", fontWeight: "600", textAlign: "center", fontSize: 16, marginTop: 4 }}>{time}</Text>
                     </View>
                 </View>
             </View>
@@ -66,7 +67,7 @@ const PostTop = (props) => {
     bottomContent: {
         flex: 1,
         justifyContent: "flex-end",
-        marginBottom: 20,
+        marginBottom: 15,
         marginHorizontal: 15,
     }
   });

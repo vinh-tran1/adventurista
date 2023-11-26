@@ -7,7 +7,7 @@ import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
+import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
   
@@ -31,20 +31,20 @@ const Post = ({ navigation }) => {
 
   const tags1 = [
     'catan', 'paddle', 'drinks', 'social',
-    'drive', 'school', 'student', 'energy',
+    'drives', 'school', 'student', 'energy',
     'beach', 'hike', 'food', 'squash', 
     'cs', 'games', 'dinner', 'apps'
   ];
   const tags2 = [
     'travel', 'music', 'movies', 'gym',
     'cook', 'read', 'garden', 'art',
-    'shop', 'photo', 'coding', 'sports',
-    'story', 'nature', 'write', 'fashion',
+    'shop', 'photos', 'coding', 'sports',
+    'tennis', 'nature', 'write', 'fashion',
   ];
   const tags3 = [
     'poetry', 'dance', 'pizza', 'guitar',
-    'coding', 'coffee', 'travel', 'sports',
-    'music', 'books', 'games', 'yoga',
+    'walks', 'coffee', 'explore', 'water',
+    'ocean', 'books', 'lawn', 'yoga',
     'paint', 'films', 'hiking', 'chess',
   ];
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
@@ -126,7 +126,6 @@ const Post = ({ navigation }) => {
     setEventName("");
     setLocation("");
     setCaption("");
-    setCaption("");
     setMonth("");
     setDate("");
     setDay("");
@@ -135,21 +134,28 @@ const Post = ({ navigation }) => {
     setMoreTagsClicked(1);
   };
 
+  // need update state of user for events posted right
   const handlePost = async () => {
     try {
       // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
         const response = await axios.post(API_URL, {
-        title: eventName,
-        description: caption,
-        date: day + ", " + month + " " + date,
-        time: time,
-        location: location, 
-        postingUserId: user.userId,
-        tags: selectTags,
-        eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
+          title: eventName,
+          description: caption,
+          date: day + ", " + month + " " + date,
+          time: time,
+          location: location, 
+          postingUserId: user.userId,
+          tags: selectTags,
+          eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
       });
       if (response.status === 201) {
+        const updatedUser = response.data;
+
         dispatch(setNewPost(true));
+        dispatch(setUserInfo({
+          ...updatedUser
+        }));
+
         handleClear();
         navigation.navigate('Feed Main');
         console.log("sucessfully created event!");
@@ -311,7 +317,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderBottomWidth: 0.25,
     flexDirection: 'row',
-    justifyContent: 'center',
     justifyContent: 'space-between'
   },
   headerText: {

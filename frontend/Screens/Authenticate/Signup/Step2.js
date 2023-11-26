@@ -41,7 +41,7 @@ const Step2 = ({ navigation, route }) => {
             email: updatedUser.email,
             eventsGoingTo: updatedUser.eventsGoingTo,
             eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-            eventsOwend: updatedUser.eventsOwend,
+            eventsOwned: updatedUser.eventsOwend,
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             friends: updatedUser.friends,
@@ -50,6 +50,8 @@ const Step2 = ({ navigation, route }) => {
             messages: updatedUser.messages,
             primaryLocation: updatedUser.primaryLocation,
             profilePictureUrl: updatedUser.profilePictureUrl,
+            bannerImageUrl: updatedUser.bannerImageUrl,
+            bio: updatedUser.bio,
             requests: updatedUser.requests
         }));
         console.log("Interests and age added!");
@@ -76,14 +78,14 @@ const Step2 = ({ navigation, route }) => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date of Birth (mm/dd/yyyy)</Text>
-        <TextInput value={age} onChangeText={(text) => setAge(text)} style={styles.input} />
+        <TextInput value={age} placeholder="10/09/1701" onChangeText={(text) => setAge(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Where Are You From?</Text>
-        <TextInput value={location} onChangeText={(text) => setLocation(text)} style={styles.input} />
+        <Text style={styles.label}>Where Are You From? (City, Country)</Text>
+        <TextInput value={location} placeholder="New Haven, USA" onChangeText={(text) => setLocation(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>What Are Your Interested In? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
+        <Text style={styles.label}>What Are Your Interests? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
         {interests.length < 3 &&
         <View style={{ flexDirection: "row" }}>
             <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.input} />
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     borderColor: "#717171",
     marginBottom: 5,
     borderRadius: 10,
-    width: 250
+    width: 275
   },
   signUpButton: {
     backgroundColor: "#CA75FF",

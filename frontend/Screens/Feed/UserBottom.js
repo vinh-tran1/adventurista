@@ -7,6 +7,10 @@ const UserBottom = (props) => {
 
     const { name, age, from } = props;
 
+    const handleAddFriend = async () => {
+        // api call to request to add friend --> should be same as friendprofileview
+    };
+
     return (
         <View style={styles.postBottom}>
             <View style={{ justifyContent: "space-between", flexDirection: "row" }}>

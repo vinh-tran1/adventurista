@@ -30,7 +30,7 @@ const initialState = {
     email: '',
     eventsGoingTo: [],
     eventsNotGoingTo: [],
-    eventsOwend: [],
+    eventsOwned: [],
     firstName: '',
     lastName: '',
     friends: [],
@@ -39,6 +39,8 @@ const initialState = {
     messages: [],
     primaryLocation: '',
     profilePictureUrl: '',
+    bannerImageUrl: '',
+    bio: '',
     requests: []
 };
 
@@ -62,6 +64,8 @@ export const userReducer = (state = initialState, action) => {
                 messages: action.payload.messages,
                 primaryLocation: action.payload.primaryLocation,
                 profilePictureUrl: action.payload.profilePictureUrl,
+                bannerImageUrl: action.payload.bannerImageUrl,
+                bio: action.payload.bio,
                 requests: action.payload.requests
 
             }
