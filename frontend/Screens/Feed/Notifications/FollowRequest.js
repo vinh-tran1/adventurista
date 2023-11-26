@@ -27,7 +27,7 @@ const FollowRequest = ({ requesterId }) => {
         console.log(error);
     });
 
-  }, []);
+  }, [user, dispatch]);
 
   // console.log(requester.userId, requester.firstName);
   // console.log(user.userId, user.firstName)
@@ -48,10 +48,10 @@ const FollowRequest = ({ requesterId }) => {
       }
 
       // redux to update friend status
-      // dispatch(setUserInfo({
-      //   newPost: false,
-      //   ...user -> can't use user
-      // }));
+      dispatch(setUserInfo({
+        newPost: false,
+        ...updatedUser
+      }));
 
     } catch (err) {
       console.log(err);

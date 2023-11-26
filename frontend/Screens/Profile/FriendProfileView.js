@@ -20,7 +20,7 @@ const FriendProfileView = ({ navigation, route }) => {
   const [isFriend, setIsFriend] = useState(user.friends.some(friendId => friendId === poster.userId));
   const [requested, setRequested] = useState(user.requests.outgoing.some(friendId => friendId === poster.userId));
   const [friendStatus, setFriendStatus] = useState(isFriend ? "Friends" : requested ? "Requested" : "Add Friend");
-  console.log(user.requests)
+  //console.log(user.requests)
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
   const groupData = [
@@ -56,16 +56,16 @@ const FriendProfileView = ({ navigation, route }) => {
       });
 
       if (response.status == 200) {
-        const updatedUser = repsonse.data;
+        const updatedUser = response.data;
         console.log(updatedUser);
         setRequested(true);
         setFriendStatus("Requested")
         
          // redux to update friend status 
-        // dispatch(setUserInfo({
-        //   newPost: false,
-        //   ...user -> cant use user
-        // }));
+        dispatch(setUserInfo({
+          newPost: false,
+          ...updatedUser
+        }));
 
       } else {
         console.log("Error in sending friend request!");

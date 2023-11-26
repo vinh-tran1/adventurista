@@ -50,6 +50,8 @@ const Step2 = ({ navigation, route }) => {
             messages: updatedUser.messages,
             primaryLocation: updatedUser.primaryLocation,
             profilePictureUrl: updatedUser.profilePictureUrl,
+            bannerImageUrl: updatedUser.bannerImageUrl,
+            bio: updatedUser.bio,
             requests: updatedUser.requests
         }));
         console.log("Interests and age added!");
