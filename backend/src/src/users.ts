@@ -1,5 +1,7 @@
 import express from "express";
 import { DynamoDB, S3 } from "aws-sdk";
+//import S3 from "aws-sdk/clients/s3";
+//import DynamoDB from "aws-sdk/clients/dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
 import bcrypt from "bcrypt";
@@ -18,6 +20,7 @@ import {
 
 // db set-up
 const db = new DynamoDB.DocumentClient();
+//const db = new DynamoDB.DocumentClient({ region: "us-east-1" });
 const s3 = new S3();
 const router = express.Router();
 
@@ -294,7 +297,7 @@ router.post("/auth/sign-in", async (req, res) => {
   res.status(200).send(user);
 });
 
-async function getUser(userId: string): Promise<User | null> {
+export async function getUser(userId: string): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
