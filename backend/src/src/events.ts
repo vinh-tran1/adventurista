@@ -1,4 +1,5 @@
 import express from "express";
+import axios from 'axios';
 import { DynamoDB, S3 } from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
@@ -133,6 +134,30 @@ console.log(`Distance in kilometers: ${distanceInKm}`);
 const distanceInMi = calculateDistance(location1, location2, "mi");
 console.log(`Distance in miles: ${distanceInMi}`);
 
+async function getCoordinates(addr: string): Promise<Coordinates> {
+  try {
+    const response = await axios.get('https://maps.googleapis.com/maps/api/geocode/json', {
+      params: {
+        address: addr,
+        key: 'AIzaSyDGt0z0i_LAEYqmz72przW0vrdKmxojtbg'
+      }
+    });
+
+    const results = response.data.results;
+    if (results.length > 0) {
+      const location = results[0].geometry.location;
+      const latitude = location.lat;
+      const longitude = location.lng;
+      return { latitude, longitude };
+    } else {
+      throw new Error('No results found');
+    }
+  } catch (error) {
+    console.error('Error retrieving coordinates:', error.message);
+    throw error;
+  }
+}
+
 async function getEvents(): Promise<Event[]> {
   // area: string,
   // userLocation: string,
@@ -158,17 +183,30 @@ async function getEvents(): Promise<Event[]> {
 }
 
 router.get("/events", async (req, res) => {
-  // const { area, userLocation, distance, userId } = req.body;
-  // const user = await getUser(userId);
-  // if (!user) {
-  //   return res.status(404).send("User not found");
-  // }
+  const { area, userLocation, distance, userId } = req.body;
+  const user = await getUser(userId);
+  if (!user) {
+    return res.status(404).send("User not found");
+  }
+
   const events = await getEvents();
+
+  const eventPromises = events.map(async (event) => {
+    const event_coords = await getCoordinates(event.location);
+    const user_coords = await getCoordinates(userLocation);
+    const distance = calculateDistance(event_coords, user_coords, 'mi');
+    return { event, distance };
+  });
+
+  const sortedEvents = await Promise.all(eventPromises);
+  sortedEvents.sort((a, b) => a.distance - b.distance);
+  const sortedEventItems = sortedEvents.map((item) => item.event);
+
   // area as string,
   // userLocation as string,
   // parseInt(distance as string),
   // user
-  res.status(200).send(events);
+  res.status(200).send(sortedEventItems);
 });
 
 async function getEvent(eventId: string): Promise<Event | null> {
