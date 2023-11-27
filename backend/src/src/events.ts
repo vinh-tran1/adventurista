@@ -183,7 +183,7 @@ async function getEvents(): Promise<Event[]> {
 }
 
 router.get("/events", async (req, res) => {
-  const { area, userLocation, distance, userId } = req.body;
+  const { userId } = req.body;
   const user = await getUser(userId);
   if (!user) {
     return res.status(404).send("User not found");
@@ -192,10 +192,15 @@ router.get("/events", async (req, res) => {
   const events = await getEvents();
 
   const eventPromises = events.map(async (event) => {
-    const event_coords = await getCoordinates(event.location);
-    const user_coords = await getCoordinates(userLocation);
-    const distance = calculateDistance(event_coords, user_coords, 'mi');
-    return { event, distance };
+    try {
+      const event_coords = await getCoordinates(event.location);
+      const user_coords = await getCoordinates(user.primaryLocation);
+      const distance = calculateDistance(event_coords, user_coords, 'mi');
+      return { event, distance };
+    } catch (error) {
+      console.error('Error getting event coordinates:', error.message);
+      return { event, distance: Infinity };
+    }
   });
 
   const sortedEvents = await Promise.all(eventPromises);
