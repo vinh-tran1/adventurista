@@ -185,8 +185,8 @@ async function getEvents(): Promise<Event[]> {
   }
 }
 
-router.get("/events/:userId", async (req, res) => {
-  const { userId } = req.params;
+router.get("/events", async (req, res) => {
+  const { userId } = req.body;
   const user = await getUser(userId);
   if (!user) {
     return res.status(404).send("User not found");
@@ -195,29 +195,23 @@ router.get("/events/:userId", async (req, res) => {
   const events = await getEvents();
 
   const eventPromises = events.map(async (event) => {
-    try {
-      if (event.postingUserId == user.userId) {
-        return null;
-      }
-      const event_coords = await getCoordinates(event.location);
-      const user_coords = await getCoordinates(user.primaryLocation);
-      const distance = calculateDistance(event_coords, user_coords, "mi");
-      return { event, distance };
-    } catch (error) {
-      console.error("Error getting event coordinates:", error.message);
-      return { event, distance: Infinity };
-    }
+    const event_coords = await getCoordinates(event.location);
+    const user_coords = await getCoordinates(user.primaryLocation);
+    const distance = calculateDistance(event_coords, user_coords, "mi");
+    return { event, distance };
   });
 
-  const sortedEvents = await Promise.all(eventPromises);
-  sortedEvents.sort((a, b) => a.distance - b.distance);
-  const sortedEventItems = sortedEvents.map((item) => item.event);
+  res.status(200).send(eventPromises);
 
-  // area as string,
-  // userLocation as string,
-  // parseInt(distance as string),
-  // user
-  res.status(200).send(sortedEventItems);
+  // const sortedEvents = await Promise.all(eventPromises);
+  // sortedEvents.sort((a, b) => a.distance - b.distance);
+  // const sortedEventItems = sortedEvents.map((item) => item.event);
+
+  // // area as string,
+  // // userLocation as string,
+  // // parseInt(distance as string),
+  // // user
+  // res.status(200).send(sortedEventItems);
 });
 
 async function getEvent(eventId: string): Promise<Event | null> {
