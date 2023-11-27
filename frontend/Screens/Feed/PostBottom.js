@@ -14,11 +14,12 @@ const PostBottom = (props) => {
 
     const user = useSelector(selectUserInfo);
 
-    const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event'
+    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event'
+    const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId
 
     const handleAttendEvent = async () => {
         try {
-            const response = await axios.post(API_URL, {
+            const response = await axios.post(ATTEND_API_URL, {
             userId: user.userId,
             eventId: eventId
           });
@@ -33,8 +34,18 @@ const PostBottom = (props) => {
         }
     }
 
-    const handleSaveEvent = () => {
-
+    const handleSaveEvent = async () => {
+        try {
+          const response = await axios.post(SAVE_API_URL);
+          if (response.status === 200) {
+            console.log("Successfully saved event to your saved events list");
+          } else {
+            console.log("Error saving this event to your saved events list");
+          }
+        } catch (err) {
+          console.log(err);
+          console.log("An error occurred while saving this event to your saved events list. Please try again.");
+        }
     }
 
     return (
