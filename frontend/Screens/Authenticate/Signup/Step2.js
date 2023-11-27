@@ -41,7 +41,7 @@ const Step2 = ({ navigation, route }) => {
             email: updatedUser.email,
             eventsGoingTo: updatedUser.eventsGoingTo,
             eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-            eventsOwned: updatedUser.eventsOwend,
+            eventsOwned: updatedUser.eventsOwned,
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             friends: updatedUser.friends,
@@ -77,8 +77,8 @@ const Step2 = ({ navigation, route }) => {
         <Image style={styles.logo} source={require('../../../assets/logo.png')}/>
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Date of Birth (mm/dd/yyyy)</Text>
-        <TextInput value={age} placeholder="10/09/1701" onChangeText={(text) => setAge(text)} style={styles.input} />
+        <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
+        <TextInput value={age} placeholder="1701-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Where Are You From? (City, Country)</Text>

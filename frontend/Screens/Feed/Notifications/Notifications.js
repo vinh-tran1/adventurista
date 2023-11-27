@@ -10,7 +10,7 @@ import FollowRequest from "./FollowRequest";
 const Notifications = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
-  console.log(user.requests.incoming)
+  // console.log(user.requests.incoming)
 
   return (
     <SafeAreaView style={styles.container}>

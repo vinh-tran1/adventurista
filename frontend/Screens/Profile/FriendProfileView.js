@@ -57,7 +57,7 @@ const FriendProfileView = ({ navigation, route }) => {
 
       if (response.status == 200) {
         const updatedUser = response.data;
-        console.log(updatedUser);
+        // console.log(updatedUser);
         setRequested(true);
         setFriendStatus("Requested")
         

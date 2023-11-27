@@ -15,6 +15,7 @@ const Post = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
+  //  console.log(user.eventsGoingTo, user.eventsOwned)
 
   const [image, setImage] = useState("");
   const [eventName, setEventName] = useState("");
@@ -150,6 +151,7 @@ const Post = ({ navigation }) => {
       });
       if (response.status === 201) {
         const updatedUser = response.data;
+        // console.log(JSON.stringify(updatedUser, null, 2));
 
         dispatch(setNewPost(true));
         dispatch(setUserInfo({
