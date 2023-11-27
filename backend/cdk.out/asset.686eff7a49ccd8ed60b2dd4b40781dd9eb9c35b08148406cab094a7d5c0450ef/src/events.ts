@@ -194,24 +194,20 @@ router.get("/events/:userId", async (req, res) => {
 
   const events = await getEvents();
 
-  const eventPromises = events
-    .filter((event) => {
+  const eventPromises = events.map(async (event) => {
+    try {
       if (event.postingUserId == user.userId) {
-        return false;
+        return null;
       }
-      return true;
-    })
-    .map(async (event) => {
-      try {
-        const event_coords = await getCoordinates(event.location);
-        const user_coords = await getCoordinates(user.primaryLocation);
-        const distance = calculateDistance(event_coords, user_coords, "mi");
-        return { event, distance };
-      } catch (error) {
-        console.error("Error getting event coordinates:", error.message);
-        return { event, distance: Infinity };
-      }
-    });
+      const event_coords = await getCoordinates(event.location);
+      const user_coords = await getCoordinates(user.primaryLocation);
+      const distance = calculateDistance(event_coords, user_coords, "mi");
+      return { event, distance };
+    } catch (error) {
+      console.error("Error getting event coordinates:", error.message);
+      return { event, distance: Infinity };
+    }
+  });
 
   const sortedEvents = await Promise.all(eventPromises);
   sortedEvents.sort((a, b) => a.distance - b.distance);
