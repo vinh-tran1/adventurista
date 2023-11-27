@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-const Event = () => {
+const Event = (props) => {
+
+  const { attending } = props;
 
   return (
     <ImageBackground source={{uri: "https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg"}} style={styles.container}>
