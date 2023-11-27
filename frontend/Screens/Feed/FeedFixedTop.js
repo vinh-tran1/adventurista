@@ -8,6 +8,12 @@ const FeedFixedTop = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
 
+  const handleSetLocation = async () => {
+    // api call to update location, keep everything else the same
+    // maybe use effect with dependency essentially?
+    console.log("set location");
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.header}>
@@ -17,7 +23,7 @@ const FeedFixedTop = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.location}>
+        <TouchableOpacity style={styles.location} onPress={handleSetLocation}>
           <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
           <Text style={{ marginTop: 2, fontSize: 13 }}>{user.primaryLocation}</Text>
         </TouchableOpacity>
