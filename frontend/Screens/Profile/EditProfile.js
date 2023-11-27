@@ -3,6 +3,7 @@ import axios from "axios";
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
+import BubbleText from "../../Shared/BubbleText";
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,17 +16,17 @@ const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [interests, setInterests] = useState([]);
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [interests, setInterests] = useState(user.interests);
   const [tempInterest, setTempInterest] = useState("");
   const [profileImage, setProfileImage] = useState("");
   const [bannerImage, setBannerImage] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState(user.primaryLocation);
   const [bio, setBio] = useState("");
-  const [age, setAge]= useState("");
+  const [age, setAge]= useState(user.age);
 
-  const pickImage = async () => {
+  const pickProfileImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -33,7 +34,19 @@ const EditProfile = ({ navigation }) => {
       quality: 1,
     });
     if (!result.canceled) {
-      handleImage(result.assets[0].uri);
+      handleProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const pickBannerImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      handleBannerImage(result.assets[0].uri);
     }
   };
   
@@ -56,6 +69,13 @@ const EditProfile = ({ navigation }) => {
     setAge("");
   };
 
+  const handleAddInterest = () => {
+    let updated = interests;
+    updated.push(tempInterest);
+    setInterests(updated);
+    setTempInterest("");
+}
+
   // need update state of user for events posted right
   const handleSaveProfile = async () => {
     try {
@@ -71,6 +91,7 @@ const EditProfile = ({ navigation }) => {
 
       if (response.status === 200) {
         const updatedUser = response.data;
+        console.log(updatedUser)
 
         dispatch(setUserInfo({
             newPost: false,
@@ -88,6 +109,14 @@ const EditProfile = ({ navigation }) => {
         console.log("An error occured for updating user. Please try again");
     }
   };
+
+//   console.log(firstName, lastName)
+//   console.log(interests)
+//   console.log(age)
+//   console.log(bio)
+//   console.log(location)
+//   console.log(user.userId)
+console.log(user)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,25 +150,25 @@ const EditProfile = ({ navigation }) => {
         </View>
 
         {/* profile and banner image */}
-        <View style={{ paddingHorizontal: 20, borderTopWidth: 0.25, borderBottomWidth: 0.25, borderColor: 'gray'}}> 
+        <View style={styles.sectionContainer}> 
             <Text style={styles.label}>Edit Profile and Banner</Text>
             <View style={styles.centerContainer}>
                 <View style={styles.image}>
-                    <TouchableOpacity onPress={pickImage}>
+                    <TouchableOpacity onPress={pickProfileImage}>
                         {profileImage.length === 0 ?
                         <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
                         :
-                        <ImageBackground style={styles.image} source={{uri: image}} />
+                        <ImageBackground style={styles.image} source={{uri: profileImage}} />
                         }
                     </TouchableOpacity>
                     <Text style={{ marginBottom: 2 }}>Profile</Text>
                     </View>
                     <View style={styles.image}>
-                    <TouchableOpacity onPress={pickImage}>
-                        {profileImage.length === 0 ?
+                    <TouchableOpacity onPress={pickBannerImage}>
+                        {bannerImage.length === 0 ?
                         <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
                         :
-                        <ImageBackground style={styles.image} source={{uri: image}} />
+                        <ImageBackground style={styles.image} source={{uri: bannerImage}} />
                         }
                     </TouchableOpacity>
                     <Text style={{ marginBottom: 2 }}>Banner</Text>
@@ -147,40 +176,85 @@ const EditProfile = ({ navigation }) => {
             </View>
         </View>
 
-        {/* text inputs */}
-        <View style={styles.inputContainer}>
-        <Text style={styles.label}>What?</Text>
-        <TextInput 
-            value={firstName} 
-            placeholder="First Name" 
-            onChangeText={(text) => setFirstName(text)} 
-            style={styles.input} 
-        />
+        {/* name inputs */}
+        <View style={styles.sectionContainer}>
+            <Text style={styles.label}>Edit First Name</Text>
+            <TextInput 
+                value={firstName} 
+                placeholder="First Name" 
+                onChangeText={(text) => setFirstName(text)} 
+                style={styles.input} 
+            />
+            <Text style={styles.label}>Edit Last Name</Text>
+            <TextInput 
+                value={lastName} 
+                placeholder="Last Name" 
+                onChangeText={(text) => setLastName(text)} 
+                style={styles.input} 
+            />
         </View>
 
-        {/* Location */}
-        <View style={styles.inputContainer}>
-        <Text style={styles.label}>Where?</Text>
-        <TextInput 
-            value={location} 
-            placeholder="Location" 
-            onChangeText={(text) => setLocation(text)} 
-            style={styles.input} 
-        />
+         {/* Location */}
+        <View style={styles.sectionContainer}>
+            <Text style={styles.label}>Edit Location</Text>
+            <TextInput 
+                value={location} 
+                placeholder="Location" 
+                onChangeText={(text) => setLocation(text)} 
+                style={styles.input} 
+            />
         </View>
 
+        {/* Interests */}
+        <View style={ styles.sectionContainer}>
+            <View>
+                <Text style={styles.label}>Edit Interests {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
+                {interests.length < 3 &&
+                    <View style={{ flexDirection: "row" }}>
+                        <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.tagInput} />
+                        <TouchableOpacity onPress={handleAddInterest}>
+                            <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-add" size={25} color='#D186FF' />
+                        </TouchableOpacity>
+                    </View>
+                }
+                <View style={{ flexDirection: "row", paddingTop: 10 }}>
+                {interests.length > 0 && interests.map((tag, index) => {
+                    return (
+                        <BubbleText key={index} title={tag} />
+                    );
+                })}
+                {interests.length === 3 &&
+                    <TouchableOpacity onPress={() => setInterests([])}>
+                        <FontAwesomeIcon style={{ marginTop: 2.5, marginLeft: 15 }} icon="fa-xmark" size={25} />
+                    </TouchableOpacity>
+                }
+                </View>
+            </View>
+        </View>
+
+        {/* Age */}
+        <View style={styles.sectionContainer}>
+            <Text style={styles.label}>Edit Date of Birth (YYYY-MM-DD)</Text>
+            <TextInput 
+                value={age} 
+                placeholder="1701-09-10"
+                onChangeText={(text) => setAge(text)} 
+                style={styles.input} 
+            />
+        </View>
+                
         {/* Caption */}
         <View style={styles.inputContainer}>
-        <Text style={styles.label}>Bio</Text>
-        <TextInput 
-            value={bio} 
-            placeholder="Describe the event!" 
-            multiline={true}
-            maxLength={100}
-            numberOfLines={5}
-            onChangeText={(text) => setBio(text)} 
-            style={styles.largeInput} 
-        />
+            <Text style={styles.label}>Edit Bio</Text>
+            <TextInput 
+                value={bio} 
+                placeholder="Bios are overrated!" 
+                multiline={true}
+                maxLength={100}
+                numberOfLines={5}
+                onChangeText={(text) => setBio(text)} 
+                style={styles.largeInput} 
+            />
         </View>
             {/* </View>
           </TouchableWithoutFeedback>
@@ -224,7 +298,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    marginBottom: 20
+    paddingBottom: 10,
+    borderBottomWidth: 0.25,
+    borderColor: 'gray'
   },
   navButton: {
     fontSize: 16, 
@@ -236,7 +312,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 70,
+    paddingBottom: 10,
+  },
+  sectionContainer: {
+    paddingHorizontal: 20, 
     paddingBottom: 20,
+    borderBottomWidth: 0.25, 
+    borderColor: 'gray',
+    marginVertical: 5
   },
   image: {
     alignItems: 'center',
@@ -248,9 +331,9 @@ const styles = StyleSheet.create({
     width: 110
   },
   inputContainer: {
-    justifyContent: 'center',
     paddingHorizontal: 20,
-    marginVertical: 5
+    marginTop: 5,
+    marginBottom: 20
   },
   label: {
     marginVertical: 10,
@@ -269,6 +352,16 @@ const styles = StyleSheet.create({
   largeInput: {
     ...inputStyle,
     height: 120
+  },
+  tagInput: {
+    paddingVertical: 10,
+    paddingLeft: 10,
+    borderWidth: 0.25,
+    borderColor: "#717171",
+    backgroundColor: "rgba(243, 232, 255, 0.45)",
+    marginBottom: 5,
+    borderRadius: 5,
+    width: 275
   }
 });
 

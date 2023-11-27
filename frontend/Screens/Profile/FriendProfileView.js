@@ -5,6 +5,7 @@ import BubbleText from "../../Shared/BubbleText";
 import Bubble from "./Bubble";
 import MyGroups from "./MyGroups";
 import MyEvents from "./MyEvents";
+import getAge from "../../Shared/GetAge";
 import axios from "axios";
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +18,8 @@ const FriendProfileView = ({ navigation, route }) => {
 
   const user = useSelector(selectUserInfo);
   const dispatch = useDispatch();
+  const age = getAge(poster.age);
+
   const [isFriend, setIsFriend] = useState(user.friends.some(friendId => friendId === poster.userId));
   const [requested, setRequested] = useState(user.requests.outgoing.some(friendId => friendId === poster.userId));
   const [friendStatus, setFriendStatus] = useState(isFriend ? "Friends" : requested ? "Requested" : "Add Friend");
@@ -113,21 +116,24 @@ const FriendProfileView = ({ navigation, route }) => {
           {/* bottom half */}
           <View style={styles.bioBanner}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Text style={{fontSize: 20, fontWeight: '700'}}>{poster.firstName} {poster.lastName}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                  <Text style={{ fontSize: 24, fontWeight: '800'}}>{poster.firstName} {poster.lastName}</Text>
+                  <Text style={{ fontSize: 20, fontWeight: '700', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
+                </View>
 
-                  { isFriend || requested ? 
-                      <View style={{ backgroundColor:requested ? '#B3B3B3' : '#EDD3FF', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}>
-                        <Text style={{ fontSize: 12}}>{friendStatus}</Text>
-                      </View>
-                      :
-                      <TouchableOpacity 
-                        style={{ backgroundColor: '#EFEFEF', 
-                              marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}
-                        onPress={handleAddFriend}
-                      >
-                        <Text style={{ fontSize: 12}}>{friendStatus}</Text>
-                      </TouchableOpacity>
-                  }
+                { isFriend || requested ? 
+                    <View style={{ backgroundColor:requested ? '#B3B3B3' : '#EDD3FF', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}>
+                      <Text style={{ fontSize: 12}}>{friendStatus}</Text>
+                    </View>
+                    :
+                    <TouchableOpacity 
+                      style={{ backgroundColor: '#EFEFEF', 
+                            marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}
+                      onPress={handleAddFriend}
+                    >
+                      <Text style={{ fontSize: 12}}>{friendStatus}</Text>
+                    </TouchableOpacity>
+                }
                   
               </View>
           
@@ -136,7 +142,7 @@ const FriendProfileView = ({ navigation, route }) => {
                       <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>{poster.primaryLocation}</Text>
               </View>
 
-              <Text style={{marginTop: 8, fontSize: 16}}>The Earth's rotation really makes my day</Text>
+              <Text style={{marginTop: 8, fontSize: 16}}>{user.bio}</Text>
 
               <View style={styles.tagContainer}>
                   {poster.interests.map((tag, index) => {

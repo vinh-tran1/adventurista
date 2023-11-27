@@ -41,6 +41,8 @@ const Login = ({ navigation }) => {
           messages: user.messages,
           primaryLocation: user.primaryLocation,
           profilePictureUrl: user.profilePictureUrl,
+          bannerPictureUrl: user.bannerImageUrl,
+          bio: user.bio,
           requests: user.requests
         }));
         console.log("Login successful!");
