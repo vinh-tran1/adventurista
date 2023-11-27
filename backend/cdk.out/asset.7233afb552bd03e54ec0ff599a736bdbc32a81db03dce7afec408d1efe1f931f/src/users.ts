@@ -331,8 +331,8 @@ async function updateUser(user: User): Promise<User | null> {
 
   try {
     const res = await db.update(params).promise();
-    //return res.Attributes as User;
-    return user;
+    return res.Attributes as User;
+    //return user;
   } catch (err) {
     console.error("Error updating user:", err);
     return null;
@@ -473,7 +473,7 @@ router.post("/update-user", async (req, res) => {
     return res.status(400).send("Error updating user");
   }
 
-  res.status(200).send(user);
+  res.status(200).send(result);
 });
 async function sendFriendRequest(
   requesterId: string,

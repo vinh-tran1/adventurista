@@ -330,8 +330,7 @@ async function updateUser(user: User): Promise<User | null> {
   };
 
   try {
-    const res = await db.update(params).promise();
-    //return res.Attributes as User;
+    await db.update(params).promise();
     return user;
   } catch (err) {
     console.error("Error updating user:", err);
@@ -468,12 +467,14 @@ router.post("/update-user", async (req, res) => {
   user.age = req.body.age || user.age;
   user.bio = req.body.bio || user.bio;
 
-  const result = updateUser(user);
-  if (!result) {
-    return res.status(400).send("Error updating user");
-  }
-
   res.status(200).send(user);
+
+  // const result = updateUser(user);
+  // if (!result) {
+  //   return res.status(400).send("Error updating user");
+  // }
+
+  
 });
 async function sendFriendRequest(
   requesterId: string,
@@ -1319,7 +1320,6 @@ async function createUser(
     profilePictureUrl: "",
     bio: "",
     bannerImageUrl: "",
-    age: 0,
   };
 
   const params = {

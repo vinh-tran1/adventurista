@@ -4,7 +4,7 @@ export interface User {
   userId: string;
   firstName: string;
   lastName: string;
-  age: number;
+  age?: number;
   hashedPassword: string;
   primaryLocation: string;
   blockedUsers: string[];
