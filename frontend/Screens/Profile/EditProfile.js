@@ -95,19 +95,12 @@ const EditProfile = ({ navigation }) => {
 
       if (response.status === 200) {
         const updatedUser = response.data;
-        console.log("updated user: ", updatedUser)
-        console.log("new bio:", bio);
+        // console.log("updated user: ", updatedUser)
+
         dispatch(setUserInfo({
             newPost: false,
-            primaryLocation: location,
-            firstName: firstName,
-            lastName: lastName,
-            interests: interests,
-            age: age,
-            bio: bio,
-            ...user
+            ...updatedUser
           }));
-          console.log("updated profile:", user.bio)
 
         handleClear();
         navigation.goBack();

@@ -139,19 +139,11 @@ const FriendProfileView = ({ navigation, route }) => {
 
             <View style={{ flexDirection: 'row', flexGrow: 1, justifyContent: 'space-between', marginLeft: 8}}>
                 <Text style={styles.headerText}>{poster.firstName}</Text>
-                {isFriend ? 
 
-                  <TouchableOpacity style={{marginTop: 6}} onPress={toggleModal}>
-                    <FontAwesomeIcon icon="fa-ellipsis" size={25} />
-                  </TouchableOpacity>
-                  :
-                  <View style={{marginTop: 6}} >
-                    <FontAwesomeIcon icon="fa-ellipsis" size={25} />
-                  </View>
+                <TouchableOpacity style={{marginTop: 6}} onPress={toggleModal}>
+                  <FontAwesomeIcon icon="fa-ellipsis" size={25} />
+                </TouchableOpacity>
                 
-                }
-                
-
                 <Modal 
                   testID={'modal'}
                   isVisible={isModalVisible}
@@ -161,10 +153,17 @@ const FriendProfileView = ({ navigation, route }) => {
                   animationOut="slideOutRight"
                 >
                   <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ backgroundColor: 'white', paddingHorizontal: 70, paddingVertical: 40, borderWidth: 2, borderColor: '#D99BFF', borderRadius: 10}}>
-                      <TouchableOpacity style={{ justifyContent: 'center', marginBottom: 16 }} onPress={handelRemoveFriend}>
-                        <Text style={{textAlign: 'center', color: '#D99BFF', fontSize: 20, fontWeight: 700 }}> Remove {poster.firstName}?</Text>
-                      </TouchableOpacity> 
+                    <View style={{ backgroundColor: 'white', paddingHorizontal: 60, paddingVertical: 40, borderWidth: 2, borderColor: '#D99BFF', borderRadius: 10}}>
+                      
+                      { isFriend ? 
+                        <TouchableOpacity style={{ justifyContent: 'center', marginBottom: 16 }} onPress={handelRemoveFriend}>
+                          <Text style={{textAlign: 'center', color: '#D99BFF', fontSize: 20, fontWeight: 700 }}>Remove {poster.firstName} as friend?</Text>
+                        </TouchableOpacity> 
+                        :
+                        <View style={{ justifyContent: 'center', marginBottom: 16 }}>
+                          <Text style={{textAlign: 'center', color: '#D99BFF', fontSize: 20, fontWeight: 700 }}>{poster.firstName} is not a friend</Text>
+                        </View>
+                      }
 
                       <TouchableOpacity style={{ backgroundColor: '#D99BFF', padding: 5 , borderRadius: 5}} onPress={toggleModal}>
                         <Text style={{textAlign: 'center', fontSize: 16, fontWeight: 500 }}>Cancel</Text>
@@ -222,7 +221,7 @@ const FriendProfileView = ({ navigation, route }) => {
                       <Text style={{marginLeft: 5, fontSize: 16, fontWeight: '500', color: 'gray'}}>{poster.primaryLocation}</Text>
               </View>
 
-              <Text style={{marginTop: 8, fontSize: 16}}>{user.bio}</Text>
+              <Text style={{marginTop: 8, fontSize: 16}}>{poster.bio}</Text>
 
               <View style={styles.tagContainer}>
                   {poster.interests.map((tag, index) => {
