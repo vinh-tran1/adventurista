@@ -7,11 +7,12 @@ import Bubble from "./Bubble";
 import MyEvents from "./MyEvents";
 
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, clearUser } from '../../Redux/userSlice';
 
 const ProfileUser = ({ navigation }) => {
 
+  const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
   console.log(JSON.stringify(user, null, 2))
 
@@ -44,14 +45,20 @@ const ProfileUser = ({ navigation }) => {
     navigation.navigate("Edit Profile");
   }
 
+  const handleLogout = () => {
+    dispatch(clearUser());
+    console.log("Log out successful!");
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
       {/* header */}
         <View style={styles.header}>
           <Text style={styles.headerText}>{user.firstName}</Text>
-          <TouchableOpacity style={{marginTop: 6}}>
-            <FontAwesomeIcon icon="fa-gear" size={25} />
+          <TouchableOpacity style={{marginTop: 6, flexDirection: "row"}} onPress={handleLogout}>
+            <Text style={{ fontSize: 16, fontWeight: "bold", marginRight: 10, marginTop: 2.5 }}>Log Out</Text>
+            <FontAwesomeIcon icon="fa-right-from-bracket" size={25} />
           </TouchableOpacity>
         </View>
 

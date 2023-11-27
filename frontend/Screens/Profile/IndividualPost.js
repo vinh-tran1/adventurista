@@ -1,25 +1,30 @@
 import React from "react";
-import { View, Text, Image, ImageBackground, StyleSheet} from 'react-native';
+import { View, Text, Image, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useNavigation } from '@react-navigation/native';
 
 const IndividualPost = (props) => {
 
     const { title, location, img, date, time } = props;
 
+    const navigation = useNavigation();
+
     return (
-        <ImageBackground source={{uri: img}} style={styles.postTop}>
-            <View style={styles.postHeader}>
-                <Text style={{fontSize: 12, fontWeight: "700"}}>{title}</Text>
-                <View style={styles.locationContainer}>
-                    <FontAwesomeIcon style={{ marginRight: 2 }} color={"#D186FF"} icon="location-dot" size={5} />
-                    <Text style={{ fontWeight: "600", fontSize: 5}}>{location}</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Event Details")}>
+            <ImageBackground source={{uri: img}} style={styles.postTop}>
+                <View style={styles.postHeader}>
+                    <Text style={{fontSize: 12, fontWeight: "700"}}>{title}</Text>
+                    <View style={styles.locationContainer}>
+                        <FontAwesomeIcon style={{ marginRight: 2 }} color={"#D186FF"} icon="location-dot" size={5} />
+                        <Text style={{ fontWeight: "600", fontSize: 5}}>{location}</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={styles.bottomContent}>
-                <Text style={{ color: "white", fontWeight: "600", textAlign: "right", fontSize: 12 }}>{date}</Text>
-                <Text style={{ color: "white", textAlign: "right", fontSize: 8 }}>{time}</Text>
-            </View>
-        </ImageBackground>
+                <View style={styles.bottomContent}>
+                    <Text style={{ color: "white", fontWeight: "600", textAlign: "right", fontSize: 12 }}>{date}</Text>
+                    <Text style={{ color: "white", textAlign: "right", fontSize: 8 }}>{time}</Text>
+                </View>
+            </ImageBackground>
+        </TouchableOpacity>
     )
   };
 
