@@ -68,7 +68,7 @@ const Feed = ({ navigation }) => {
     .then((response) => {
       setPosts(response.data);
       dispatch(setNewPost(false));
-      //console.log(JSON.stringify(posts, null, 2))
+      // console.log(JSON.stringify(posts, null, 2))
     })
     .catch((error) => {
       console.log(error);

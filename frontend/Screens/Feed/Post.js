@@ -7,8 +7,14 @@ import PostBottom from "./PostBottom";
 import UserTop from "./UserTop";
 import UserBottom from "./UserBottom";
 import axios from 'axios';
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost } from '../../Redux/userSlice';
 
 const Post = (props) => {
+
+    const newPost = useSelector(selectNewPost);
+    const dispatch = useDispatch();  
     const [poster, setPoster] = useState("");
     // const [userName, setUserName] = useState("")
     const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
@@ -58,13 +64,14 @@ const Post = (props) => {
         axios.get(API_URL + createdBy) 
         .then((response) => {
             //setUserName(response.data.firstName);
+            dispatch(setNewPost(false));
             setPoster(response.data);
         })
         .catch((error) => {
             console.log(error);
     });
 
-    }, []);
+    }, [newPost, dispatch]);
 
     return (
         <View>

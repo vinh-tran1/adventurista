@@ -55,7 +55,7 @@ export const userReducer = (state = initialState, action) => {
                 email: action.payload.email,
                 eventsGoingTo: action.payload.eventsGoingTo,
                 eventsNotGoingTo: action.payload.eventsNotGoingTo,
-                eventsOwend: action.payload.eventsOwend,
+                eventsOwned: action.payload.eventsOwned,
                 firstName: action.payload.firstName,
                 lastName: action.payload.lastName,
                 friends: action.payload.friends,
@@ -67,7 +67,6 @@ export const userReducer = (state = initialState, action) => {
                 bannerImageUrl: action.payload.bannerImageUrl,
                 bio: action.payload.bio,
                 requests: action.payload.requests
-
             }
             
         case CLEAR_USER:
