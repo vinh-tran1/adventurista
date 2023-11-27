@@ -32,7 +32,7 @@ const Login = ({ navigation }) => {
           email: user.email,
           eventsGoingTo: user.eventsGoingTo,
           eventsNotGoingTo: user.eventsNotGoingTo,
-          eventsOwend: user.eventsOwend,
+          eventsOwned: user.eventsOwned,
           firstName: user.firstName,
           lastName: user.lastName,
           friends: user.friends,

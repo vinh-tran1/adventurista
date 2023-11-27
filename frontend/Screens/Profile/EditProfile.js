@@ -96,78 +96,92 @@ const EditProfile = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.innerContainer}> */}
 
-            {/* header */}
-              <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <FontAwesomeIcon icon="fa-caret-left" size={30} />
-                </TouchableOpacity>
+        {/* header */}
+        <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+                <FontAwesomeIcon icon="fa-caret-left" size={30} />
+            </TouchableOpacity>
 
-                <View style={{ flexDirection: 'row', marginLeft: 8}}>
-                    <Text style={styles.headerText}>{user.firstName} {user.lastName}</Text>
-                </View>
-              </View>
+            <View style={{ flexDirection: 'row', marginLeft: 8}}>
+                <Text style={styles.headerText}>{user.firstName} {user.lastName}</Text>
+            </View>
+        </View>
 
-              {/* nav buttons on top bar */}
-              <View style={styles.topBar}>
-                <TouchableOpacity onPress={handleClear}>
-                  <Text style={styles.navButton}>Clear</Text>
-                </TouchableOpacity>
+        {/* nav buttons on top bar */}
+        <View style={styles.topBar}>
+            <TouchableOpacity onPress={handleClear}>
+            <Text style={styles.navButton}>Clear</Text>
+            </TouchableOpacity>
 
-                <Text style={{fontSize:20, fontWeight: "600"}}>Edit Profile</Text>
+            <Text style={{fontSize:20, fontWeight: "600"}}>Edit Profile</Text>
 
-                <TouchableOpacity onPress={handleSaveProfile} style={styles.navButton}>
-                  <Text style={styles.navButton}>Save</Text>
-                </TouchableOpacity>
-              </View>
+            <TouchableOpacity onPress={handleSaveProfile} style={styles.navButton}>
+            <Text style={styles.navButton}>Save</Text>
+            </TouchableOpacity>
+        </View>
 
-              {/* image */}
-              <View style={styles.centerContainer}>
+        {/* profile and banner image */}
+        <View style={{ paddingHorizontal: 20, borderTopWidth: 0.25, borderBottomWidth: 0.25, borderColor: 'gray'}}> 
+            <Text style={styles.label}>Edit Profile and Banner</Text>
+            <View style={styles.centerContainer}>
                 <View style={styles.image}>
-                  <TouchableOpacity onPress={pickImage}>
-                    {profileImage.length === 0 ?
-                    <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                    :
-                    <ImageBackground style={styles.image} source={{uri: image}} />
-                    }
-                  </TouchableOpacity>
+                    <TouchableOpacity onPress={pickImage}>
+                        {profileImage.length === 0 ?
+                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                        :
+                        <ImageBackground style={styles.image} source={{uri: image}} />
+                        }
+                    </TouchableOpacity>
+                    <Text style={{ marginBottom: 2 }}>Profile</Text>
+                    </View>
+                    <View style={styles.image}>
+                    <TouchableOpacity onPress={pickImage}>
+                        {profileImage.length === 0 ?
+                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                        :
+                        <ImageBackground style={styles.image} source={{uri: image}} />
+                        }
+                    </TouchableOpacity>
+                    <Text style={{ marginBottom: 2 }}>Banner</Text>
                 </View>
-              </View>
+            </View>
+        </View>
 
-              {/* text inputs */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>What?</Text>
-                <TextInput 
-                  value={firstName} 
-                  placeholder="First Name" 
-                  onChangeText={(text) => setFirstName(text)} 
-                  style={styles.input} 
-                />
-              </View>
+        {/* text inputs */}
+        <View style={styles.inputContainer}>
+        <Text style={styles.label}>What?</Text>
+        <TextInput 
+            value={firstName} 
+            placeholder="First Name" 
+            onChangeText={(text) => setFirstName(text)} 
+            style={styles.input} 
+        />
+        </View>
 
-              {/* Location */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Where?</Text>
-                <TextInput 
-                  value={location} 
-                  placeholder="Location" 
-                  onChangeText={(text) => setLocation(text)} 
-                  style={styles.input} 
-                />
-              </View>
+        {/* Location */}
+        <View style={styles.inputContainer}>
+        <Text style={styles.label}>Where?</Text>
+        <TextInput 
+            value={location} 
+            placeholder="Location" 
+            onChangeText={(text) => setLocation(text)} 
+            style={styles.input} 
+        />
+        </View>
 
-              {/* Caption */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Bio</Text>
-                <TextInput 
-                  value={bio} 
-                  placeholder="Describe the event!" 
-                  multiline={true}
-                  maxLength={100}
-                  numberOfLines={5}
-                  onChangeText={(text) => setBio(text)} 
-                  style={styles.largeInput} 
-                />
-              </View>
+        {/* Caption */}
+        <View style={styles.inputContainer}>
+        <Text style={styles.label}>Bio</Text>
+        <TextInput 
+            value={bio} 
+            placeholder="Describe the event!" 
+            multiline={true}
+            maxLength={100}
+            numberOfLines={5}
+            onChangeText={(text) => setBio(text)} 
+            style={styles.largeInput} 
+        />
+        </View>
             {/* </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView> */}
@@ -218,8 +232,11 @@ const styles = StyleSheet.create({
     color:'#D186FF',
   },
   centerContainer: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 70,
+    paddingBottom: 20,
   },
   image: {
     alignItems: 'center',
