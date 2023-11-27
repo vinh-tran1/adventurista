@@ -12,7 +12,6 @@ const Calendar = () => {
   const user = useSelector(selectUserInfo);
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
-  console.log(API_URL)
 
   const [attending, setAttending] = useState([]);
 
@@ -20,7 +19,9 @@ const Calendar = () => {
     axios.get(API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log("attending state: " + attending);
+        console.log("DATAAAAA");
+        console.log(response.data);
+        //console.log("attending state: " + attending);
       })
       .catch((error) => {
         console.log(error);
@@ -35,14 +36,10 @@ const Calendar = () => {
       <ScrollView>
         <View style={styles.calendarContainer}>
           <Text style={styles.subheaderText}>Events Attending</Text>
-          <Event />
-          <Event />
-          <Event />
+          <Event attending={attending[0]} />
         </View>
         <View style={styles.savedContainer}>
           <Text style={styles.subheaderText}>Saved Events</Text>
-          <Event />
-          <Event />
           <Event />
         </View>
       </ScrollView>
