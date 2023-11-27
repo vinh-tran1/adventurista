@@ -48,7 +48,7 @@ const FriendProfileView = ({ navigation, route }) => {
       name: 'squash5'
     }
   ];
-  
+  console.log(requested)
   // also need modal for the elipises to block or remove friend
   // show full profile if friends, button click only to request friends, then should be able to click when friends unless unadd
   const handleAddFriend = async () => {
@@ -116,13 +116,13 @@ const FriendProfileView = ({ navigation, route }) => {
           {/* bottom half */}
           <View style={styles.bioBanner}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                   <Text style={{ fontSize: 24, fontWeight: '800'}}>{poster.firstName} {poster.lastName}</Text>
                   <Text style={{ fontSize: 20, fontWeight: '700', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
                 </View>
 
                 { isFriend || requested ? 
-                    <View style={{ backgroundColor:requested ? '#B3B3B3' : '#EDD3FF', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}>
+                    <View style={{ backgroundColor: isFriend ? '#EDD3FF' : '#B3B3B3', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}>
                       <Text style={{ fontSize: 12}}>{friendStatus}</Text>
                     </View>
                     :

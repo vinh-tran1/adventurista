@@ -6,7 +6,7 @@ import FeedFixedTop from "./FeedFixedTop";
 import axios from 'axios';
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectNewPost, setNewPost } from '../../Redux/userSlice';
+import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
 
 // sample posts data
 const DATA = [
