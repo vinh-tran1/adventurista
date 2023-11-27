@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Modal from "react-native-modal";
 import BubbleText from "../../Shared/BubbleText";
 import Bubble from "./Bubble";
 import MyGroups from "./MyGroups";
@@ -12,7 +13,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo, setUserInfo } from "../../Redux/userSlice";
 
 const FriendProfileView = ({ navigation, route }) => {
-  const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/friend-request';
+  const API_URL_ADD = process.env.REACT_APP_AWS_API_URL + 'users/friend-request';
+  const API_URL_UNADD = process.env.REACT_APP_AWS_API_URL + 'users/friend-request/unadd';
   const { poster } = route.params;
   // console.log(poster);
 
@@ -20,10 +22,20 @@ const FriendProfileView = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const age = getAge(poster.age);
 
+  // necessary for modals
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const [isFriend, setIsFriend] = useState(user.friends.some(friendId => friendId === poster.userId));
   const [requested, setRequested] = useState(user.requests.outgoing.some(friendId => friendId === poster.userId));
   const [friendStatus, setFriendStatus] = useState(isFriend ? "Friends" : requested ? "Requested" : "Add Friend");
-  //console.log(user.requests)
+  // the friend's groups (not the user's)
+  const [groups, setGroups] = useState(poster.eventsGoingTo.filter(event => !poster.eventsOwned.includes(event)));
+
+  // dummy data
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
   const groupData = [
@@ -48,12 +60,12 @@ const FriendProfileView = ({ navigation, route }) => {
       name: 'squash5'
     }
   ];
-  console.log(requested)
+  
   // also need modal for the elipises to block or remove friend
   // show full profile if friends, button click only to request friends, then should be able to click when friends unless unadd
   const handleAddFriend = async () => {
     try {
-      const response = await axios.post(API_URL, {
+      const response = await axios.post(API_URL_ADD, {
         requesterId: user.userId, 
         requestId: poster.userId
       });
@@ -70,6 +82,8 @@ const FriendProfileView = ({ navigation, route }) => {
           ...updatedUser
         }));
 
+        console.log("Sucessfully requested friend!")
+
       } else {
         console.log("Error in sending friend request!");
       }
@@ -77,6 +91,40 @@ const FriendProfileView = ({ navigation, route }) => {
     } catch (err) {
       console.log(err);
       console.log("An error occured for sending request. Please try again");
+    }
+  };
+
+  const handelRemoveFriend = async() => {
+    try {
+      const response = await axios.post(API_URL_UNADD, {
+        requesterId: user.userId, 
+        requestId: poster.userId
+      });
+
+      if (response.status == 200) {
+        const updatedUser = response.data;
+        // console.log(updatedUser);
+        setRequested(false);
+        setIsFriend(false);
+        setFriendStatus("Add Friend")
+        
+        // redux to update friend status 
+        dispatch(setUserInfo({
+          newPost: false,
+          ...updatedUser
+        }));
+
+        toggleModal();
+        navigation.navigate("Feed Main");
+        console.log("Sucessfully removed friend!")
+
+      } else {
+        console.log("Error in unadding friend");
+      }
+
+    } catch (err) {
+      console.log(err);
+      console.log("An error occured for unadding friend. Please try again");
     }
   };
 
@@ -91,9 +139,40 @@ const FriendProfileView = ({ navigation, route }) => {
 
             <View style={{ flexDirection: 'row', flexGrow: 1, justifyContent: 'space-between', marginLeft: 8}}>
                 <Text style={styles.headerText}>{poster.firstName}</Text>
-                <TouchableOpacity style={{marginTop: 6}}>
+                {isFriend ? 
+
+                  <TouchableOpacity style={{marginTop: 6}} onPress={toggleModal}>
                     <FontAwesomeIcon icon="fa-ellipsis" size={25} />
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                  :
+                  <View style={{marginTop: 6}} >
+                    <FontAwesomeIcon icon="fa-ellipsis" size={25} />
+                  </View>
+                
+                }
+                
+
+                <Modal 
+                  testID={'modal'}
+                  isVisible={isModalVisible}
+                  backdropOpacity={0.9}
+                  backdropColor="#B4B3DB"
+                  animationIn="slideInLeft"
+                  animationOut="slideOutRight"
+                >
+                  <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ backgroundColor: 'white', paddingHorizontal: 70, paddingVertical: 40, borderWidth: 2, borderColor: '#D99BFF', borderRadius: 10}}>
+                      <TouchableOpacity style={{ justifyContent: 'center', marginBottom: 16 }} onPress={handelRemoveFriend}>
+                        <Text style={{textAlign: 'center', color: '#D99BFF', fontSize: 20, fontWeight: 700 }}> Remove {poster.firstName}?</Text>
+                      </TouchableOpacity> 
+
+                      <TouchableOpacity style={{ backgroundColor: '#D99BFF', padding: 5 , borderRadius: 5}} onPress={toggleModal}>
+                        <Text style={{textAlign: 'center', fontSize: 16, fontWeight: 500 }}>Cancel</Text>
+                      </TouchableOpacity> 
+                    </View>
+                  </View>
+                </Modal>
+                
             </View>
         </View>
 
@@ -108,7 +187,8 @@ const FriendProfileView = ({ navigation, route }) => {
               <View style={styles.bubbleRow}>
                 <Bubble value={poster.eventsOwned.length} name={'Events'}/>
                 <Bubble value={poster.friends.length} name={'Connections'}/>
-                <Bubble value={poster.groups.length} name={'Groups'}/>
+                <Bubble value={groups.length} name={'Groups'}/>
+                {/* <Bubble value={poster.groups.length} name={'Groups'}/> */}
               </View>
           </View>
           </ImageBackground>
@@ -170,11 +250,14 @@ const FriendProfileView = ({ navigation, route }) => {
           <View>
               <View style={styles.sectionContainer}>
                   <View style={styles.sectionHeader}>
-                      <Text style={styles.sectionText}>My Groups</Text>
+                      {groups.length > 0 ? <Text style={styles.sectionText}>My Groups</Text> : <Text style={styles.sectionText}>No Groups Joined Yet!</Text>}
                   </View>
                   <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                      {groupData.map((item, index) => (
-                          <MyGroups key={index.toString()} img={item.img} name={item.name} />
+                      {/* {groupData.map((groupId) => (
+                          <MyGroups key={index.toString()} groupId={groupId} />
+                      ))} */}
+                      {groups.map((groupId, index) => (
+                          <MyGroups key={index.toString()} groupId={groupId} poster={poster}/>
                       ))}
                   </ScrollView>
               </View>

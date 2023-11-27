@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 // Redux
-import { useSelector, useDispatch } from 'react-redux';
-import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '../../Redux/userSlice';
 
 const IndividualPost = ({ eventId }) => {
 
