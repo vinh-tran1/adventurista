@@ -1,10 +1,34 @@
 import { StyleSheet, View, Text, Image } from 'react-native';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+// Redux
+// import { useSelector, useDispatch } from 'react-redux';
+// import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
-const MyGroups = ({ img, name }) => {
+const MyGroups = ({ groupId, poster }) => {
+  // have to use goingToEvents for now, because no groups yet
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/' + groupId;
+  // const user = useSelector(selectUserInfo);
+  const [group, setGroup] = useState("");
+  // dummy image before S3
+  const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
+
+  useEffect(() => {
+    axios.get(API_URL) 
+    .then((response) => {
+        setGroup(response.data);
+        // console.log(JSON.stringify(event, null, 2));
+    })
+    .catch((error) => {
+        console.log(error);
+        console.log("cannot get event going to")
+    });
+  }, [poster]);
+
   return (
     <View style={styles.container}>
         <Image source={{ uri: img }} style={styles.circle} />
-        <Text style={styles.caption}>{name}</Text>
+        <Text style={styles.caption}>{group.title}</Text>
     </View>
   );
 }

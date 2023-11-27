@@ -9,10 +9,11 @@ import UserBottom from "./UserBottom";
 import axios from 'axios';
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
-import { selectNewPost, setNewPost } from '../../Redux/userSlice';
+import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice';
 
 const Post = (props) => {
 
+    const user = useSelector(selectUserInfo);
     const newPost = useSelector(selectNewPost);
     const dispatch = useDispatch();  
     const [poster, setPoster] = useState("");
@@ -70,7 +71,7 @@ const Post = (props) => {
         .catch((error) => {
             console.log(error);
         });
-    }, [newPost, dispatch]);
+    }, [newPost, user.friends]);
 
     return (
         <View>

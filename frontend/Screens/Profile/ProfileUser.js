@@ -17,6 +17,8 @@ const ProfileUser = ({ navigation }) => {
   const user = useSelector(selectUserInfo);
   // console.log(JSON.stringify(user, null, 2))
   const age = getAge(user.age);
+  const [groups, setGroups] = useState(user.eventsGoingTo.filter(event => !user.eventsOwned.includes(event)));
+
 
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
@@ -82,7 +84,7 @@ const ProfileUser = ({ navigation }) => {
             <View style={styles.bubbleRow}>
               <Bubble value={user.eventsOwned.length} name={'Events'}/>
               <Bubble value={user.friends.length} name={'Connections'}/>
-              <Bubble value={user.groups.length} name={'Groups'}/>
+              <Bubble value={groups.length} name={'Groups'}/>
             </View>
           </View>
         </ImageBackground>
@@ -122,7 +124,7 @@ const ProfileUser = ({ navigation }) => {
         </ScrollView>
       </View> */}
 
-      <View style={{borderBottomWidth: 0.25}}></View>
+      <View style={{borderBottomWidth: 0.25, borderColor: 'gray'}}></View>
 
       {/* my events */}
       <View style={styles.sectionContainer}>
@@ -163,7 +165,8 @@ const styles = StyleSheet.create({
   },
   bioBanner: {
     height: 130,
-    borderBottomWidth: 0.25,
+    // borderBottomWidth: 0.25,
+    // borderColor: 'gray',
     top: 90,
     paddingHorizontal: 20,
     marginBottom: 90,
