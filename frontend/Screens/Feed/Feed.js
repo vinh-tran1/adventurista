@@ -35,25 +35,9 @@ const DATA = [
 ];
 
 const Feed = ({ navigation }) => {
-  // const user = useSelector(selectUserInfo);
+  const user = useSelector(selectUserInfo);
   // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
-  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events'
-
-  // useEffect(() => {
-  //       axios
-  //         .get(
-  //           "https://drip-email-scraping-service-koh2hxfdwq-uw.a.run.app/closet",
-  //           {
-  //             params: { email: email },
-  //           }
-  //         )
-  //         .then((response) => {
-  //           setItems(response.data);
-  //         })
-  //         .catch((error) => {
-  //           console.error(error);
-  //         });
-  //     }, []);
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events/' + user.userId;
 
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  

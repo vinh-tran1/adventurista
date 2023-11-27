@@ -81,8 +81,8 @@ const Step2 = ({ navigation, route }) => {
         <TextInput value={age} placeholder="1701-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Where Are You From? (City, Country)</Text>
-        <TextInput value={location} placeholder="New Haven, USA" onChangeText={(text) => setLocation(text)} style={styles.input} />
+        <Text style={styles.label}>Where Are You Currently?</Text>
+        <TextInput value={location} placeholder="New Haven, CT, US" onChangeText={(text) => setLocation(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>What Are Your Interests? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>

@@ -1,8 +1,13 @@
 import React from "react";
 import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useSelector } from "react-redux";
+import { selectUserInfo } from "../../Redux/userSlice";
 
 const FeedFixedTop = ({ navigation }) => {
+
+  const user = useSelector(selectUserInfo);
+
   return (
     <SafeAreaView>
       <View style={styles.header}>
@@ -14,11 +19,11 @@ const FeedFixedTop = ({ navigation }) => {
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.location}>
           <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
-          <Text style={{ marginTop: 2, fontSize: 13 }}>New Haven, CT</Text>
+          <Text style={{ marginTop: 2, fontSize: 13 }}>{user.primaryLocation}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ marginTop: 7.5 }}>
+        {/* <TouchableOpacity style={{ marginTop: 7.5 }}>
           <FontAwesomeIcon color={"#D99BFF"} icon="magnifying-glass" size={20} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
@@ -37,7 +42,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginVertical: 12.5,
     flexDirection: "row",
-    justifyContent: "space-between"
+    // justifyContent: "space-between"
+    justifyContent: "flex-start"
   },
   logo: {
     height: 60,
