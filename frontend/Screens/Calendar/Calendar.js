@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
-import Event from "./Event";
+import EventCard from "../../Shared/EventCard";
 
 // Redux
 import { useSelector } from 'react-redux';
@@ -11,16 +11,30 @@ const Calendar = () => {
 
   const user = useSelector(selectUserInfo);
 
-  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
-  console.log(API_URL)
+  const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
+  const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/saved/' + user.userId;
 
   const [attending, setAttending] = useState([]);
+  const [saved, setSaved] = useState([]);
 
   useEffect(() => {
-    axios.get(API_URL)
+    axios.get(ATTEND_API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log("attending state: " + attending);
+        console.log("DATAAAAA");
+        console.log(response.data);
+        //console.log("attending state: " + attending);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      axios.get(SAVE_API_URL)
+      .then((response) => {
+        setSaved(response.data);
+        console.log("SAVED DATAAAAA");
+        console.log(response.data);
+        //console.log("saved state: " + saved);
       })
       .catch((error) => {
         console.log(error);
@@ -35,15 +49,11 @@ const Calendar = () => {
       <ScrollView>
         <View style={styles.calendarContainer}>
           <Text style={styles.subheaderText}>Events Attending</Text>
-          <Event />
-          <Event />
-          <Event />
+          <EventCard attending={attending[0]} />
         </View>
         <View style={styles.savedContainer}>
           <Text style={styles.subheaderText}>Saved Events</Text>
-          <Event />
-          <Event />
-          <Event />
+          <EventCard />
         </View>
       </ScrollView>
     </SafeAreaView>
