@@ -16,6 +16,8 @@ const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
 
+  // console.log("before: ", user.firstName, user.lastName, user.interests, user.primaryLocation, user.bio, user.age)
+
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [interests, setInterests] = useState(user.interests);
@@ -25,6 +27,8 @@ const EditProfile = ({ navigation }) => {
   const [location, setLocation] = useState(user.primaryLocation);
   const [bio, setBio] = useState("");
   const [age, setAge]= useState(user.age);
+
+  // console.log("after: ", firstName, lastName, interests, location, bio, age)
 
   const pickProfileImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -91,18 +95,25 @@ const EditProfile = ({ navigation }) => {
 
       if (response.status === 200) {
         const updatedUser = response.data;
-        console.log(updatedUser)
-
+        console.log("updated user: ", updatedUser)
+        console.log("new bio:", bio);
         dispatch(setUserInfo({
             newPost: false,
-            ...updatedUser
+            primaryLocation: location,
+            firstName: firstName,
+            lastName: lastName,
+            interests: interests,
+            age: age,
+            bio: bio,
+            ...user
           }));
+          console.log("updated profile:", user.bio)
 
         handleClear();
         navigation.goBack();
         console.log("Sucessfully updated user!");
       } else {
-        console.log("Error in udpating user");
+        console.log("Error in updating user");
       }  
     } catch (err) {
         console.log(err);
@@ -116,7 +127,6 @@ const EditProfile = ({ navigation }) => {
 //   console.log(bio)
 //   console.log(location)
 //   console.log(user.userId)
-console.log(user)
 
   return (
     <SafeAreaView style={styles.container}>

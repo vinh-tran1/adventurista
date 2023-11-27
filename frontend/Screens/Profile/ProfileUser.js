@@ -90,8 +90,8 @@ const ProfileUser = ({ navigation }) => {
         {/* bottom half */}
         <View style={styles.bioBanner}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-            <Text style={{ fontSize: 24, fontWeight: '800'}}>{user.firstName} {user.lastName}</Text>
-            <Text style={{ fontSize: 20, fontWeight: '700', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
+            <Text style={{ fontSize: 24, fontWeight: '700'}}>{user.firstName} {user.lastName}</Text>
+            <Text style={{ fontSize: 20, fontWeight: '600', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 8}}>
             <FontAwesomeIcon icon="location-dot" color="#D186FF"/>  
@@ -110,10 +110,9 @@ const ProfileUser = ({ navigation }) => {
       </View>
 
       {/* my groups */}
-      <View style={styles.sectionContainer}>
+      {/* <View style={styles.sectionContainer}>
         <View style={styles.sectionHeader}>
            <Text style={styles.sectionText}>My Groups</Text>
-           {/* <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity> */}
         </View>
        
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -121,7 +120,7 @@ const ProfileUser = ({ navigation }) => {
             <MyGroups key={index.toString()} img={item.img} name={item.name} />
           ))}
         </ScrollView>
-      </View>
+      </View> */}
 
       <View style={{borderBottomWidth: 0.25}}></View>
 
@@ -134,7 +133,7 @@ const ProfileUser = ({ navigation }) => {
       </View>
 
       <View style={{paddingHorizontal: 20}}>
-        <MyEvents />
+        <MyEvents events={user.eventsOwned}/>
       </View>
         
       </ScrollView>

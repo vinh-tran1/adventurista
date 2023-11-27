@@ -1,27 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, ImageBackground, StyleSheet, TouchableOpacity} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
-const IndividualPost = (props) => {
+const IndividualPost = ({ eventId }) => {
 
-    const { title, location, img, date, time } = props;
-
+    const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/' + eventId;
+    const user = useSelector(selectUserInfo);
+    const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
+    // const { title, location, img, date, time } = props;
     const navigation = useNavigation();
+    const [event, setEvent] = useState("");
+
+    useEffect(() => {
+        axios.get(API_URL) 
+        .then((response) => {
+            setEvent(response.data);
+            // console.log(JSON.stringify(event, null, 2));
+        })
+        .catch((error) => {
+            console.log(error);
+            console.log("cannot get event")
+        });
+    }, [user]);
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("Event Details")}>
             <ImageBackground source={{uri: img}} style={styles.postTop}>
                 <View style={styles.postHeader}>
-                    <Text style={{fontSize: 12, fontWeight: "700"}}>{title}</Text>
-                    <View style={styles.locationContainer}>
+                    <Text style={{fontSize: 10, fontWeight: "700"}}>{event.title}</Text>
+                    {/* <View style={styles.locationContainer}>
                         <FontAwesomeIcon style={{ marginRight: 2 }} color={"#D186FF"} icon="location-dot" size={5} />
-                        <Text style={{ fontWeight: "600", fontSize: 5}}>{location}</Text>
-                    </View>
+                        <Text style={{ fontWeight: "600", fontSize: 5}}>{event.location}</Text>
+                    </View> */}
                 </View>
                 <View style={styles.bottomContent}>
-                    <Text style={{ color: "white", fontWeight: "600", textAlign: "right", fontSize: 12 }}>{date}</Text>
-                    <Text style={{ color: "white", textAlign: "right", fontSize: 8 }}>{time}</Text>
+                    <View style={{ backgroundColor: '#4b3654', borderRadius: 2 }}>
+                        <Text style={{ color: "white", fontWeight: "600", textAlign: "right", fontSize: 8 }}>{event.date}</Text>
+                        <Text style={{ color: "white", fontWeight: "600", textAlign: "right", fontSize: 7 }}>{event.time}</Text>
+                    </View>
                 </View>
             </ImageBackground>
         </TouchableOpacity>
@@ -30,6 +51,7 @@ const IndividualPost = (props) => {
 
   const styles = StyleSheet.create({
     postTop: {
+        flex: 1,
         height: 127, 
         width: 121,
         backgroundColor: 'gray',
@@ -40,6 +62,7 @@ const IndividualPost = (props) => {
         backgroundColor: 'rgba(255, 255, 255, 0.65)',
         paddingVertical: 4,
         paddingHorizontal: 10,
+        justifyContent: 'center'
     },
     locationContainer: {
         flexDirection: "row",
@@ -55,6 +78,7 @@ const IndividualPost = (props) => {
     bottomContent: {
         flex: 1,
         justifyContent: "flex-end",
+        alignItems: 'flex-end',
         marginBottom: 20,
         marginHorizontal: 15,
     }

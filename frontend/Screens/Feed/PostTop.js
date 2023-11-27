@@ -62,7 +62,7 @@ const PostTop = (props) => {
         marginVertical: 5,
         padding: 5,
         borderRadius: 5,
-        width: "75%"
+        width: "100%"
     },
     bottomContent: {
         flex: 1,

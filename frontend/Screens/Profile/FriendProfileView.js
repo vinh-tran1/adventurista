@@ -117,8 +117,8 @@ const FriendProfileView = ({ navigation, route }) => {
           <View style={styles.bioBanner}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                  <Text style={{ fontSize: 24, fontWeight: '800'}}>{poster.firstName} {poster.lastName}</Text>
-                  <Text style={{ fontSize: 20, fontWeight: '700', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
+                  <Text style={{ fontSize: 24, fontWeight: '700'}}>{poster.firstName} {poster.lastName}</Text>
+                  <Text style={{ fontSize: 20, fontWeight: '600', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
                 </View>
 
                 { isFriend || requested ? 
@@ -185,7 +185,7 @@ const FriendProfileView = ({ navigation, route }) => {
               </View>
 
               <View style={{paddingHorizontal: 20}}>
-                  <MyEvents />
+                  <MyEvents events={poster.eventsOwned}/>
               </View>
           </View>
       } 

@@ -3,7 +3,6 @@ import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity,
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import IndividualPost from "./IndividualPost";
 
-
 // sample posts data
 const DATA = [
   {
@@ -58,17 +57,17 @@ const DATA = [
   },
 ];
 
-const MyEvents = () => {
+const MyEvents = ({ events }) => {
     return (
       <View style={styles.container}>
-        {DATA.map(item => (
-          <IndividualPost
-            key={item.id}
-            title={item.title}
-            location={item.location}
-            img={item.img}
-            date={item.date}
-            time={item.time}
+        {events.map(eventId => (
+          <IndividualPost key={eventId} eventId={eventId}
+            // key={item.id}
+            // title={item.title}
+            // location={item.location}
+            // img={item.img}
+            // date={item.date}
+            // time={item.time}
           />
         ))}
       </View>
