@@ -40,7 +40,16 @@ Using React Native, our app is able to run on both iOS and Android.
 - `frontend/Navigators/`: React Native stack navigation for major screens
 - `frontend/Redux/`: Redux for global state
 - `frontend/Screens/`: Folders for the major screens
-- `frontend/Shared/`: Reusable components
+	- `Authenticate/`: authentication for user
+ 		- `Login/`
+   		- `Signup/`
+	- `Calendar/`: Events attending and events saved
+   	- `Feed/`: Feed for current user
+   		- `Notifications/`
+	- `Messages/`: Displays groups
+	- `Post/`: Creating posts
+   	- `Profile/`: Different profile views
+- `frontend/Shared/`: Reusable components and functions
 - `frontend/assets/`: Images
 
 ### Backend
@@ -64,7 +73,7 @@ $ npm install
 # run app
 $ npm start
 ```
-Optional: download Expo Go on mobile to view app on mobile device
+- QR Code will show in terminal: download Expo Go on mobile to view app on mobile device or use XCode Simulator to view on Macbook
 
 #### Backend
 
