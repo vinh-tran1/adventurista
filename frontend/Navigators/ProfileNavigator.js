@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 
 import ProfileUser from "../Screens/Profile/ProfileUser";
 import EditProfile from "../Screens/Profile/EditProfile";
+import EventDetails from '../Shared/EventDetails';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,13 @@ const MyStack = () => {
             <Stack.Screen 
                 name='Edit Profile'
                 component={EditProfile}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen 
+                name='Event Details'
+                component={EventDetails}
                 options={{
                     headerShown: false,
                 }}
