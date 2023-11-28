@@ -569,8 +569,8 @@ async function updateEventPicture(event: Event): Promise<Event | null> {
   }
 }
 
-router.get("/event-pic-presigned/:eventId", async (req, res) => {
-  const { eventId } = req.params;
+router.get("/event-pic-presigned", async (req, res) => {
+  const { eventId } = req.body;
   const event = await getEvent(eventId);
   if (!event) {
     return res.status(404).send("Event not found");
