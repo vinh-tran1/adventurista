@@ -33,6 +33,7 @@ const Login = ({ navigation }) => {
           eventsGoingTo: user.eventsGoingTo,
           eventsNotGoingTo: user.eventsNotGoingTo,
           eventsOwned: user.eventsOwned,
+          eventsSaved: user.eventsSaved,
           firstName: user.firstName,
           lastName: user.lastName,
           friends: user.friends,

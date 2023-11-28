@@ -21,7 +21,7 @@ const Calendar = () => {
     axios.get(ATTEND_API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log(response.data);
+        console.log("attending:", attending);
         //console.log("attending state: " + attending);
       })
       .catch((error) => {
@@ -30,14 +30,17 @@ const Calendar = () => {
 
       axios.get(SAVE_API_URL)
       .then((response) => {
-        setSaved(response.data);
-        console.log(response.data);
+        setSaved(response.data.eventsSaved);
+        console.log("saved: ", saved);
         //console.log("saved state: " + saved);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+
+      // filter arrays chronologically
+
+  }, [user.eventsSaved]);
 
   return (
     <SafeAreaView style={styles.container}>

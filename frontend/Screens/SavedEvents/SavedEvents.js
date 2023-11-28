@@ -19,7 +19,6 @@ const Messages = () => {
     axios.get(API_URL)
       .then((response) => {
         setGroups(response.data);
-        console.log("DATAAAAA");
         console.log(response.data);
       })
       .catch((error) => {

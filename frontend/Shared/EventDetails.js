@@ -3,10 +3,13 @@ import { View, Text, Image, ImageBackground, StyleSheet, TouchableOpacity, SafeA
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
 import AttendingUser from "./AttendingUser";
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, setUserInfo } from "../Redux/userSlice";
 
 const EventDetails = (props) => {
 
     const navigation = useNavigation();
+    const user = useSelector(selectUserInfo);
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {

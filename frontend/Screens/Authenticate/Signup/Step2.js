@@ -42,6 +42,7 @@ const Step2 = ({ navigation, route }) => {
             eventsGoingTo: updatedUser.eventsGoingTo,
             eventsNotGoingTo: updatedUser.eventsNotGoingTo,
             eventsOwned: updatedUser.eventsOwned,
+            eventsSaved: updatedUser.eventsSaved,
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             friends: updatedUser.friends,

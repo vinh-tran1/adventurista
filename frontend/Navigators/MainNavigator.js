@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import FeedNavigator from "./FeedNavigator";
 import CalendarNavigator from "./CalendarNavigator";
 import PostNavigator from "./PostNavigator";
-import MessagesNavigator from "./MessagesNavigator";
+import SavedEventsNavigator from "./SavedEventsNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import AuthenticationNavigator from "./AuthenticationNavigator";
 
@@ -63,11 +63,11 @@ const MainNavigator = () => {
                   }}
                 />
                 <Tab.Screen
-                name="Messages"
-                component={MessagesNavigator}
+                name="Saved Events"
+                component={SavedEventsNavigator}
                 options={{
                     tabBarIcon: () => (
-                      <FontAwesomeIcon icon="message" size={25} />
+                      <FontAwesomeIcon icon="bookmark" size={25} />
                     ),
                     headerShown: false
                   }}

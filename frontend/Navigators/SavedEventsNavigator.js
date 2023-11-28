@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack"
 
-import Messages from '../Screens/Messages/Messages';
+import SavedEvents from '../Screens/SavedEvents/SavedEvents';
 import EventDetails from '../Shared/EventDetails';
 
 const Stack = createStackNavigator();
@@ -11,7 +11,7 @@ const MyStack = () => {
         <Stack.Navigator>
             <Stack.Screen 
                 name='Messages Main'
-                component={Messages}
+                component={SavedEvents}
                 options={{
                     headerShown: false,
                 }}
