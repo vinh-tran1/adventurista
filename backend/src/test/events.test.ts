@@ -1,5 +1,5 @@
 // Assuming you have an `events` module that exports `getEvent` function
-import { getEvent, createEvent } from '../src/events';
+import { getEvent, createEvent, updateEvent } from '../src/events';
 import { getUser } from '../src/users';
 import { Event } from '../src/models';
 import AWS from 'aws-sdk';
@@ -8,7 +8,7 @@ import request from 'supertest'; // if you are using supertest for HTTP assertio
 import * as sinon from 'sinon';
 import { AWSError, Request } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { sampleEvent, sampleEventId, sampleUser } from './testConstants';
+import { sampleEvent, sampleEventId, sampleUser, newSampleEvent } from './testConstants';
 
 const sandbox = sinon.createSandbox();
 
@@ -77,6 +77,28 @@ describe('Create Event', () => {
         // Assert that the result is an error string
         expect(result).not.toEqual(sampleUser);
       });
+
+  
+  });
+
+
+  describe('Update Event', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+  
+    it('Should return new event when required fields are present', async () => {
+      // Call createEvent with missing fields
+      const event = {
+        ...sampleEvent,
+        time: '20:00:00'
+      };
+      const result = await updateEvent(event);
+  
+      // Assert that the result is an error string
+      expect(result).not.toEqual(sampleEvent);
+    });
 
   
   });

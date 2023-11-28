@@ -288,7 +288,7 @@ router.get("/events-going-to-ids/:userId", async (req, res) => {
   res.status(200).send(user.eventsGoingTo);
 });
 
-async function updateEvent(event: Event): Promise<Event | null> {
+export async function updateEvent(event: Event): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {

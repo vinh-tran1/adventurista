@@ -31,11 +31,14 @@ export const sampleUser: User = {
     age: 0,
   };
 
+  export const sampleEventId = "065c748f-3b89-4a4f-8d2b-9493f2d84e42"
+  const date = moment().format('YYYY-MM-DD')
+
   export const sampleEvent: Event = {
-    eventId: uuidv4(),
+    eventId: sampleEventId,
     title: 'Sample Event',
     description: 'This is a sample event',
-    date: moment().format('YYYY-MM-DD'),
+    date: date,
     time: '18:00:00',
     location: 'Sample Location',
     postingUserId: sampleUserId,
@@ -45,4 +48,17 @@ export const sampleUser: User = {
     tags: []
   };
 
-  export const sampleEventId = sampleEvent.eventId;
+  export const newSampleEvent: Event = {
+    eventId: sampleEventId,
+    title: 'Sample Event',
+    description: 'This is a sample event',
+    date: date,
+    time: '20:00:00',
+    location: 'Sample Location',
+    postingUserId: sampleUserId,
+    blockedUsers: [],
+    whoIsGoing: [],
+    eventPictureUrl: '',
+    tags: []
+  };
+
