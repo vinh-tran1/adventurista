@@ -3,13 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 
 export const sampleUserId: string = "testUserId"
+export const sampleEmail: string = "test@test.edu"
+export const sampleFirstName: string = "Bob"
+export const sampleLastName: string = "Joe"
+export const sampleUnhashedPassword: string = "NotAPassword123"
 
 export const sampleUser: User = {
-    email: "test@test.edu",
+    email: sampleEmail,
     userId: sampleUserId,
-    firstName: "Bob",
-    lastName: "Joe",
-    hashedPassword: "NotAPassword123",
+    firstName: sampleFirstName,
+    lastName: sampleLastName,
+    hashedPassword: sampleUnhashedPassword,
     primaryLocation: "",
     blockedUsers: [],
     interests: [],

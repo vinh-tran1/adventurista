@@ -1251,7 +1251,7 @@ router.get("/profile-pic-as-bytes", async (req, res) => {
   }
 });
 
-async function hashPassword(password: string): Promise<string> {
+export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, saltRounds);
 }
 
@@ -1266,7 +1266,7 @@ async function comparePassword(
   return bcrypt.compare(password, hash);
 }
 
-async function emailExists(email: string): Promise<boolean> {
+export async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
     IndexName: USERS_SECONDARY_KEY,
@@ -1285,7 +1285,7 @@ async function emailExists(email: string): Promise<boolean> {
   }
 }
 
-async function createUser(
+export async function createUser(
   email: string,
   firstName: string,
   lastName: string,
