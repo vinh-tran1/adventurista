@@ -86,8 +86,6 @@ describe('Create Event', () => {
     afterEach(() => {
       sandbox.restore();
     });
-
-  
     it('Should return new event when required fields are present', async () => {
       // Call createEvent with missing fields
       const event = {
@@ -99,6 +97,4 @@ describe('Create Event', () => {
       // Assert that the result is an error string
       expect(result).not.toEqual(sampleEvent);
     });
-
-  
   });
