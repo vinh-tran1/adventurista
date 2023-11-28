@@ -179,7 +179,7 @@ const Post = ({ navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
 
-          axios.get("/events/event-pic-presigned/" + eventId)
+          axios.get(process.env.REACT_APP_AWS_API_URL + "/events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
               console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
@@ -189,13 +189,6 @@ const Post = ({ navigation }) => {
                 });
                 if (response3.status === 200) {
                   console.log("Successfully added picture url to event");
-                  dispatch(setNewPost(true));
-                  dispatch(setUserInfo({
-                    ...updatedUser
-                  }));
-                  handleClear();
-                  navigation.navigate('Feed Main');
-                  console.log("sucessfully created event!");
                 } else {
                   console.log("Error adding picture url to event");
                 }
@@ -211,6 +204,15 @@ const Post = ({ navigation }) => {
         } catch (error) {
           console.error('Error converting image to base64:', error);
         }
+        // End of S3 code
+
+        dispatch(setNewPost(true));
+        dispatch(setUserInfo({
+          ...updatedUser
+        }));
+        handleClear();
+        navigation.navigate('Feed Main');
+        console.log("Sucessfully created event!");
       } else {
         console.log("Error in creating event");
       }
