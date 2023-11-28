@@ -1251,7 +1251,7 @@ router.get("/profile-pic-as-bytes", async (req, res) => {
   }
 });
 
-async function hashPassword(password: string): Promise<string> {
+export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, saltRounds);
 }
 
@@ -1266,7 +1266,7 @@ async function comparePassword(
   return bcrypt.compare(password, hash);
 }
 
-async function emailExists(email: string): Promise<boolean> {
+export async function emailExists(email: string): Promise<boolean> {
   const params = {
     TableName: USERS_TABLE_NAME,
     IndexName: USERS_SECONDARY_KEY,
@@ -1285,7 +1285,7 @@ async function emailExists(email: string): Promise<boolean> {
   }
 }
 
-async function createUser(
+export async function createUser(
   email: string,
   firstName: string,
   lastName: string,
@@ -1462,21 +1462,6 @@ router.post("/events/mark-as-seen/:userId/:eventId", async (req, res) => {
   } catch (error) {
     console.error("Error marking event as seen:", error);
     res.status(500).send("Error marking event as seen");
-  }
-});
-
-// Save an event to a user's profile
-router.post("/events/save/:userId/:eventId", async (req, res) => {
-  const { userId, eventId } = req.params;
-  try {
-    const updatedUser = await saveEvent(userId, eventId);
-    if (!updatedUser) {
-      return res.status(404).send("User or event not found");
-    }
-    res.status(200).send("Event saved to profile");
-  } catch (error) {
-    console.error("Error saving event:", error);
-    res.status(500).send("Error saving event to profile");
   }
 });
 

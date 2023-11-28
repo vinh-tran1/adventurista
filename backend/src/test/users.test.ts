@@ -1,127 +1,129 @@
-// @ts-nocheck
-test('Get User (User does exist)', () => {
-
-});
-
-test('Get User (User does NOT exist)', () => {
-
-});
-
-import { getUser } from '../src/users';
+import { getUser, createUser, hashPassword } from '../src/users';
 import { User } from '../src/models';
-import { DynamoDB } from 'aws-sdk';
+import { AWSError, Request } from 'aws-sdk';
+import * as sinon from 'sinon';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { sampleEmail, sampleFirstName, sampleLastName, sampleUnhashedPassword, sampleUser, sampleUserId } from './testConstants';
 
-// // Mock the AWS SDK DynamoDB DocumentClient
-// jest.mock('aws-sdk', () => {
-//   const mockDocumentClient = {
-//     get: jest.fn(),
-//   };
+const usersFunctions = require("../src/users");
 
-//   return {
-//     DynamoDB: {
-//       DocumentClient: jest.fn(() => mockDocumentClient),
-//     },
-//   };
-// });
+const sandbox = sinon.createSandbox();
 
-// describe('getUser', () => {
-//   const mockDocumentClient = new DynamoDB.DocumentClient() as jest.Mocked<DynamoDB.DocumentClient>;
-//   const userId = 'testUserId';
+describe('Create User', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+    
+    it('When creation is successful', async () => {
+        const returnEmailExistsMock = {
+            promise () {
+              return {
+                Count: 0,
+              };
+            },
+          } as unknown as Request <DocumentClient.QueryOutput, AWSError>;
+                
+        sandbox.stub(DocumentClient.prototype, 'query').returns(returnEmailExistsMock);
 
-//   afterEach(() => {
-//     jest.clearAllMocks();
-//   });
+        const returnValueMock = {
+            promise() {
+                return {
+                    Item: sampleUser,
+                };
+            },
+        } as unknown as Request<DocumentClient.PutItemOutput, AWSError>;
 
-//   it('should return the user from DynamoDB', async () => {
-//     const expectedUser: User = {
-//         email: "test@test.edu",
-//         userId: userId,
-//         firstName: "Bob",
-//         lastName: "Joe",
-//         hashedPassword: "NotAPassword123",
-//         primaryLocation: "",
-//         blockedUsers: [],
-//         interests: [],
-//         friends: [],
-//         requests: {
-//           outgoing: [],
-//           incoming: [],
-//         },
-//         groups: [],
-//         eventsSeen: [],
-//         eventsSaved: [],
-//         eventsOwned: [],
-//         eventsGoingTo: [],
-//         eventsNotGoingTo: [],
-//         messages: [],
-//         profilePictureUrl: "",
-//         bio: "",
-//         bannerImageUrl: "",
-//         age: 0,
-//       };
+        sandbox.stub(DocumentClient.prototype, 'put').returns(returnValueMock);
 
-//     // Mock the DynamoDB DocumentClient get method
-//     mockDocumentClient.get.mockReturnValueOnce({
-//       promise: jest.fn().mockReturnValueOnce({
-//         Item: expectedUser,
-//       }),
-//     });
+        // jest.mock('../src/users', () => ({
+        //   hashPassword: jest.fn(),
+        // }));
+        
+        // Set the mockResolvedValue for the hashPassword function
+        //(hashPassword as jest.Mock).mockResolvedValue(sampleUnhashedPassword);
 
-//     const result = await getUser(userId);
+        const result: User | string = await createUser(sampleEmail, sampleFirstName, sampleLastName, sampleUnhashedPassword);
+        let user: User = sampleUser;
+        if (typeof result !== 'string') {
+            user.userId = result.userId;
+            user.hashedPassword = result.hashedPassword;
+        }
+        expect(user).toEqual(result);
+      });
 
-//     expect(result).toEqual(expectedUser);
+    it('When email is already associated with another account', async () => {
+        const returnEmailExistsMock = {
+            promise () {
+              return {
+                Count: 1,
+              };
+            },
+          } as unknown as Request <DocumentClient.QueryOutput, AWSError>;
+                
+        sandbox.stub(DocumentClient.prototype, 'query').returns(returnEmailExistsMock);
 
-//     // Verify that the DynamoDB DocumentClient get method was called with the correct parameters
-//     expect(mockDocumentClient.get).toHaveBeenCalledWith({
-//       TableName: 'YourUsersTableName',
-//       Key: {
-//         userId: userId,
-//       },
-//     });
-//   });
-// });
+        const returnValueMock = {
+            promise() {
+                return {
+                    Item: sampleUser,
+                };
+            },
+        } as unknown as Request<DocumentClient.PutItemOutput, AWSError>;
 
-// // import { USERS_TABLE_NAME } from '../src/constants';
-// // import { getUser } from '../src/users';
-// // import { DynamoDB } from 'aws-sdk';
-// // import { AWSError, Request } from 'aws-sdk';
-// // import { GetItemOutput } from 'aws-sdk/clients/dynamodb';
+        sandbox.stub(DocumentClient.prototype, 'put').returns(returnValueMock);
 
-// // // Mock the AWS SDK DynamoDB methods
-// // jest.mock('aws-sdk', () => {
-// //   const mockDocumentClient = {
-// //     get: jest.fn(),
-// //   };
+        const result: User | string = await createUser(sampleEmail, sampleFirstName, sampleLastName, sampleUnhashedPassword);
+        expect(result).toEqual("Email already in use");
+    });
+  
+    // it('When DynamoDB put fails', async () => {
+    //   const returnValueMock = {
+    //       promise () {
+    //         return {
+    //           Item: sampleUser,
+    //         };
+    //       },
+    //     } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+              
+    //     const stub = sandbox.stub(DocumentClient.prototype, 'get').throwsException("User does not exist");
+  
+    //     const result = await getUser(sampleUserId);
+    //     expect(result).not.toEqual(sampleUser);
+    // });
+  });
 
-// //   return {
-// //     DynamoDB: {
-// //       DocumentClient: jest.fn(() => mockDocumentClient),
-// //     },
-// //   };
-// // });
+describe('Get User', () => {
+  afterEach(() => {
+    sandbox.restore();
+  });
+  
+  it('When user exists', async () => {
+    const returnValueMock = {
+        promise () {
+          return {
+            Item: sampleUser,
+          };
+        },
+      } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+            
+      const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
 
-// // describe('getItemFromDynamoDB', () => {
-// //   const mockDocumentClient = new DynamoDB.DocumentClient() as jest.Mocked<DynamoDB.DocumentClient>;
-// //   //const tableName = USERS_TABLE_NAME;
-// //   const key = { userId: 'randomUserId' };
+      const result = await getUser(sampleUserId);
+      expect(result).toEqual(sampleUser);
+  });
 
-// //   afterEach(() => {
-// //     jest.clearAllMocks();
-// //   });
+  it('When user does not exist / when DynamoDB get fails', async () => {
+    const returnValueMock = {
+        promise () {
+          return {
+            Item: sampleUser,
+          };
+        },
+      } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+            
+      const stub = sandbox.stub(DocumentClient.prototype, 'get').throwsException("User does not exist");
 
-// // it('should return the item from DynamoDB', async () => {
-// //     const expectedResult = { yourAttribute: 'someData' };
-// //     process.env.USERS_TABLE_NAME = "users";
-
-// //     // Mock the DynamoDB get method
-// //     mockDocumentClient.get.mockReturnValueOnce({
-// //         promise: jest.fn().mockResolvedValue(expectedResult),
-// //     } as unknown as Request<GetItemOutput, AWSError>);
-
-// //     const result = await getUser("randomUserId");
-
-// //     expect(result).toEqual(expectedResult);
-
-// //     // Verify that the DynamoDB get method was called with the correct parameters
-// // });
-// // });
+      const result = await getUser(sampleUserId);
+      expect(result).not.toEqual(sampleUser);
+  });
+});

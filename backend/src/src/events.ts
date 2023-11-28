@@ -21,7 +21,7 @@ const db = new DynamoDB.DocumentClient();
 const s3 = new S3();
 const router = express.Router();
 
-async function createEvent(event: Event): Promise<Event | string | User> {
+export async function createEvent(event: Event): Promise<Event | string | User> {
   if (!event.time || !event.location || !event.postingUserId) {
     return "Required event fields are missing";
   }
@@ -224,7 +224,7 @@ router.get("/events/:userId", async (req, res) => {
   res.status(200).send(sortedEventItems);
 });
 
-async function getEvent(eventId: string): Promise<Event | null> {
+export async function getEvent(eventId: string): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
@@ -267,6 +267,7 @@ router.get("/events-going-to/:userId", async (req, res) => {
     }
   });
 
+
   res.status(200).send(events);
 });
 
@@ -281,7 +282,7 @@ router.get("/events-going-to-ids/:userId", async (req, res) => {
   res.status(200).send(user.eventsGoingTo);
 });
 
-async function updateEvent(event: Event): Promise<Event | null> {
+export async function updateEvent(event: Event): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
