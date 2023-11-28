@@ -54,6 +54,7 @@ Using React Native, our app is able to run on both iOS and Android.
     - `Profile/`: Different profile views
 - `frontend/Shared/`: Reusable components and functions
 - `frontend/assets/`: Images
+- `frontend/__tests__/`: All tests for frontend
 
 ### Backend
 
@@ -109,7 +110,7 @@ docker run -p 80:80 --name adventurista ts-adventurista
 
 #### Frontend
 
-- While our expo app has been published, we are still pending approval from the Apple App Store and Google Play Store.
+- While our expo app has been published (instructions above), we are still pending approval from the Apple App Store and Google Play Store.
 
 #### Backend (AWS)
 
@@ -123,9 +124,18 @@ docker run -p 80:80 --name adventurista ts-adventurista
 
 ### Frontend (~~)
 
-- ~~ - Coverage: ~~%
-- ~~ - Coverage: ~~%
-- ~~ - Coverage: ~~%
+**Run Tests**: `npm test`
+
+**Add Your Own Tests:** We are using Jest for frontend testing (documentation: https://jestjs.io/docs/tutorial-react-native)
+
+  1. Navigate to `frontend/__tests__` folder
+  2. Create file: <Component_To_Test_Here>.test.js
+  3. Import component, function names, etc from file that you want to test. We are using default export convention (import Component from './Component').
+  4. To test a component view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
+  5. to test a function view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
+
+
+Image Of Coverage Here
 
 ### Backend (Jest)
 
