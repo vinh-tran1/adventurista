@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import MyGroups from "./MyGroups";
 import BubbleText from "../../Shared/BubbleText";
@@ -15,10 +15,9 @@ const ProfileUser = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
-  // console.log(JSON.stringify(user, null, 2))
   const age = getAge(user.age);
+  const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
   const [groups, setGroups] = useState(user.eventsGoingTo.filter(event => !user.eventsOwned.includes(event)));
-
 
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
@@ -54,6 +53,11 @@ const ProfileUser = ({ navigation }) => {
     console.log("Log out successful!");
   }
 
+  useEffect(() => {
+    const { width, height } = Dimensions.get('window');
+    setViewDimensions({ width, height });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -70,18 +74,18 @@ const ProfileUser = ({ navigation }) => {
       <View>
       {/* top half */}
         <ImageBackground source={{uri: profileBannerImg}} style={styles.imageBanner}>
-          <View style={{position: 'absolute', top: 35}}>
-            <View style={{left: 30}}>
+          <View style={{position: 'absolute', top: viewDimensions.height * .03}}>
+            <View style={{ left: viewDimensions.width * 0.045 }}>
               <Image source={{uri: profilePic}} style={styles.profilePic}/>
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <TouchableOpacity onPress={handleEditProfile}>
-                <View style={styles.bubble}>
+                <View style={[styles.bubble, {left: viewDimensions.width * 0.008 }]}>
                   <FontAwesomeIcon icon="fa-pencil" size={22}/>
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={styles.bubbleRow}>
+            <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.06 }]}>
               <Bubble value={user.eventsOwned.length} name={'Events'}/>
               <Bubble value={user.friends.length} name={'Connections'}/>
               <Bubble value={groups.length} name={'Groups'}/>
@@ -90,7 +94,7 @@ const ProfileUser = ({ navigation }) => {
         </ImageBackground>
 
         {/* bottom half */}
-        <View style={styles.bioBanner}>
+        <View style={[styles.bioBanner, {top: viewDimensions.height * 0.09}]}>
           <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
             <Text style={{ fontSize: 24, fontWeight: '700'}}>{user.firstName} {user.lastName}</Text>
             <Text style={{ fontSize: 20, fontWeight: '600', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
@@ -111,26 +115,12 @@ const ProfileUser = ({ navigation }) => {
         </View>
       </View>
 
-      {/* my groups */}
-      {/* <View style={styles.sectionContainer}>
-        <View style={styles.sectionHeader}>
-           <Text style={styles.sectionText}>My Groups</Text>
-        </View>
-       
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {groupData.map((item, index) => (
-            <MyGroups key={index.toString()} img={item.img} name={item.name} />
-          ))}
-        </ScrollView>
-      </View> */}
-
       <View style={{borderBottomWidth: 0.25, borderColor: 'gray'}}></View>
 
       {/* my events */}
       <View style={styles.sectionContainer}>
         <View style={styles.sectionHeader}>
            <Text style={styles.sectionText}>My Events</Text>
-           {/* <TouchableOpacity><FontAwesomeIcon icon="fa-pencil" size={22} color="#D186FF"/></TouchableOpacity> */}
         </View>
       </View>
 
@@ -197,8 +187,8 @@ const styles = StyleSheet.create({
   },
   bubbleRow: {
     position: "absolute",
-    top: 40,
-    left: 200,
+    // top: 40,
+    // left: 200,
     flexDirection: 'row',
   },
   bubbleText: {

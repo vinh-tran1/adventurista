@@ -21,7 +21,6 @@ const Calendar = () => {
     axios.get(ATTEND_API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log("DATAAAAA");
         console.log(response.data);
         //console.log("attending state: " + attending);
       })
@@ -32,7 +31,6 @@ const Calendar = () => {
       axios.get(SAVE_API_URL)
       .then((response) => {
         setSaved(response.data);
-        console.log("SAVED DATAAAAA");
         console.log(response.data);
         //console.log("saved state: " + saved);
       })
