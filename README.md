@@ -141,6 +141,7 @@ docker run -p 80:80 --name adventurista ts-adventurista
   - We need to refactor for good coverage. Most of the logic is build into the route handler, rather than having a separate function for DynamoDB / S3 access. This will be fixed in the future.
 
 - Notes:
+  - You can run the CDK tests by running `npm run test` in `backend/`, and you can run the unit tests by running `npm run test` in `backend/src`
   - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing.
   - If you are looking to add tests to this suite, the following need to be formally tested:
   - `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URI generation
