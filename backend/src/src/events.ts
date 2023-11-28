@@ -267,15 +267,7 @@ router.get("/events-going-to/:userId", async (req, res) => {
     }
   });
 
-  // // Sort events by their date property
-  // events.sort((a, b) => {
-  //   // Assuming 'date' is the property where the date is stored in 'yyyy-mm-dd' format
-  //   return a.date.localeCompare(b.date);
-  // });
 
-  // Vinh.tran [ { "S" : "f485d34d-96e6-45d6-94c7-2aaf370e14a9" }, { "S" : "14b60afa-f1b5-4760-b461-6ceda6de95aa" } ]
-
-  
   res.status(200).send(events);
 });
 
