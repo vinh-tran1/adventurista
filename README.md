@@ -81,7 +81,7 @@ $ npm install
 $ npm start
 ```
 
-- QR Code will show in terminal: download Expo Go on mobile to view app on mobile device or use XCode Simulator to view on Macbook
+- Download Expo Go on mobile to view app on mobile device (QR Code will show in terminal) or use XCode Simulator to view on Macbook (best to use iPhone 15, also note that you must have updated XCode)
 
 #### Backend
 
