@@ -59,7 +59,7 @@ describe('Create Event', () => {
       // Call createEvent with missing fields
       const event = {
         ...sampleEvent,
-        // time: null, // Required field is null
+        time: "", // Required field is null
       };
       const result = await createEvent(event);
   
