@@ -224,7 +224,7 @@ router.get("/events/:userId", async (req, res) => {
   res.status(200).send(sortedEventItems);
 });
 
-async function getEvent(eventId: string): Promise<Event | null> {
+export async function getEvent(eventId: string): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
