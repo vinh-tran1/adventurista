@@ -1465,21 +1465,6 @@ router.post("/events/mark-as-seen/:userId/:eventId", async (req, res) => {
   }
 });
 
-// Save an event to a user's profile
-router.post("/events/save/:userId/:eventId", async (req, res) => {
-  const { userId, eventId } = req.params;
-  try {
-    const updatedUser = await saveEvent(userId, eventId);
-    if (!updatedUser) {
-      return res.status(404).send("User or event not found");
-    }
-    res.status(200).send("Event saved to profile");
-  } catch (error) {
-    console.error("Error saving event:", error);
-    res.status(500).send("Error saving event to profile");
-  }
-});
-
 // Function to delete a user from the database, along with all references in friends' lists and events.
 async function deleteUser(userId: string): Promise<string> {
   const userToDelete: User | null = await getUser(userId);

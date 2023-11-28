@@ -267,13 +267,7 @@ router.get("/events-going-to/:userId", async (req, res) => {
     }
   });
 
-  // Sort events by their date property
-  events.sort((a, b) => {
-    // Assuming 'date' is the property where the date is stored in 'yyyy-mm-dd' format
-    return a.date.localeCompare(b.date);
-  });
 
-  
   res.status(200).send(events);
 });
 
