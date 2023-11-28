@@ -407,7 +407,7 @@ router.post("/update-user-age-interests-location", async (req, res) => {
   res.status(200).send(updateResult);
 });
 
-export async function updateUserAgeInterestsLocation(
+async function updateUserAgeInterestsLocation(
   user: User
 ): Promise<User | null> {
   const params = {
@@ -478,7 +478,7 @@ router.post("/update-user", async (req, res) => {
 
   res.status(200).send(user);
 });
-export async function sendFriendRequest(
+async function sendFriendRequest(
   requesterId: string,
   requestId: string
 ): Promise<User | null> {
@@ -568,7 +568,7 @@ router.post("/friend-request", async (req, res) => {
   res.status(200).send(result);
 });
 
-export async function unaddFriend(
+async function unaddFriend(
   requesterId: string,
   requestId: string
 ): Promise<User | null> {
@@ -667,7 +667,7 @@ router.post("/friend-request/unadd", async (req, res) => {
   res.status(200).send(result);
 });
 
-export async function acceptFriendRequest(
+async function acceptFriendRequest(
   requesterId: string,
   requestId: string
 ): Promise<User | null> {
@@ -773,7 +773,7 @@ router.post("/friend-request/accept", async (req, res) => {
   res.status(200).send(result);
 });
 
-export async function denyFriendRequest(
+async function denyFriendRequest(
   requesterId: string,
   requestId: string
 ): Promise<User | null> {
@@ -945,7 +945,7 @@ router.get("/get-friends-of-user-ids", async (req, res) => {
   res.status(200).send(user.friends);
 });
 
-export async function blockUser(
+async function blockUser(
   blockerId: string,
   blockedUserId: string
 ): Promise<User | null> {
@@ -1015,7 +1015,7 @@ router.post("/block-user", async (req, res) => {
   res.status(200).send(result);
 });
 
-export async function unblockUser(
+async function unblockUser(
   unblockerId: string,
   blockedUserId: string
 ): Promise<User | null> {
@@ -1086,7 +1086,7 @@ router.post("/unblock-user", async (req, res) => {
 });
 
 // profile picture bucket read/write
-export const getProfilePicUploadURL = async function () {
+const getProfilePicUploadURL = async function () {
   const randomID = uuidv4();
   const Key = `${randomID}.jpg`;
 
@@ -1108,7 +1108,7 @@ export const getProfilePicUploadURL = async function () {
   });
 };
 
-export async function updateProfilePicture(user: User): Promise<User | null> {
+async function updateProfilePicture(user: User): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
@@ -1128,7 +1128,7 @@ export async function updateProfilePicture(user: User): Promise<User | null> {
     return null;
   }
 }
-export async function updateBannerImage(user: User): Promise<User | null> {
+async function updateBannerImage(user: User): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
@@ -1399,7 +1399,7 @@ router.get("/friends/mutual/:userId1/:userId2", async (req, res) => {
 });
 
 // Function to mark an event as seen by a user
-export async function markEventAsSeen(
+async function markEventAsSeen(
   userId: string,
   eventId: string
 ): Promise<User | null> {
@@ -1425,7 +1425,7 @@ export async function markEventAsSeen(
 }
 
 // Function to save an event to a user's profile
-export async function saveEvent(
+async function saveEvent(
   userId: string,
   eventId: string
 ): Promise<User | null> {
@@ -1528,7 +1528,7 @@ async function updateUserFriendsList(
   }
 }
 
-export async function getEvent(eventId: string): Promise<Event | null> {
+async function getEvent(eventId: string): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
