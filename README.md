@@ -23,12 +23,14 @@ Adventurista allows users to grow a global network of friends, meet new people, 
 Our mobile app is built using a DERN stack along with Amazon Web Services.
 
 1. DERN Stack
+
 - **Frontend**: React Native, Redux
 - **Backend**: Node.js, Express.js, DynamoDB
 
 Using React Native, our app is able to run on both iOS and Android.
 
 2. AWS
+
 - **ECS + Fargate** for compute. We will run a containerized Node.js server(s) with Express to process the API calls
 - **DynamoDB** for persistent data storage. We will have different tables for users, events, friends, etc.
 - **S3** for storing images
@@ -37,22 +39,24 @@ Using React Native, our app is able to run on both iOS and Android.
 ## Code Structure
 
 ### Frontend
+
 - `frontend/Navigators/`: React Native stack navigation for major screens
 - `frontend/Redux/`: Redux for global state
 - `frontend/Screens/`: Folders for the major screens
-	- `Authenticate/`: authentication for user
- 		- `Login/`
-   		- `Signup/`
-	- `Calendar/`: Events attending and events saved
-   	- `Feed/`: Feed for current user
-   		- `Notifications/`
-	- `Messages/`: Displays groups
-	- `Post/`: Creating posts
-   	- `Profile/`: Different profile views
+  - `Authenticate/`: authentication for user
+    - `Login/`
+      - `Signup/`
+  - `Calendar/`: Events attending and events saved
+    - `Feed/`: Feed for current user
+      - `Notifications/`
+  - `Messages/`: Displays groups
+  - `Post/`: Creating posts
+    - `Profile/`: Different profile views
 - `frontend/Shared/`: Reusable components and functions
 - `frontend/assets/`: Images
 
 ### Backend
+
 - `backend/bin/`: Where CDK stacks are initialized. Currently, we only have 1 ("CDKStack") with all of our resources within it. When we switch back to CodePipeline, we will have 2+ stacks
 - `backend/cdk.out/`: Output of CDK code as `.yaml` files for CloudFormation to consume. Normally git-ignored, but pushed for CI tests to pass.
 - `backend/lib/`: Where CDK stacks are defined. Our current stack ("CDKStack") contains our API Gateway, Fargate, S3, and DynamoDB instances. Specifications, access controls, and settings are defined here.
@@ -64,7 +68,9 @@ Using React Native, our app is able to run on both iOS and Android.
 ### Locally
 
 #### Frontend
+
 - To run React Native app using Expo, run:
+
 ```bash
 # navigate to frontend
 $ cd frontend
@@ -73,32 +79,39 @@ $ npm install
 # run app
 $ npm start
 ```
+
 - QR Code will show in terminal: download Expo Go on mobile to view app on mobile device or use XCode Simulator to view on Macbook
 
 #### Backend
 
 - To run the Node.js/Express server directly on your local machine (port 80), run:
+
 ```bash
 # navigate to backend/src/
 cd backend/src
 npm install
 npm run start
 ```
+
 - To run the Node.js/Express server as a Docker container on your local machine, run:
+
 ```bash
 # navigate to backend/src/
 cd backend/src
 docker build . -t ts-adventurista
 docker run -p 80:80 --name adventurista ts-adventurista
 ```
+
 - Note that any local deployment of the backend will not function fully, as DynamoDB + S3 instances cannot be connected to. This deployment simply replicates what will be run on an instance within Fargate
 
 ### Production
 
 #### Frontend
+
 - ~~
 
 #### Backend (AWS)
+
 - Configure the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) (`aws configure`) with your AWS account
 - Install the [AWS CDK Toolkit](https://docs.aws.amazon.com/cdk/v2/guide/cli.html)
 - Navigate to `backend/`
@@ -108,19 +121,23 @@ docker run -p 80:80 --name adventurista ts-adventurista
 ## Testing
 
 ### Frontend (~~)
-- ~~
-  	- Coverage: ~~%
-- ~~
-  	- Coverage: ~~%
-- ~~
-  	- Coverage: ~~%
-  	  
+
+- ~~ - Coverage: ~~%
+- ~~ - Coverage: ~~%
+- ~~ - Coverage: ~~%
+
 ### Backend (Jest)
+
 - CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
-	- Coverage: 100%
+  - Coverage: 100%
 - Events Unit Tests
-	- Coverage: ~~%
+  - Coverage: ~~%
 - Users Unit Tests
-	- Coverage: ~~%
+  - Coverage: ~~%
 - Messages Unit Tests
-	- Coverage: ~~%
+
+  - Coverage: ~~%
+
+- Notes:
+  - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing.
+  - To write your own tests:

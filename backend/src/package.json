@@ -11,7 +11,7 @@
     "build": "tsc",
     "prestart": "npm run build",
     "start": "node .",
-    "test": "jest",
+    "test": "jest --silent",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --fix"
   },
