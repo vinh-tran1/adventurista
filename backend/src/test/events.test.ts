@@ -1,5 +1,5 @@
 // Assuming you have an `events` module that exports `getEvent` function
-import { getEvent, createEvent, updateEvent } from '../src/events';
+import { getEvent, createEvent, updateEvent, updateEventPicture, deleteEvent } from '../src/events';
 import { getUser } from '../src/users';
 import { Event } from '../src/models';
 import AWS from 'aws-sdk';
@@ -98,3 +98,121 @@ describe('Create Event', () => {
       expect(result).not.toEqual(sampleEvent);
     });
   });
+
+  describe('Update Event Picture', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+    
+    it('When DynamoDB update is successful', async () => {
+      const returnValueMock = {
+          promise () {
+            return {
+                Attributes: sampleEvent,
+            };
+          },
+        } as unknown as Request <DocumentClient.UpdateItemOutput, AWSError>;
+              
+        const stub = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock);
+  
+        const result = await updateEventPicture(sampleEvent);
+        expect(result).toEqual(sampleEvent);
+    });
+  
+    it('When DynamoDB update is not successful', async () => {
+      const returnValueMock = {
+          promise () {
+            return {
+              Attributes: sampleEvent,
+            };
+          },
+        } as unknown as Request <DocumentClient.UpdateItemOutput, AWSError>;
+              
+        const stub = sandbox.stub(DocumentClient.prototype, 'update').throwsException("Enable to update user table");
+  
+        const result = await updateEventPicture(sampleEvent);
+        expect(result).toBeNull();
+    });
+
+    // DDB Update will create new user when it does not already exist in the users table
+    // Thus, checking for user existence is futile
+});
+
+// describe('Delete Event', () => {
+//   afterEach(() => {
+//     sandbox.restore();
+//   });
+  
+//   it('When DynamoDB delete is successful', async () => {
+//     const returnGetMock = {
+//       promise () {
+//         return {
+//             Attributes: sampleEvent,
+//         };
+//       },
+//     } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+          
+//     sandbox.stub(DocumentClient.prototype, 'get').returns(returnGetMock);
+
+//     const returnUpdateMock = {
+//         promise () {
+//           return {
+//               Attributes: sampleEvent,
+//           };
+//         },
+//       } as unknown as Request <DocumentClient.UpdateItemOutput, AWSError>;
+            
+//     sandbox.stub(DocumentClient.prototype, 'update').returns(returnUpdateMock);
+
+//       const returnDeleteMock = {
+//         promise () {
+//           return {
+//               Attributes: sampleEvent,
+//           };
+//         },
+//       } as unknown as Request <DocumentClient.DeleteItemOutput, AWSError>;
+            
+//       const stub = sandbox.stub(DocumentClient.prototype, 'delete').returns(returnDeleteMock);
+
+//       const result = await deleteEvent("eventId");
+//       expect(result).toEqual("Event successfully deleted");
+//   });
+
+//   it('When DynamoDB update is not successful', async () => {
+//     const returnGetMock = {
+//       promise () {
+//         return {
+//             Attributes: sampleEvent,
+//         };
+//       },
+//     } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+          
+//     sandbox.stub(DocumentClient.prototype, 'get').returns(returnGetMock);
+
+//     const returnUpdateMock = {
+//         promise () {
+//           return {
+//               Attributes: sampleEvent,
+//           };
+//         },
+//       } as unknown as Request <DocumentClient.UpdateItemOutput, AWSError>;
+            
+//     sandbox.stub(DocumentClient.prototype, 'update').throws("Unable to update events table");
+
+//       const returnDeleteMock = {
+//         promise () {
+//           return {
+//               Attributes: sampleEvent,
+//           };
+//         },
+//       } as unknown as Request <DocumentClient.DeleteItemOutput, AWSError>;
+            
+//       const stub = sandbox.stub(DocumentClient.prototype, 'delete').returns(returnDeleteMock);
+
+//       const result = await deleteEvent("eventId");
+//       expect(result).toThrow("Unable to update events table");
+//   });
+
+//   // DDB Update will create new user when it does not already exist in the users table
+//   // Thus, checking for user existence is futile
+// });

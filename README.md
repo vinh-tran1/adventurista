@@ -132,7 +132,7 @@ docker run -p 80:80 --name adventurista ts-adventurista
 - CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
   - Coverage: 100%
 - Events Unit Tests
-  - Coverage: ~~%
+  - Coverage: 25%
 - Users Unit Tests
   - Coverage: 95%
 - Messages Unit Tests

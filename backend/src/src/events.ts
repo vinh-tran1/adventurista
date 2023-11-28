@@ -548,7 +548,7 @@ const getEventPicUploadURL = async function () {
   });
 };
 
-async function updateEventPicture(event: Event): Promise<Event | null> {
+export async function updateEventPicture(event: Event): Promise<Event | null> {
   const params = {
     TableName: EVENTS_TABLE_NAME,
     Key: {
@@ -601,7 +601,7 @@ router.get("/event-pic-as-bytes", async (req, res) => {
 });
 
 // Function to delete an event from the database, along with all references in attendees' lists of events they are going to.
-async function deleteEvent(eventId: string): Promise<string> {
+export async function deleteEvent(eventId: string): Promise<string> {
   const eventToDelete: Event | null = await getEvent(eventId);
 
   if (!eventToDelete) {
