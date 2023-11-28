@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from 'expo-file-system';
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
@@ -10,14 +11,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectNewPost, setNewPost, selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
 const Post = ({ navigation }) => {
-  
+
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/create';
 
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
   //  console.log(user.eventsGoingTo, user.eventsOwned)
 
-  const [image, setImage] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
   const [eventName, setEventName] = useState("");
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
@@ -27,13 +28,13 @@ const Post = ({ navigation }) => {
   const [time, setTime] = useState("");
   const [selectTags, setSelectTags] = useState([]);
   const [moreTagsClicked, setMoreTagsClicked] = useState(1);
-  
+
   //const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
 
   const tags1 = [
     'catan', 'paddle', 'drinks', 'social',
     'drives', 'school', 'student', 'energy',
-    'beach', 'hike', 'food', 'squash', 
+    'beach', 'hike', 'food', 'squash',
     'cs', 'games', 'dinner', 'apps'
   ];
   const tags2 = [
@@ -78,21 +79,34 @@ const Post = ({ navigation }) => {
     "23:00", "23:30"
   ];
 
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
+  const handleImageUpload = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access camera roll is required!');
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
     });
-    if (!result.canceled) {
-      handleImage(result.assets[0].uri);
+
+    if (pickerResult.canceled === true) {
+      console.log('Image picker was cancelled');
+      return;
+    }
+
+    const { assets } = pickerResult;
+
+    if (assets && assets.length > 0) {
+      const asset = assets[0]; // Assuming only one asset is picked
+      const { uri } = asset;
+      setSelectedImage(uri);
     }
   };
-  
-  const handleImage = (img) => {
-    setImage(img);
-  };
+
   const handleMonth = (val) => {
     setMonth(val);
     console.log(val);
@@ -123,7 +137,7 @@ const Post = ({ navigation }) => {
   };
 
   const handleClear = () => {
-    setImage("");
+    setSelectedImage(null);
     setEventName("");
     setLocation("");
     setCaption("");
@@ -137,36 +151,72 @@ const Post = ({ navigation }) => {
 
   // need update state of user for events posted right
   const handlePost = async () => {
+
     try {
       // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
-        const response = await axios.post(API_URL, {
-          title: eventName,
-          description: caption,
-          date: day + ", " + month + " " + date,
-          time: time,
-          location: location, 
-          postingUserId: user.userId,
-          tags: selectTags,
-          eventPictureUrl: 'https://images.squarespace-cdn.com/content/v1/5fc81abe9637537b99122e0b/1644296557746-M4AD4B5SYWQT9P9GAK6U/3M2A0998.jpg'
+      const response = await axios.post(API_URL, {
+        title: eventName,
+        description: caption,
+        date: day + ", " + month + " " + date,
+        time: time,
+        location: location,
+        postingUserId: user.userId,
+        tags: selectTags
       });
       if (response.status === 201) {
-        const updatedUser = response.data;
-        // console.log(JSON.stringify(updatedUser, null, 2));
+        const updatedUser = response.data.user;
+        const eventId = response.data.event.eventId;
 
-        dispatch(setNewPost(true));
-        dispatch(setUserInfo({
-          ...updatedUser
-        }));
+        // GET and PUT requests for event picture URL
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(selectedImage);
+          if (!fileInfo || !fileInfo.exists) {
+            console.log('File does not exist.');
+            return;
+          }
 
-        handleClear();
-        navigation.navigate('Feed Main');
-        console.log("sucessfully created event!");
+          const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          axios.get("/events/event-pic-presigned/" + eventId)
+            .then(async (response2) => {
+              console.log(response2.data);
+              console.log("Succesfully received pre-signed URL")
+              try {
+                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
+                   'Content-Type': "image/jpeg"
+                });
+                if (response3.status === 200) {
+                  console.log("Successfully added picture url to event");
+                  dispatch(setNewPost(true));
+                  dispatch(setUserInfo({
+                    ...updatedUser
+                  }));
+                  handleClear();
+                  navigation.navigate('Feed Main');
+                  console.log("sucessfully created event!");
+                } else {
+                  console.log("Error adding picture url to event");
+                }
+              } catch (err) {
+                console.log(err);
+                console.log("An error occurred while adding the picture url to event. Please try again.");
+              }
+            })
+            .catch((error) => {
+              console.log("Error receiving pre-signed URL");
+              console.log(error);
+            });
+        } catch (error) {
+          console.error('Error converting image to base64:', error);
+        }
       } else {
-        console.log("error in creating event");
-      }  
+        console.log("Error in creating event");
+      }
     } catch (err) {
-        console.log(err);
-        console.log("An error occured for creating events. Please try again");
+      console.log(err);
+      console.log("An error occured for creating events. Please try again");
     }
   };
 
@@ -177,118 +227,118 @@ const Post = ({ navigation }) => {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.innerContainer}> */}
 
-            {/* header */}
-              <View style={styles.header}>
-                <Text style={styles.headerText}>New Event</Text>
-                <TouchableOpacity style={{marginTop: 6}}>
-                  <FontAwesomeIcon icon="fa-gear" size={25} />
-                </TouchableOpacity>
-              </View>
+        {/* header */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>New Event</Text>
+          <TouchableOpacity style={{ marginTop: 6 }}>
+            <FontAwesomeIcon icon="fa-gear" size={25} />
+          </TouchableOpacity>
+        </View>
 
-              {/* nav buttons on top bar */}
-              <View style={styles.topBar}>
-                <TouchableOpacity onPress={handleClear}>
-                  <Text style={styles.navButton}>Clear</Text>
-                </TouchableOpacity>
+        {/* nav buttons on top bar */}
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={handleClear}>
+            <Text style={styles.navButton}>Clear</Text>
+          </TouchableOpacity>
 
-                <Text style={{fontSize:20, fontWeight: "600"}}>Event Details</Text>
+          <Text style={{ fontSize: 20, fontWeight: "600" }}>Event Details</Text>
 
-                <TouchableOpacity onPress={handlePost} style={styles.navButton}>
-                  <Text style={styles.navButton}>Post</Text>
-                </TouchableOpacity>
-              </View>
+          <TouchableOpacity onPress={handlePost} style={styles.navButton}>
+            <Text style={styles.navButton}>Post</Text>
+          </TouchableOpacity>
+        </View>
 
-              {/* image */}
-              <View style={styles.centerContainer}>
-                <View style={styles.image}>
-                  <TouchableOpacity onPress={pickImage}>
-                    {image.length === 0 ?
-                    <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                    :
-                    <ImageBackground style={styles.image} source={{uri: image}} />
-                    }
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              {/* text inputs */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>What?</Text>
-                <TextInput 
-                  value={eventName} 
-                  placeholder="Event Name" 
-                  onChangeText={(text) => setEventName(text)} 
-                  style={styles.input} 
-                />
-              </View>
-
-              {/* Location */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Where?</Text>
-                <TextInput 
-                  value={location} 
-                  placeholder="Location" 
-                  onChangeText={(text) => setLocation(text)} 
-                  style={styles.input} 
-                />
-              </View>
-
-              {/* Date */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>When?</Text>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                  <SelectDate title={"Month"} data={months} func={handleMonth}/>
-                  <SelectDate title={"Date"} data={dates} func={handleDate}/>
-                  <SelectDate title={"Day"} data={days} func={handleDay}/>
-                  <SelectDate title={"Time"} data={times} func={handleTime}/>
-                </View>
-              </View>
-
-              {/* Caption */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Caption</Text>
-                <TextInput 
-                  value={caption} 
-                  placeholder="Describe the event!" 
-                  multiline={true}
-                  maxLength={100}
-                  numberOfLines={5}
-                  onChangeText={(text) => setCaption(text)} 
-                  style={styles.largeInput} 
-                />
-              </View>
-
-              {/* Tags */}
-              <View style={styles.inputContainer}>
-                <Text style={styles.label}>Tags (max 3)</Text>
-                <View style={styles.tagContainer}>
-                  <Tags tags={tags1} select={handleSelectTags} press={handleTagPress}/>
-                  {moreTagsClicked >= 2 && <Tags tags={tags2} select={handleSelectTags} press={handleTagPress}/>}
-                  {moreTagsClicked >= 3 && <Tags tags={tags3} select={handleSelectTags} press={handleTagPress}/>}
-                </View>
-              </View>
-              
-              {/* Load More Tags */}
-              {moreTagsClicked < 3 ?
-              <View style={styles.moreTags}>
-                  <TouchableOpacity 
-                    onPress = {() => setMoreTagsClicked(moreTagsClicked + 1)}
-                    style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
-                      <Text style={{fontWeight: '500', color: 'white'}}>more</Text>
-                  </TouchableOpacity>
-              </View> :
-              <View style={styles.moreTags}>
-                  <TouchableOpacity 
-                    onPress = {() => setMoreTagsClicked(1)}
-                    style={{backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5}}>
-                      <Text style={{fontWeight: '500', color: 'white'}}>less</Text>
-                  </TouchableOpacity>
-              </View>
+        {/* image */}
+        <View style={styles.centerContainer}>
+          <View style={styles.image}>
+            <TouchableOpacity onPress={handleImageUpload}>
+              {!selectedImage ?
+                <Text style={{ fontSize: 75, fontWeight: '700', color: '#D186FF' }}>+</Text>
+                :
+                <ImageBackground style={styles.image} source={{ uri: selectedImage }} />
               }
-            {/* </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* text inputs */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>What?</Text>
+          <TextInput
+            value={eventName}
+            placeholder="Event Name"
+            onChangeText={(text) => setEventName(text)}
+            style={styles.input}
+          />
+        </View>
+
+        {/* Location */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Where?</Text>
+          <TextInput
+            value={location}
+            placeholder="Location"
+            onChangeText={(text) => setLocation(text)}
+            style={styles.input}
+          />
+        </View>
+
+        {/* Date */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>When?</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <SelectDate title={"Month"} data={months} func={handleMonth} />
+            <SelectDate title={"Date"} data={dates} func={handleDate} />
+            <SelectDate title={"Day"} data={days} func={handleDay} />
+            <SelectDate title={"Time"} data={times} func={handleTime} />
+          </View>
+        </View>
+
+        {/* Caption */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Caption</Text>
+          <TextInput
+            value={caption}
+            placeholder="Describe the event!"
+            multiline={true}
+            maxLength={100}
+            numberOfLines={5}
+            onChangeText={(text) => setCaption(text)}
+            style={styles.largeInput}
+          />
+        </View>
+
+        {/* Tags */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Tags (max 3)</Text>
+          <View style={styles.tagContainer}>
+            <Tags tags={tags1} select={handleSelectTags} press={handleTagPress} />
+            {moreTagsClicked >= 2 && <Tags tags={tags2} select={handleSelectTags} press={handleTagPress} />}
+            {moreTagsClicked >= 3 && <Tags tags={tags3} select={handleSelectTags} press={handleTagPress} />}
+          </View>
+        </View>
+
+        {/* Load More Tags */}
+        {moreTagsClicked < 3 ?
+          <View style={styles.moreTags}>
+            <TouchableOpacity
+              onPress={() => setMoreTagsClicked(moreTagsClicked + 1)}
+              style={{ backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5 }}>
+              <Text style={{ fontWeight: '500', color: 'white' }}>more</Text>
+            </TouchableOpacity>
+          </View> :
+          <View style={styles.moreTags}>
+            <TouchableOpacity
+              onPress={() => setMoreTagsClicked(1)}
+              style={{ backgroundColor: '#D186FF', paddingVertical: 10, paddingHorizontal: 30, borderRadius: 5 }}>
+              <Text style={{ fontWeight: '500', color: 'white' }}>less</Text>
+            </TouchableOpacity>
+          </View>
+        }
+        {/* </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView> */}
-      </ScrollView> 
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -323,7 +373,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 30,
-    fontWeight: "bold" 
+    fontWeight: "bold"
   },
   topBar: {
     flexDirection: 'row',
@@ -333,9 +383,9 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   navButton: {
-    fontSize: 16, 
-    fontWeight: '500', 
-    color:'#D186FF',
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#D186FF',
   },
   centerContainer: {
     justifyContent: 'center',
@@ -385,12 +435,12 @@ const styles = StyleSheet.create({
   selectedTag: {
     width: '25%',
     paddingVertical: 10,
-    backgroundColor: '#D186FF', 
+    backgroundColor: '#D186FF',
     borderRadius: 20,
   },
   moreTags: {
-    justifyContent: 'center', 
-    alignItems: 'center', 
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 10,
     marginBottom: 20
   }
