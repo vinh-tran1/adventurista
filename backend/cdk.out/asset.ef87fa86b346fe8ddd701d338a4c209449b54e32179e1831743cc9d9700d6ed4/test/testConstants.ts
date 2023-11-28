@@ -35,33 +35,6 @@ export const sampleUser: User = {
     age: 0,
   };
 
-  export const sampleUpdatedUser: User = {
-    email: sampleEmail,
-    userId: sampleUserId,
-    firstName: sampleFirstName,
-    lastName: sampleLastName,
-    hashedPassword: sampleUnhashedPassword,
-    primaryLocation: "Seattle, WA",
-    blockedUsers: [],
-    interests: [],
-    friends: [],
-    requests: {
-      outgoing: [],
-      incoming: [],
-    },
-    groups: [],
-    eventsSeen: [],
-    eventsSaved: [],
-    eventsOwned: [],
-    eventsGoingTo: [],
-    eventsNotGoingTo: [],
-    messages: [],
-    profilePictureUrl: "",
-    bio: "Hi I have updated my parameters",
-    bannerImageUrl: "",
-    age: 22,
-  };
-
   export const sampleEventId = "065c748f-3b89-4a4f-8d2b-9493f2d84e42"
   const date = moment().format('YYYY-MM-DD')
 

@@ -230,7 +230,7 @@ router.post("/auth/create-user", async (req, res) => {
   res.status(201).send(result);
 });
 
-export async function signIn(email: string, password: string): Promise<User | false> {
+async function signIn(email: string, password: string): Promise<User | false> {
   // Retrieve user based on email
   const params = {
     TableName: USERS_TABLE_NAME,
@@ -314,7 +314,7 @@ export async function getUser(userId: string): Promise<User | null> {
   }
 }
 
-export async function updateUser(user: User): Promise<User | null> {
+async function updateUser(user: User): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {
