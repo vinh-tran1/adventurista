@@ -5,7 +5,7 @@ import { Event } from '../src/models';
 import AWS from 'aws-sdk';
 import request from 'supertest'; // if you are using supertest for HTTP assertions
 // import app from '../src/app'; // your Express application
-import sinon = require('sinon');
+import * as sinon from 'sinon';
 import { AWSError, Request } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { sampleEvent, sampleEventId, sampleUser } from './testConstants';
