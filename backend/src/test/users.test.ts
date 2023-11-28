@@ -27,18 +27,18 @@ describe('Get User', () => {
       expect(result).toEqual(sampleUser);
   });
 
-//   it('When user does not exist', async () => {
-//     const returnValueMock = {
-//         promise () {
-//           return {
-//             Item: sampleUser,
-//           };
-//         },
-//       } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
+  it('When user does not exist', async () => {
+    const returnValueMock = {
+        promise () {
+          return {
+            Item: sampleUser,
+          };
+        },
+      } as unknown as Request <DocumentClient.GetItemOutput, AWSError>;
             
-//       const stub = sandbox.stub(DocumentClient.prototype, 'get').throwsException("User does not exist");
+      const stub = sandbox.stub(DocumentClient.prototype, 'get').throwsException("User does not exist");
 
-//       const result = await getUser(sampleUserId);
-//       expect(result).not.toEqual(sampleUser);
-//   });
+      const result = await getUser(sampleUserId);
+      expect(result).not.toEqual(sampleUser);
+  });
 });
