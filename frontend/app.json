@@ -15,8 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.adventurista.frontend"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
@@ -26,11 +25,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "e0961c60-7780-44e1-a179-60631ed99aae"
-      }
     }
   }
 }
