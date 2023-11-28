@@ -1,7 +1,7 @@
 import { getUser } from '../src/users';
 import { User } from '../src/models';
 import { AWSError, Request } from 'aws-sdk';
-import sinon = require('sinon');
+import * as sinon from 'sinon';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { sampleUser, sampleUserId } from './testConstants';
 
