@@ -129,18 +129,20 @@ docker run -p 80:80 --name adventurista ts-adventurista
 
 ### Backend (Jest)
 
-- CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`)
+- CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`) (in `backend/test`)
   - Coverage: 100%
-- Events Unit Tests
+- Events Unit Tests (in `backend/src/test`)
   - Coverage: 25%
-- Users Unit Tests
+- Users Unit Tests (in `backend/src/test`)
   - Coverage: 95%
-- Messages Unit Tests
+- Messages Unit Tests (in `backend/src/test`)
 
   - Coverage: ~~%
+  - We need to refactor for good coverage. Most of the logic is build into the route handler, rather than having a separate function for DynamoDB / S3 access. This will be fixed in the future.
 
 - Notes:
   - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing.
   - If you are looking to add tests to this suite, the following need to be formally tested:
   - `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URI generation
   - `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB
+  - A large portion of the Events service in `backend/src/src/events.ts` needs to be unit tested. Feel free to write any tests, using a format similar to `backend/src/test/users.test.ts`!
