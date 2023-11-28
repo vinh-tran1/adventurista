@@ -1,17 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { View, Text, FlatList, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useSelector } from "react-redux";
-import { selectUserInfo } from "../../Redux/userSlice";
+import { useSelector, useDispatch } from 'react-redux';
+import { setNewPost, selectUserInfo , setUserInfo} from '../../Redux/userSlice';
 
 const FeedFixedTop = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
+  const dispatch = useDispatch();  
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/update-user';
+
+  const [location, setLocation] = useState("");
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+    console.log(isSearchVisible)
+  };
 
   const handleSetLocation = async () => {
-    // api call to update location, keep everything else the same
-    // maybe use effect with dependency essentially?
-    console.log("set location");
+    try {
+      const response = await axios.post(API_URL, {
+          userId: user.userId,
+          primaryLocation: location,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          interests: user.interests,
+          age: user.age,
+          bio: user.bio
+        });
+
+      if (response.status === 200) {
+        const updatedUser = response.data;
+        console.log("updated user location: ", updatedUser.primaryLocation);
+
+        // do this so feed re-renders
+        dispatch(setNewPost(true));
+        dispatch(setUserInfo({
+            ...updatedUser
+          }));
+        
+        toggleSearchBar()
+        console.log("Sucessfully updated user's location!");
+      } else {
+        console.log("Error in updating user's location");
+      }  
+    } catch (err) {
+        console.log(err);
+        console.log("An error occured for updating user's location. Please try again");
+    
+    };
   };
 
   return (
@@ -23,10 +62,27 @@ const FeedFixedTop = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.location} onPress={handleSetLocation}>
-          <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
-          <Text style={{ marginTop: 2, fontSize: 13 }}>{user.primaryLocation}</Text>
-        </TouchableOpacity>
+
+        {!isSearchVisible ? 
+          <TouchableOpacity style={styles.location} onPress={toggleSearchBar}>
+            <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
+            <Text style={{ marginTop: 2, fontSize: 13 }}>{user.primaryLocation}</Text>
+          </TouchableOpacity>
+          :
+          <View style={styles.searchBar}>
+            <FontAwesomeIcon color={"#D99BFF"} icon="magnifying-glass" size={20} />
+            <TextInput 
+              value={location} 
+              placeholder="New Haven, CT" 
+              onChangeText={(text) => setLocation(text)} 
+              style={{ marginLeft: 10, flex: 1 }} 
+            />
+            <TouchableOpacity style={{ marginLeft: 8, borderWidth: 1,  borderColor: '#D99BFF', paddingHorizontal: 6, paddingVertical: 4, backgroundColor: 'white' }} onPress={handleSetLocation}>
+              <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '600' }}>Search</Text>
+            </TouchableOpacity>
+          </View>
+        }
+        
         {/* <TouchableOpacity style={{ marginTop: 7.5 }}>
           <FontAwesomeIcon color={"#D99BFF"} icon="magnifying-glass" size={20} />
         </TouchableOpacity> */}
@@ -57,6 +113,15 @@ const styles = StyleSheet.create({
   },
   location: {
     flexDirection: "row",
+    backgroundColor: "#F3E8FF",
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: 5
+  },
+  searchBar: {
+    flexDirection: "row",
+    width: '100%',
+    alignItems: 'center',
     backgroundColor: "#F3E8FF",
     paddingHorizontal: 10,
     paddingVertical: 7,
