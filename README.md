@@ -61,7 +61,8 @@ Using React Native, our app is able to run on both iOS and Android.
 - `backend/cdk.out/`: Output of CDK code as `.yaml` files for CloudFormation to consume. Normally git-ignored, but pushed for CI tests to pass.
 - `backend/lib/`: Where CDK stacks are defined. Our current stack ("CDKStack") contains our API Gateway, Fargate, S3, and DynamoDB instances. Specifications, access controls, and settings are defined here.
 - `backend/src/`: The containerized (Docker) Node.js/Express server that runs on Fargate
-- `backend/test/`: Where unit tests are stored
+  - `backend/src/test/`: Where unit tests for the core logic are stored
+- `backend/test/`: Where unit tests for AWS CDK are stored
 
 ## Deployment
 
