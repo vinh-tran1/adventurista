@@ -21,28 +21,6 @@ const ProfileUser = ({ navigation }) => {
 
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
   const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
-  const groupData = [
-    {
-      img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG',
-      name: 'squash1'
-    },
-    {
-      img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG',
-      name: 'squash2'
-    },
-    {
-      img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG',
-      name: 'squash3'
-    },
-    {
-      img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG',
-      name: 'squash4'
-    },
-    {
-      img: 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG',
-      name: 'squash5'
-    }
-  ];
 
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");
@@ -85,7 +63,7 @@ const ProfileUser = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.06 }]}>
+            <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.058 }]}>
               <Bubble value={user.eventsOwned.length} name={'Events'}/>
               <Bubble value={user.friends.length} name={'Connections'}/>
               <Bubble value={groups.length} name={'Groups'}/>
@@ -157,7 +135,7 @@ const styles = StyleSheet.create({
     height: 130,
     // borderBottomWidth: 0.25,
     // borderColor: 'gray',
-    top: 90,
+    // top: 90,
     paddingHorizontal: 20,
     marginBottom: 90,
   },
@@ -183,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // position: "absolute",
     top: 100,
-    left: 15
+    // left: 15
   },
   bubbleRow: {
     position: "absolute",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Modal from "react-native-modal";
 import BubbleText from "../../Shared/BubbleText";
@@ -21,7 +21,7 @@ const FriendProfileView = ({ navigation, route }) => {
   const user = useSelector(selectUserInfo);
   const dispatch = useDispatch();
   const age = getAge(poster.age);
-
+  const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
   // necessary for modals
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -60,9 +60,12 @@ const FriendProfileView = ({ navigation, route }) => {
       name: 'squash5'
     }
   ];
+
+  useEffect(() => {
+    const { width, height } = Dimensions.get('window');
+    setViewDimensions({ width, height });
+  }, []);
   
-  // also need modal for the elipises to block or remove friend
-  // show full profile if friends, button click only to request friends, then should be able to click when friends unless unadd
   const handleAddFriend = async () => {
     try {
       const response = await axios.post(API_URL_ADD, {
@@ -130,7 +133,7 @@ const FriendProfileView = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
     {/* header */}
         <View style={styles.header}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -179,11 +182,11 @@ const FriendProfileView = ({ navigation, route }) => {
       <View>
       {/* top half */}
           <ImageBackground source={{uri: profileBannerImg}} style={styles.imageBanner}>
-          <View style={{position: 'absolute', top: 35}}>
-              <View style={{left: 30}}>
+          <View style={{position: 'absolute', top: viewDimensions.height * .03}}>
+              <View style={{ left: viewDimensions.width * 0.045 }}>
                 <Image source={{uri: profilePic}} style={styles.profilePic}/>
               </View>
-              <View style={styles.bubbleRow}>
+              <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.065 }]}>
                 <Bubble value={poster.eventsOwned.length} name={'Events'}/>
                 <Bubble value={poster.friends.length} name={'Connections'}/>
                 <Bubble value={groups.length} name={'Groups'}/>
@@ -193,9 +196,9 @@ const FriendProfileView = ({ navigation, route }) => {
           </ImageBackground>
 
           {/* bottom half */}
-          <View style={styles.bioBanner}>
+          <View style={[styles.bioBanner, {top: viewDimensions.height * 0.09}]}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                   <Text style={{ fontSize: 24, fontWeight: '700'}}>{poster.firstName} {poster.lastName}</Text>
                   <Text style={{ fontSize: 20, fontWeight: '600', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
                 </View>
@@ -286,7 +289,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 5,
     flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent: 'center',
+    justifyContent: 'space-between'
   },
   headerText: {
     fontSize: 30,
@@ -298,9 +302,9 @@ const styles = StyleSheet.create({
   bioBanner: {
     height: 130,
     borderBottomWidth: 0.25,
-    top: 90,
+    // top: 90,
     paddingHorizontal: 20,
-    marginBottom: 90
+    marginBottom: 80
   },
   profilePic: {
     height: 150,
@@ -313,9 +317,9 @@ const styles = StyleSheet.create({
     borderColor: "#EDDBFF"
   },
   bubble: {
-    height: 50,
-    width: 50,
-    borderRadius: 50/2, 
+    height: 45,
+    width: 45,
+    borderRadius: 45/2, 
     borderWidth: 1,
     borderColor: "gray",
     backgroundColor: "#fff",
@@ -323,13 +327,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // position: "absolute",
-    top: 78,
-    left: 6
+    top: 100,
+    // left: 6
   },
   bubbleRow: {
     position: "absolute",
-    top: 40,
-    left: 200,
+    // top: 40,
+    // left: 200,
     flexDirection: 'row',
   },
   bubbleText: {
