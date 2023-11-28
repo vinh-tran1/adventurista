@@ -1162,8 +1162,8 @@ async function updateBannerImage(user: User): Promise<User | null> {
  *         "200":
  *           description: "Presigned URL generated"
  */
-router.get("/profile-pic-presigned/:userId", async (req, res) => {
-  const { userId } = req.params;
+router.get("/profile-pic-presigned", async (req, res) => {
+  const { userId } = req.body;
   const user = await getUser(userId);
   if (!user) {
     return res.status(404).send("User not found");
@@ -1194,8 +1194,8 @@ router.get("/profile-pic-presigned/:userId", async (req, res) => {
  *         "200":
  *           description: "Presigned URL generated"
  */
-router.get("/banner-image-presigned/:userId", async (req, res) => {
-  const { userId } = req.params;
+router.get("/banner-image-presigned", async (req, res) => {
+  const { userId } = req.body;
   const user = await getUser(userId);
   if (!user) {
     return res.status(404).send("User not found");

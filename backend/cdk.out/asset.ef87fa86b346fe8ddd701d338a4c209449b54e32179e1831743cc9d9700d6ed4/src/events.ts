@@ -14,7 +14,6 @@ import {
   PRESIGNED_URL_EXPIRATION_SECONDS,
   EVENT_PIC_BUCKET_URI,
 } from "./constants";
-import { json } from "express";
 
 // db set-up
 const db = new DynamoDB.DocumentClient();
@@ -22,7 +21,7 @@ const db = new DynamoDB.DocumentClient();
 const s3 = new S3();
 const router = express.Router();
 
-export async function createEvent(event: Event): Promise<string | User> {
+export async function createEvent(event: Event): Promise<Event | string | User> {
   if (!event.time || !event.location || !event.postingUserId) {
     return "Required event fields are missing";
   }
@@ -75,8 +74,7 @@ router.post("/event/create", async (req, res) => {
     postingUserId: req.body.postingUserId,
     blockedUsers: [],
     whoIsGoing: [req.body.postingUserId],
-    // eventPictureUrl: req.body.eventPictureUrl,
-    eventPictureUrl: "",
+    eventPictureUrl: req.body.eventPictureUrl,
     tags: req.body.tags,
   };
 
@@ -88,13 +86,7 @@ router.post("/event/create", async (req, res) => {
     return res.status(400).send(result);
   }
 
-  // create dictionary of result object and event object
-  const mergedObject: { user: User; event: Event } = {
-    user: result,
-    event: event,
-  };
-
-  res.status(201).send(mergedObject);
+  res.status(201).send(result);
 });
 
 // TODO: TO BE USED FOR THE /EVENTS ENDPOINT -- AKSHAY use this to filter events by distance (need to grab their current coordinates)
@@ -569,8 +561,8 @@ async function updateEventPicture(event: Event): Promise<Event | null> {
   }
 }
 
-router.get("/event-pic-presigned/:eventId", async (req, res) => {
-  const { eventId } = req.params;
+router.get("/event-pic-presigned", async (req, res) => {
+  const { eventId } = req.body;
   const event = await getEvent(eventId);
   if (!event) {
     return res.status(404).send("Event not found");
