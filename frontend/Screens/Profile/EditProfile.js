@@ -22,44 +22,68 @@ const EditProfile = ({ navigation }) => {
   const [lastName, setLastName] = useState(user.lastName);
   const [interests, setInterests] = useState(user.interests);
   const [tempInterest, setTempInterest] = useState("");
-  const [profileImage, setProfileImage] = useState("");
-  const [bannerImage, setBannerImage] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [bannerImage, setBannerImage] = useState(null);
   const [location, setLocation] = useState(user.primaryLocation);
   const [bio, setBio] = useState("");
   const [age, setAge]= useState(user.age);
 
   // console.log("after: ", firstName, lastName, interests, location, bio, age)
 
-  const pickProfileImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
+  const handleProfileUpload = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access camera roll is required!');
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
     });
-    if (!result.canceled) {
-      handleProfileImage(result.assets[0].uri);
+
+    if (pickerResult.canceled === true) {
+      console.log('Image picker was cancelled');
+      return;
+    }
+
+    const { assets } = pickerResult;
+
+    if (assets && assets.length > 0) {
+      const asset = assets[0]; // Assuming only one asset is picked
+      const { uri } = asset;
+      setProfileImage(uri);
     }
   };
 
-  const pickBannerImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
+  const handleBannerUpload = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log('Permission to access camera roll is required!');
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
     });
-    if (!result.canceled) {
-      handleBannerImage(result.assets[0].uri);
-    }
-  };
-  
-  const handleProfileImage = (img) => {
-    setProfileImage(img);
-  };
 
-  const handleBannerImage = (img) => {
-    setBannerImage(img);
+    if (pickerResult.canceled === true) {
+      console.log('Image picker was cancelled');
+      return;
+    }
+
+    const { assets } = pickerResult;
+
+    if (assets && assets.length > 0) {
+      const asset = assets[0]; // Assuming only one asset is picked
+      const { uri } = asset;
+      setBannerImage(uri);
+    }
   };
 
   const handleClear = () => {
@@ -92,16 +116,91 @@ const EditProfile = ({ navigation }) => {
             age: age,
             bio: bio
       });
-
       if (response.status === 200) {
         const updatedUser = response.data;
-        // console.log("updated user: ", updatedUser)
+        
+        // GET and PUT requests for profile picture URL
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(profileImage);
+          if (!fileInfo || !fileInfo.exists) {
+            console.log('File does not exist.');
+            return;
+          }
+
+          const fileBase64 = await FileSystem.readAsStringAsync(profileImage, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          axios.get(process.env.REACT_APP_AWS_API_URL + "users/profile-pic-presigned/" + updatedUser.userId)
+            .then(async (response2) => {
+              console.log(response2.data);
+              console.log("Succesfully received pre-signed URL")
+              try {
+                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
+                   'Content-Type': "image/jpeg"
+                });
+                if (response3.status === 200) {
+                  console.log("Successfully added profile picture url");
+                } else {
+                  console.log("Error adding profile picture url");
+                }
+              } catch (err) {
+                console.log(err);
+                console.log("An error occurred while adding the profile picture url. Please try again.");
+              }
+            })
+            .catch((error) => {
+              console.log("Error receiving pre-signed URL");
+              console.log(error);
+            });
+        } catch (error) {
+          console.error('Error converting image to base64:', error);
+        }
+        // End of profile picture s3 code
+
+        // GET and PUT requests for banner picture URL
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(bannerImage);
+          if (!fileInfo || !fileInfo.exists) {
+            console.log('File does not exist.');
+            return;
+          }
+
+          const fileBase64 = await FileSystem.readAsStringAsync(bannerImage, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+
+          axios.get(process.env.REACT_APP_AWS_API_URL + "users/banner-image-presigned/" + updatedUser.userId)
+            .then(async (response2) => {
+              console.log(response2.data);
+              console.log("Succesfully received pre-signed URL")
+              try {
+                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
+                   'Content-Type': "image/jpeg"
+                });
+                if (response3.status === 200) {
+                  console.log("Successfully added banner picture url");
+                } else {
+                  console.log("Error adding banner picture url");
+                }
+              } catch (err) {
+                console.log(err);
+                console.log("An error occurred while adding the banner picture url. Please try again.");
+              }
+            })
+            .catch((error) => {
+              console.log("Error receiving pre-signed URL");
+              console.log(error);
+            });
+        } catch (error) {
+          console.error('Error converting image to base64:', error);
+        }
+        // End of banner picture s3 code
 
         dispatch(setUserInfo({
-            newPost: false,
-            ...updatedUser
-          }));
-
+          newPost: false,
+          ...updatedUser
+        }));
         handleClear();
         navigation.goBack();
         console.log("Sucessfully updated user!");
@@ -157,8 +256,8 @@ const EditProfile = ({ navigation }) => {
             <Text style={styles.label}>Edit Profile and Banner</Text>
             <View style={styles.centerContainer}>
                 <View style={styles.image}>
-                    <TouchableOpacity onPress={pickProfileImage}>
-                        {profileImage.length === 0 ?
+                    <TouchableOpacity onPress={handleProfileUpload}>
+                        {!profileImage ?
                         <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
                         :
                         <ImageBackground style={styles.image} source={{uri: profileImage}} />
@@ -167,8 +266,8 @@ const EditProfile = ({ navigation }) => {
                     <Text style={{ marginBottom: 2 }}>Profile</Text>
                     </View>
                     <View style={styles.image}>
-                    <TouchableOpacity onPress={pickBannerImage}>
-                        {bannerImage.length === 0 ?
+                    <TouchableOpacity onPress={handleBannerUpload}>
+                        {!bannerImage ?
                         <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
                         :
                         <ImageBackground style={styles.image} source={{uri: bannerImage}} />

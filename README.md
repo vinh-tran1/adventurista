@@ -109,7 +109,7 @@ docker run -p 80:80 --name adventurista ts-adventurista
 
 #### Frontend
 
-- ~~
+- While our expo app has been published, we are still pending approval from the Apple App Store and Google Play Store.
 
 #### Backend (AWS)
 
