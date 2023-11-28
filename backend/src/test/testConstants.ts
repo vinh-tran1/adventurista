@@ -38,7 +38,7 @@ export const sampleUser: User = {
     date: moment().format('YYYY-MM-DD'),
     time: '18:00:00',
     location: 'Sample Location',
-    postingUserId: 'existing-user-id',
+    postingUserId: sampleUserId,
     blockedUsers: [],
     whoIsGoing: [],
     eventPictureUrl: '',

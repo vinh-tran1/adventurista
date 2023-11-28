@@ -1,5 +1,6 @@
 // Assuming you have an `events` module that exports `getEvent` function
-import { getEvent } from '../src/events';
+import { getEvent, createEvent } from '../src/events';
+import { getUser } from '../src/users';
 import { Event } from '../src/models';
 import AWS from 'aws-sdk';
 import request from 'supertest'; // if you are using supertest for HTTP assertions
@@ -7,17 +8,14 @@ import request from 'supertest'; // if you are using supertest for HTTP assertio
 import sinon = require('sinon');
 import { AWSError, Request } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { sampleEvent, sampleEventId } from './testConstants';
+import { sampleEvent, sampleEventId, sampleUser } from './testConstants';
 
 const sandbox = sinon.createSandbox();
-
-
 
 describe('Get Event', () => {
   afterEach(() => {
     sandbox.restore();
   });
-
   it('When event exists', async () => {
     // Mock AWS SDK response for an existing event
     const returnValueMock: Request<DocumentClient.GetItemOutput, AWSError> = {
@@ -50,3 +48,35 @@ describe('Get Event', () => {
     expect(result).not.toEqual(sampleEvent);
   });
 });
+
+describe('Create Event', () => {
+    afterEach(() => {
+      sandbox.restore();
+    });
+
+  
+    it('should return an error string when required event fields are missing', async () => {
+      // Call createEvent with missing fields
+      const event = {
+        ...sampleEvent,
+        // time: null, // Required field is null
+      };
+      const result = await createEvent(event);
+  
+      // Assert that the result is an error string
+      expect(result).not.toEqual(sampleEvent);
+    });
+    it('should fail when user doesnt exist', async () => {
+        // Call createEvent with missing fields
+        const event = {
+          ...sampleEvent,
+          // time: null, // Required field is null
+        };
+        const result = await createEvent(event);
+    
+        // Assert that the result is an error string
+        expect(result).not.toEqual(sampleUser);
+      });
+
+  
+  });
