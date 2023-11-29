@@ -16,7 +16,6 @@ const Post = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
-  //  console.log(user.eventsGoingTo, user.eventsOwned)
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [eventName, setEventName] = useState("");
@@ -104,6 +103,7 @@ const Post = ({ navigation }) => {
       const asset = assets[0]; // Assuming only one asset is picked
       const { uri } = asset;
       setSelectedImage(uri);
+      console.log(selectedImage);
     }
   };
 
@@ -179,13 +179,14 @@ const Post = ({ navigation }) => {
             encoding: FileSystem.EncodingType.Base64,
           });
 
-          axios.get(process.env.REACT_APP_AWS_API_URL + "/events/event-pic-presigned/" + eventId)
+          axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
               console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
               try {
-                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
-                   'Content-Type': "image/jpeg"
+                // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
+                const response3 = await axios.put(response2.data.uploadURL, {
+                  data: fileBase64,
                 });
                 if (response3.status === 200) {
                   console.log("Successfully added picture url to event");
@@ -202,7 +203,7 @@ const Post = ({ navigation }) => {
               console.log(error);
             });
         } catch (error) {
-          console.error('Error converting image to base64:', error);
+          console.error('Error converting image to binary:', error);
         }
         // End of S3 code
 

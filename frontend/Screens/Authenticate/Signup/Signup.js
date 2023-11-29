@@ -5,7 +5,6 @@ import axios from "axios";
 const Signup = ({ navigation }) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/auth/create-user';
-  // console.log(API_URL)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [first, setFirst] = useState("");
@@ -13,7 +12,7 @@ const Signup = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-      // const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/create-user", {
+        console.log("urllll", API_URL);
         const response = await axios.post(API_URL, {
         email: email,
         firstName: first,

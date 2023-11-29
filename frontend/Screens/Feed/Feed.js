@@ -42,11 +42,9 @@ const Feed = ({ navigation }) => {
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  
 
-  // const state = useSelector((state) => state);
-  // console.log(state);
+  const [posts, setPosts] = useState([]);
 
   // fetch posts api
-  const [posts, setPosts] = useState([]);
   useEffect(() => {
     axios.get(API_URL)
     .then((response) => {
