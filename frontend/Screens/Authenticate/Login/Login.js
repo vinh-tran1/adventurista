@@ -17,7 +17,6 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      // const response = await axios.post("https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/auth/sign-in", {
         const response = await axios.post(API_URL, {
         email: email,
         password: password
