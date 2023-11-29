@@ -15,8 +15,9 @@ const Feed = ({ navigation }) => {
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  
 
-  // fetch posts api
   const [posts, setPosts] = useState([]);
+
+  // fetch posts api
   useEffect(() => {
     axios.get(API_URL)
     .then((response) => {

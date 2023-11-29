@@ -20,7 +20,6 @@ const IndividualPost = ({ eventId }) => {
         axios.get(API_URL) 
         .then((response) => {
             setEvent(response.data);
-            // console.log(JSON.stringify(event, null, 2));
         })
         .catch((error) => {
             console.log(error);

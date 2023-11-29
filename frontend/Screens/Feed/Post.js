@@ -16,8 +16,9 @@ const Post = (props) => {
     const user = useSelector(selectUserInfo);
     const newPost = useSelector(selectNewPost);
     const dispatch = useDispatch();  
+    
     const [poster, setPoster] = useState("");
-    // const [userName, setUserName] = useState("")
+
     const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
 
     // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'

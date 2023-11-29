@@ -79,7 +79,7 @@ const Step2 = ({ navigation, route }) => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
-        <TextInput value={age} placeholder="1701-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
+        <TextInput value={age} placeholder="2001-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Where Are You Currently?</Text>

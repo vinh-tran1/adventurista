@@ -9,8 +9,8 @@ import store from "./Redux/store";
 // Icons
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faRightFromBracket, faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus, faLock, faEllipsis } from '@fortawesome/free-solid-svg-icons';
-library.add(faRightFromBracket, faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus, faLock, faEllipsis);
+import { faRightFromBracket, faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus, faLock, faEllipsis, faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+library.add(faRightFromBracket, faCaretLeft, faXmark, faTrash, faCheck, faPencil, faGear, faBell, faUserPlus, faBookmark, faCalendarPlus, faLocationDot, faHouse, faMagnifyingGlass, faMessage, faUser, faCalendar, faPlus, faLock, faEllipsis, faChevronUp, faChevronDown);
 
 export default function App() {
   return (
