@@ -1,7 +1,6 @@
 import SelectDropdown from 'react-native-select-dropdown'
 import {View, StyleSheet} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 const SelectDate = ({ title, data, func }) => {
   
   const handleSelection = (selectedItem) => {
@@ -20,7 +19,7 @@ const SelectDate = ({ title, data, func }) => {
                 buttonStyle={styles.dropdown1BtnStyle}
                 buttonTextStyle={styles.dropdown1BtnTxtStyle}
                 renderDropdownIcon={isOpened => {
-                    return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'#D186FF'} size={14} />;
+                    return <FontAwesomeIcon icon={isOpened ? 'chevron-up' : 'chevron-down'} color={'#D186FF'} size={14} />;
                 }}
                 dropdownIconPosition={'right'}
                 dropdownStyle={styles.dropdown1DropdownStyle}
