@@ -130,10 +130,10 @@ docker run -p 80:80 --name adventurista ts-adventurista
 **Add Your Own Tests:** We are using Jest for frontend testing (documentation: https://jestjs.io/docs/tutorial-react-native)
 
   1. Navigate to `frontend/__tests__` folder
-  2. Create file: Name_Of_Component_To_Test_Here.test.js
+  2. Create file: NameOfComponentToTestHere.test.js
   3. Import component, function names, etc from file that you want to test. We are using default export convention (import Component from './Component').
-  4. To test a component view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
-  5. to test a function view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
+  4. To test a component, view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
+  5. To test a function, view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
 
 
 Image Of Coverage Here
