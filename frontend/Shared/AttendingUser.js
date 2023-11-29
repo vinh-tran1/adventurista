@@ -5,14 +5,18 @@ import axios from "axios";
 
 const AttendingUser = (props) => {
 
+  const { user } = props;
+
+  // need to get user with api call and use effect
+
   return (
     <TouchableOpacity style={styles.request}>
         <View style={{ flexDirection: "row" }}>
             <Image source={{uri: "https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=1706745600&v=beta&t=jDcDuLbtio29INiWjdd2az7wXwGOEpENa9MPqPH5pvo"}} style={styles.profilePic}/>
-            <Text style={{ fontWeight: "bold", fontSize: 18, marginTop: 12.5, marginLeft: 12.5 }}>Nikhil Ismail</Text>
+            <Text style={{ fontWeight: "bold", fontSize: 18, marginTop: 12.5, marginLeft: 12.5 }}>{user.firstName} {user.lastName}</Text>
         </View>
         <TouchableOpacity style={styles.button}>
-            <FontAwesomeIcon style={{ marginLeft: 10, marginTop: 10 }} icon="user-plus" size={20} color="#D186FF"/>
+            <FontAwesomeIcon testID='user-plus-icon' style={{ marginLeft: 10, marginTop: 10 }} icon="user-plus" size={20} color="#D186FF"/>
         </TouchableOpacity>
     </TouchableOpacity>
   );

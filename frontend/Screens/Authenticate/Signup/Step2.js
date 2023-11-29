@@ -11,7 +11,7 @@ import { setUserInfo } from "../../../Redux/userSlice";
 const Step2 = ({ navigation, route }) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/update-user-age-interests-location';
-  // console.log(API_URL)
+  console.log(API_URL)
 
   const dispatch = useDispatch();
 

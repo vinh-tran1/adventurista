@@ -38,7 +38,7 @@ const Feed = ({ navigation }) => {
   const user = useSelector(selectUserInfo);
   // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events/' + user.userId;
-
+  console.log(API_URL)
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  
 
@@ -64,6 +64,8 @@ const Feed = ({ navigation }) => {
       <FeedFixedTop navigation={navigation} />
       <FlatList
         data={posts}
+        initialNumToRender={8}
+        maxToRenderPerBatch={4}
         renderItem={({ item }) => 
           <Post 
             date={item.date}

@@ -5,7 +5,7 @@ import axios from "axios";
 const Signup = ({ navigation }) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/auth/create-user';
-  // console.log(API_URL)
+  console.log(API_URL)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [first, setFirst] = useState("");

@@ -9,7 +9,7 @@ import { setUserInfo } from "../../../Redux/userSlice";
 const Login = ({ navigation }) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/auth/sign-in';
-  // console.log(API_URL)
+  console.log("login", API_URL)
   // const API_URL = 'https://8ly1bceyw5.execute-api.us-east-1.amazonaws.com/users/auth/sign-in'
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
