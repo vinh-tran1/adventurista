@@ -6,7 +6,7 @@ const BubbleText = (props) => {
   const { title } = props;
   
   return (
-    <View style={[styles.container, disabled && styles.selectedTag]}>
+    <View testID='bubble-text-container' style={[styles.container, disabled && styles.selectedTag]}>
         <Text style={styles.title}>{title}</Text>
     </View>
   );
