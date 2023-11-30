@@ -11,7 +11,7 @@ const Bubble = (props) => {
 
     return (
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <View style={[styles.bubble, {marginHorizontal: viewDimensions.width * 0.02 }]}>
+            <View testID="bubble-component" style={[styles.bubble, {marginHorizontal: viewDimensions.width * 0.02 }]}>
                 <Text style={styles.bubbleText}>{props.value}</Text>
             </View>
             <View>

@@ -9,7 +9,7 @@ const SelectDate = ({ title, data, func }) => {
       };
       
     return (
-        <View style={styles.dropdownsRow}>
+        <View testID='select-date-button' style={styles.dropdownsRow}>
              <SelectDropdown
                 data={data}
                 onSelect={handleSelection}

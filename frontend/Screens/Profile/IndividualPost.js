@@ -28,7 +28,7 @@ const IndividualPost = ({ eventId }) => {
     }, [user]);
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("Event Details")}>
+        <TouchableOpacity testID='individual-post-component' onPress={() => navigation.navigate("Event Details")}>
             <ImageBackground source={{uri: img}} style={styles.postTop}>
                 <View style={styles.postHeader}>
                     <Text style={{fontSize: 10, fontWeight: "700"}}>{event.title}</Text>
