@@ -175,9 +175,12 @@ const Post = ({ navigation }) => {
             return;
           }
 
-          const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
+          var fs = require("fs");
+          const imageFile = fs.readFileSync(selectedImage);
+
+          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
             encoding: FileSystem.EncodingType.Base64,
-          });
+          });*/
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
@@ -185,9 +188,15 @@ const Post = ({ navigation }) => {
               console.log("Succesfully received pre-signed URL")
               try {
                 // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
-                const response3 = await axios.put(response2.data.uploadURL, {
-                  data: fileBase64,
-                });
+                const response3 = await axios.put(
+                  response2.data.uploadURL,
+                  imageFile,
+                  {
+                    headers: {
+                      "Content-Type": "image/jpeg",
+                    },
+                  }
+                );
                 if (response3.status === 200) {
                   console.log("Successfully added picture url to event");
                 } else {
