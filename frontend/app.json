@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Adventurista",
-    "slug": "Adventurista",
+    "slug": "front-end",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +24,7 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/splash.png"
     }
   }
 }

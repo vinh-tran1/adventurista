@@ -48,7 +48,7 @@ const EventDetails = ({ event, poster }) => {
                             </View>
                         </TouchableOpacity>
                         <View style={{ justifyContent: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
-                            <Text style={{ color: "white", fontWeight: "800", fontSize: 18 }}>Wed, Oct 25</Text>
+                            <Text style={{ color: "white", fontWeight: "800", fontSize: 18 }}>{event.date}</Text>
                             <Text style={{ color: "white", fontWeight: "600", textAlign: "center", fontSize: 16, marginTop: 4 }}>{event.time}</Text>
                         </View>
                     </View>
@@ -58,8 +58,8 @@ const EventDetails = ({ event, poster }) => {
             <ScrollView>
                 <AttendingUser />
                 <AttendingUser />
-                <AttendingUser />
-                <AttendingUser />
+                <AttendingUser /> 
+                <AttendingUser /> 
                 <AttendingUser />
             </ScrollView>
         </SafeAreaView>
