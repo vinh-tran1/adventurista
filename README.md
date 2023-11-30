@@ -45,13 +45,13 @@ Using React Native, our app is able to run on both iOS and Android.
 - `frontend/Screens/`: Folders for the major screens
   - `Authenticate/`: authentication for user
     - `Login/`
-      - `Signup/`
+    -  `Signup/`
   - `Calendar/`: Events attending and events saved
-    - `Feed/`: Feed for current user
-      - `Notifications/`
+  - `Feed/`: Feed for current user
+    - `Notifications/`
   - `Messages/`: Displays groups
   - `Post/`: Creating posts
-    - `Profile/`: Different profile views
+  - `Profile/`: Different profile views
 - `frontend/Shared/`: Reusable components and functions
 - `frontend/assets/`: Images
 - `frontend/__tests__/`: All tests for frontend
