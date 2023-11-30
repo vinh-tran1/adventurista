@@ -16,7 +16,6 @@ const FeedFixedTop = ({ navigation }) => {
 
   const toggleSearchBar = () => {
     setIsSearchVisible(!isSearchVisible);
-    console.log(isSearchVisible)
   };
 
   const handleSetLocation = async () => {
@@ -66,7 +65,7 @@ const FeedFixedTop = ({ navigation }) => {
         {!isSearchVisible ? 
           <TouchableOpacity style={styles.location} onPress={toggleSearchBar}>
             <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
-            <Text style={{ marginTop: 2, fontSize: 13 }}>{user.primaryLocation}</Text>
+            <Text style={{ marginTop: 2, fontSize: 14 }}>{user.primaryLocation}</Text>
           </TouchableOpacity>
           :
           <View style={styles.searchBar}>
@@ -82,6 +81,17 @@ const FeedFixedTop = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         }
+
+        {isSearchVisible && 
+          <View>
+            <TouchableOpacity 
+              onPress={toggleSearchBar}
+              style={{ marginLeft: 10, backgroundColor:'#D99BFF', borderWidth: 2, borderColor: '#EDD3FF', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 5 }}>
+              <Text style={{ textAlign: 'center', color: 'black', fontWeight: '800', fontSize: 20 }}>X</Text>
+            </TouchableOpacity>
+          </View>
+        }
+        
         
         {/* <TouchableOpacity style={{ marginTop: 7.5 }}>
           <FontAwesomeIcon color={"#D99BFF"} icon="magnifying-glass" size={20} />
@@ -104,8 +114,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginVertical: 12.5,
     flexDirection: "row",
-    // justifyContent: "space-between"
-    justifyContent: "flex-start"
+    justifyContent: "space-between",
+    alignItems: 'center'
   },
   logo: {
     height: 60,
@@ -120,7 +130,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: "row",
-    width: '100%',
+    width: '85%',
     alignItems: 'center',
     backgroundColor: "#F3E8FF",
     paddingHorizontal: 10,

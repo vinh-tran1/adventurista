@@ -5,8 +5,8 @@ import BubbleText from "../../Shared/BubbleText";
 import axios from 'axios';
 
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, setUserInfo } from "../../Redux/userSlice";
 
 const PostBottom = (props) => {
 
@@ -24,6 +24,14 @@ const PostBottom = (props) => {
             eventId: eventId
           });
           if (response.status === 200) {
+            const updatedUser = response.data;
+            console.log(updatedUser.eventsGoingTo);
+
+            // dispatch(setUserInfo({
+            //   newPost: false,
+            //   ...updatedUser
+            // }));
+
             console.log("Successfully added event to your calendar");
           } else {
             console.log("Error adding this event to your calendar");
@@ -38,6 +46,15 @@ const PostBottom = (props) => {
         try {
           const response = await axios.post(SAVE_API_URL);
           if (response.status === 200) {
+
+            const updatedUser = response.data;
+            console.log(updatedUser.eventsSaved);
+
+            // dispatch(setUserInfo({
+            //   newPost: false,
+            //   ...updatedUser
+            // }));
+
             console.log("Successfully saved event to your saved events list");
           } else {
             console.log("Error saving this event to your saved events list");

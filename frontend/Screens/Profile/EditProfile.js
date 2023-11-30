@@ -264,8 +264,8 @@ const EditProfile = ({ navigation }) => {
                         }
                     </TouchableOpacity>
                     <Text style={{ marginBottom: 2 }}>Profile</Text>
-                    </View>
-                    <View style={styles.image}>
+                  </View>
+                  <View style={styles.image}>
                     <TouchableOpacity onPress={handleBannerUpload}>
                         {!bannerImage ?
                         <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>

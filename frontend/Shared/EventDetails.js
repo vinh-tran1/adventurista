@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, Image, ImageBackground, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
 import AttendingUser from "./AttendingUser";
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, setUserInfo } from "../Redux/userSlice";
 
-const EventDetails = (props) => {
+const EventDetails = ({ event, poster }) => {
 
     const navigation = useNavigation();
+    const user = useSelector(selectUserInfo);
+
+    // need to get event
+    // useEffect(() => {
+
+    // });
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
@@ -20,10 +28,10 @@ const EventDetails = (props) => {
             </TouchableOpacity>
             <ImageBackground source={{uri: "https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg"}} style={styles.postTop}>
                 <View style={styles.postHeader}>
-                    <Text style={{fontSize: 28, fontWeight: "bold"}}>Hallowoads</Text>
+                    <Text style={{fontSize: 28, fontWeight: "bold"}}>{event.title}</Text>
                     <View style={styles.locationContainer}>
                         <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={15} />
-                        <Text style={{ fontWeight: "bold", fontSize: 12 }}>300 York St., New Haven</Text>
+                        <Text style={{ fontWeight: "bold", fontSize: 12 }}>{event.location}</Text>
                     </View>
                 </View>
                 <View style={styles.bottomContent}>
@@ -36,22 +44,22 @@ const EventDetails = (props) => {
                                 >
                                     <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
                                 </View>
-                                <Text style={{ color: "white", fontWeight: "700", marginTop: 7.5, marginLeft: 5 }}>by Vinh</Text>
+                                <Text style={{ color: "white", fontWeight: "700", marginTop: 7.5, marginLeft: 5 }}>by {poster.firstName}</Text>
                             </View>
                         </TouchableOpacity>
                         <View style={{ justifyContent: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
-                            <Text style={{ color: "white", fontWeight: "800", fontSize: 18 }}>Wed, Oct 25</Text>
-                            <Text style={{ color: "white", fontWeight: "600", textAlign: "center", fontSize: 16, marginTop: 4 }}>10:30 PM</Text>
+                            <Text style={{ color: "white", fontWeight: "800", fontSize: 18 }}>{event.date}</Text>
+                            <Text style={{ color: "white", fontWeight: "600", textAlign: "center", fontSize: 16, marginTop: 4 }}>{event.time}</Text>
                         </View>
                     </View>
                 </View>
             </ImageBackground>
-            <Text style={styles.subheaderText}>Attending (5)</Text>
+            <Text style={styles.subheaderText}>Attending {event.whoIsGoing.length}</Text>
             <ScrollView>
                 <AttendingUser />
                 <AttendingUser />
-                <AttendingUser />
-                <AttendingUser />
+                <AttendingUser /> 
+                <AttendingUser /> 
                 <AttendingUser />
             </ScrollView>
         </SafeAreaView>
