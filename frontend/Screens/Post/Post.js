@@ -4,6 +4,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, Tex
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
@@ -175,19 +176,36 @@ const Post = ({ navigation }) => {
             return;
           }
 
-          const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
+          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
             encoding: FileSystem.EncodingType.Base64,
-          });
+          });*/
+
+          const manipulatedImage = await ImageManipulator.manipulateAsync(
+            selectedImage,
+            [{ resize: { width: 300 } }],
+            { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+          );
+    
+          const byteArray = await fetch(manipulatedImage.uri)
+            .then((response) => response.arrayBuffer())
+            .then((arrayBuffer) => new Uint8Array(arrayBuffer));
+
+          console.log("arrrayyy", byteArray);
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
               console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
               try {
-                // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
-                const response3 = await axios.put(response2.data.uploadURL, {
-                  data: fileBase64,
-                });
+                const response3 = await axios.put(
+                  response2.data.uploadURL,
+                  byteArray,
+                  {
+                    headers: {
+                      "Content-Type": "image/jpeg",
+                    },
+                  }
+                );
                 if (response3.status === 200) {
                   console.log("Successfully added picture url to event");
                 } else {
