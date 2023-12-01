@@ -153,6 +153,15 @@ Image Of Coverage Here
 - Notes:
   - You can run the CDK tests by running `npm run test` in `backend/`, and you can run the unit tests by running `npm run test` in `backend/src`
   - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing
-  - If you are looking to add tests to this suite, the following need to be formally tested:
-  - `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URL generation, or for banner image presigned URL (`users.ts`) or event image presigned URL (`events.ts`)
-  - `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB
+
+**Add Your Own Tests:** We are using Jest for frontend testing (documentation: https://jestjs.io/docs/tutorial-react-native)
+
+1. Navigate to `backend/src` to create unit tests (or `backend/` if you want to add/refine the CDK tests)
+2. Open `users.test.ts`, `events.test.ts`, or `messages.test.ts` (or `cdk.test.ts`) to add tests
+3. Import the handler function (from `users.ts`, `events.ts`, or `messages.ts`), type (from `models.ts`)
+4. Write your test! For an example, see [users.test.ts](backend/src/test/users.test.ts) or [cdk.test.ts](backend/test/cdk.test.ts)
+
+If you are looking for code that needs testing coverage:
+
+- `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URL generation, or for banner image presigned URL (`users.ts`) or event image presigned URL (`events.ts`)
+- `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB
