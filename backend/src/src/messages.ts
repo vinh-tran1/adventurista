@@ -52,6 +52,30 @@ const router = express.Router();
  *       format: "date-time"
  */
 
+export async function createGroupChat(name: string, event_id: string, user_ids: string[]): Promise<GroupChat> {
+  const groupId = uuidv4();
+
+  const newGroupChat: GroupChat = {
+    groupId,
+    name,
+    event_id,
+    user_ids,
+  };
+
+  const params = {
+    TableName: GROUP_CHAT_TABLE_NAME,
+    Item: newGroupChat,
+  };
+
+  try {
+    await db.put(params).promise();
+    return newGroupChat;
+  } catch (err) {
+    console.error("Error creating group chat:", err);
+    return null;
+  }
+}
+
 /**
  * @swagger
  * /create-group-chat:
@@ -78,28 +102,40 @@ const router = express.Router();
  */
 router.post("/create-group-chat", async (req, res) => {
   const { name, event_id, user_ids } = req.body;
-  const groupId = uuidv4();
+  const newGC: GroupChat = await createGroupChat(name, event_id, user_ids);
 
-  const newGroupChat: GroupChat = {
+  if(newGC == null) {
+    res.status(500).send("Error creating group chat");
+  } else {
+    res.status(200).json(newGC);
+  }
+});
+
+export async function addMessage(groupId: string, userId: string, content: string): Promise<Message> {
+  const messageId = uuidv4();
+  const timestamp = moment().toISOString();
+
+  const newMessage: Message = {
+    messageId,
     groupId,
-    name,
-    event_id,
-    user_ids,
+    userId,
+    content,
+    timestamp,
   };
 
   const params = {
-    TableName: GROUP_CHAT_TABLE_NAME,
-    Item: newGroupChat,
+    TableName: MESSAGES_TABLE_NAME,
+    Item: newMessage,
   };
 
   try {
     await db.put(params).promise();
-    res.status(200).json(newGroupChat);
+    return newMessage;
   } catch (err) {
-    console.error("Error creating group chat:", err);
-    res.status(500).send("Error creating group chat");
+    console.error("Error adding message:", err);
+    return null;
   }
-});
+}
 
 /**
  * @swagger
@@ -127,30 +163,31 @@ router.post("/create-group-chat", async (req, res) => {
  */
 router.post("/add-message", async (req, res) => {
   const { groupId, userId, content } = req.body;
-  const messageId = uuidv4();
-  const timestamp = moment().toISOString();
+  const newMessage: Message = await addMessage(groupId, userId, content);
 
-  const newMessage: Message = {
-    messageId,
-    groupId,
-    userId,
-    content,
-    timestamp,
-  };
+  if (newMessage == null) {
+    res.status(500).send("Error adding message");
+  } else {
+    res.status(200).json(newMessage);
+  }
+});
 
+export async function deleteMessage(messageId: string): Promise<string> {
   const params = {
     TableName: MESSAGES_TABLE_NAME,
-    Item: newMessage,
+    Key: {
+      messageId,
+    },
   };
 
   try {
-    await db.put(params).promise();
-    res.status(200).json(newMessage);
+    await db.delete(params).promise();
+    return "Message deleted successfully";
   } catch (err) {
-    console.error("Error adding message:", err);
-    res.status(500).send("Error adding message");
+    console.error("Error deleting message:", err);
+    return null;
   }
-});
+}
 
 /**
  * @swagger
@@ -178,22 +215,32 @@ router.post("/add-message", async (req, res) => {
  */
 router.delete("/delete-message", async (req, res) => {
   const { messageId } = req.body;
+  const result = await deleteMessage(messageId);
 
+  if (result == null) {
+    res.status(500).send("Error deleting message");
+  } else {
+    res.status(200).send(result);
+  }
+});
+
+export async function getGroupMessages(groupId: string): Promise<Message[]> {
   const params = {
     TableName: MESSAGES_TABLE_NAME,
-    Key: {
-      messageId,
+    FilterExpression: "groupId = :groupId",
+    ExpressionAttributeValues: {
+      ":groupId": groupId,
     },
   };
 
   try {
-    await db.delete(params).promise();
-    res.status(200).send("Message deleted successfully");
+    const result = await db.scan(params).promise();
+    return result.Items as Message[];
   } catch (err) {
-    console.error("Error deleting message:", err);
-    res.status(500).send("Error deleting message");
+    console.error("Error retrieving messages:", err);
+    return null;
   }
-});
+}
 
 /**
  * @swagger
@@ -218,23 +265,32 @@ router.delete("/delete-message", async (req, res) => {
  */
 router.get("/get-group-messages/:groupId", async (req, res) => {
   const { groupId } = req.params;
+  const messages = await getGroupMessages(groupId);
 
+  if (messages == null) {
+    res.status(500).send("Error retrieving messages");
+  } else {
+    res.status(200).json(messages);
+  }
+});
+
+export async function getUserMessages(userId: string): Promise<Message[]> {
   const params = {
     TableName: MESSAGES_TABLE_NAME,
-    FilterExpression: "groupId = :groupId",
+    FilterExpression: "userId = :userId",
     ExpressionAttributeValues: {
-      ":groupId": groupId,
+      ":userId": userId,
     },
   };
 
   try {
     const result = await db.scan(params).promise();
-    res.status(200).json(result.Items);
+    return result.Items as Message[];
   } catch (err) {
-    console.error("Error retrieving messages:", err);
-    res.status(500).send("Error retrieving messages");
+    console.error("Error retrieving user messages:", err);
+    return null;
   }
-});
+}
 
 /**
  * @swagger
@@ -259,23 +315,36 @@ router.get("/get-group-messages/:groupId", async (req, res) => {
  */
 router.get("/get-user-messages/:userId", async (req, res) => {
   const { userId } = req.params;
+  const messages = await getUserMessages(userId);
 
-  const params = {
-    TableName: MESSAGES_TABLE_NAME,
-    FilterExpression: "userId = :userId",
-    ExpressionAttributeValues: {
-      ":userId": userId,
+  if (messages == null) {
+    res.status(500).send("Error retrieving messages");
+  } else {
+    res.status(200).json(messages);
+  }
+});
+
+export async function addUserToGroup(userId: string, groupId: string): Promise<string> {
+  const groupParams = {
+    TableName: GROUP_CHAT_TABLE_NAME,
+    Key: {
+      groupId,
     },
+    UpdateExpression: "SET user_ids = list_append(user_ids, :userId)",
+    ExpressionAttributeValues: {
+      ":userId": [userId],
+    },
+    ReturnValues: "UPDATED_NEW",
   };
 
   try {
-    const result = await db.scan(params).promise();
-    res.status(200).json(result.Items);
+    await db.update(groupParams).promise();
+    return "User added to group chat successfully";
   } catch (err) {
-    console.error("Error retrieving user messages:", err);
-    res.status(500).send("Error retrieving user messages");
+    console.error("Error adding user to group chat:", err);
+    return null
   }
-});
+}
 
 /**
  * @swagger
@@ -311,31 +380,58 @@ router.get("/get-user-messages/:userId", async (req, res) => {
  */
 router.put("/add-user-to-group", async (req, res) => {
   const { groupId, userId } = req.body;
+  const result = await addUserToGroup(userId, groupId);
 
-  const groupParams = {
-    TableName: GROUP_CHAT_TABLE_NAME,
-    Key: {
-      groupId,
-    },
-    UpdateExpression: "SET user_ids = list_append(user_ids, :userId)",
-    ExpressionAttributeValues: {
-      ":userId": [userId],
-    },
-    ReturnValues: "UPDATED_NEW",
-  };
-
-  try {
-    await db.update(groupParams).promise();
-    res.status(200).send("User added to group chat successfully");
-  } catch (err) {
-    console.error("Error adding user to group chat:", err);
+  if (result == null) {
     res.status(500).send("Error adding user to group chat");
+  } else {
+    res.status(200).send(result);
   }
 });
 
 interface RemoveUserFromBody {
   groupId: string;
   userId: string;
+}
+
+export async function removeUserFromGroup(userId: string, groupId: string): Promise<string> {
+  // Fetch the current group chat details
+  const getParams = {
+    TableName: GROUP_CHAT_TABLE_NAME,
+    Key: {
+      groupId,
+    },
+  };
+
+  try {
+    const groupChat = await db.get(getParams).promise();
+    if (!groupChat.Item) {
+      return "Group chat not found";
+    }
+
+    // Remove the user from the user_ids list
+    const updatedUserIds = groupChat.Item.user_ids.filter(
+      (id: string) => id !== userId
+    );
+
+    // Update the group chat with the new user_ids list
+    const updateParams = {
+      TableName: GROUP_CHAT_TABLE_NAME,
+      Key: {
+        groupId,
+      },
+      UpdateExpression: "SET user_ids = :userIds",
+      ExpressionAttributeValues: {
+        ":userIds": updatedUserIds,
+      },
+    };
+
+    await db.update(updateParams).promise();
+    return null;
+  } catch (err) {
+    console.error("Error removing user from group chat:", err);
+    return "Error removing user from group chat";
+  }
 }
 
 /**
@@ -372,43 +468,12 @@ interface RemoveUserFromBody {
  */
 router.put("/remove-user-from-group", async (req: Request, res: Response) => {
   const { groupId, userId } = req.body as RemoveUserFromBody;
+  const result = await removeUserFromGroup(userId, groupId);
 
-  // Fetch the current group chat details
-  const getParams = {
-    TableName: GROUP_CHAT_TABLE_NAME,
-    Key: {
-      groupId,
-    },
-  };
-
-  try {
-    const groupChat = await db.get(getParams).promise();
-    if (!groupChat.Item) {
-      return res.status(404).send("Group chat not found");
-    }
-
-    // Remove the user from the user_ids list
-    const updatedUserIds = groupChat.Item.user_ids.filter(
-      (id: string) => id !== userId
-    );
-
-    // Update the group chat with the new user_ids list
-    const updateParams = {
-      TableName: GROUP_CHAT_TABLE_NAME,
-      Key: {
-        groupId,
-      },
-      UpdateExpression: "SET user_ids = :userIds",
-      ExpressionAttributeValues: {
-        ":userIds": updatedUserIds,
-      },
-    };
-
-    await db.update(updateParams).promise();
+  if (result == null) { // special case. check impl in removeUserFromGroup
     res.status(200).send("User removed from group chat successfully");
-  } catch (err) {
-    console.error("Error removing user from group chat:", err);
-    res.status(500).send("Error removing user from group chat");
+  } else {
+    res.status(500).send(result);
   }
 });
 
