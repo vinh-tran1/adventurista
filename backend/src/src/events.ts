@@ -169,7 +169,7 @@ async function getCoordinates(addr: string): Promise<Coordinates> {
   }
 }
 
-async function getEvents(): Promise<Event[]> {
+export async function getEvents(): Promise<Event[]> {
   // area: string,
   // userLocation: string,
   // distance: number,
@@ -364,7 +364,7 @@ router.get("/who-is-going-ids", async (req, res) => {
   res.status(200).send(event.whoIsGoing);
 });
 
-async function goingToEvent(
+export async function goingToEvent(
   userId: string,
   eventId: string
 ): Promise<string | null> {
@@ -435,7 +435,7 @@ router.post("/going-to-event", async (req, res) => {
   res.status(200).send(`User ${userId} going to event ${eventId}`);
 });
 
-async function cancelGoingToEvent(
+export async function cancelGoingToEvent(
   userId: string,
   eventId: string
 ): Promise<string | null> {
@@ -526,7 +526,7 @@ async function getUser(userId: string): Promise<User | null> {
 }
 
 // event picture bucket read/write
-const getEventPicUploadURL = async function () {
+export const getEventPicUploadURL = async function () {
   const randomID = uuidv4();
   const Key = `${randomID}.jpg`;
 
@@ -634,7 +634,7 @@ export async function deleteEvent(eventId: string): Promise<string> {
 }
 
 // Helper function to update a user's list of events they are going to
-async function updateUserEventsList(
+export async function updateUserEventsList(
   userId: string,
   eventIdToRemove: string
 ): Promise<void> {
@@ -668,3 +668,5 @@ router.delete("/event/:eventId", async (req, res) => {
 });
 
 export default router;
+
+
