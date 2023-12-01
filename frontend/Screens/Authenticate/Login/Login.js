@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
   const handleLogin = async () => {
     try {
         const response = await axios.post(API_URL, {
-        email: email,
+        email: email, 
         password: password
       });
       if (response.status === 200) {
@@ -62,18 +62,18 @@ const Login = ({ navigation }) => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>
-        <TextInput value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
+        <TextInput testID="email" value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
-        <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
+        <TextInput testID="password" value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <TouchableOpacity testID="loginButtonTestId" style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.signupContainer} onPress={() => navigation.navigate('Signup Main')}>
+      <TouchableOpacity testID="signup" style={styles.signupContainer} onPress={() => navigation.navigate('Signup Main')}>
         <Text style={styles.signup}>Don't have an account? Sign up!</Text>
       </TouchableOpacity>
     </View>

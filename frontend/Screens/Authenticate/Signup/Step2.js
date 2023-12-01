@@ -6,7 +6,7 @@ import BubbleText from '../../../Shared/BubbleText';
 
 // Redux
 import { useDispatch } from "react-redux";
-import { setUserInfo } from "../../../Redux/userSlice";
+import { setUserInfo, initialState } from "../../../Redux/userSlice";
 
 const Step2 = ({ navigation, route }) => {
 
@@ -79,17 +79,17 @@ const Step2 = ({ navigation, route }) => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Date of Birth (YYYY-MM-DD)</Text>
-        <TextInput value={age} placeholder="2001-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
+        <TextInput testID="DOB" value={age} placeholder="2001-09-10" onChangeText={(text) => setAge(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Where Are You Currently?</Text>
-        <TextInput value={location} placeholder="New Haven, United States" onChangeText={(text) => setLocation(text)} style={styles.input} />
+        <TextInput testID="location" value={location} placeholder="New Haven, United States" onChangeText={(text) => setLocation(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>What Are Your Interests? {interests.length === 3 ? "" : "(" + (3 - interests.length) + " Required)"}</Text>
         {interests.length < 3 &&
         <View style={{ flexDirection: "row" }}>
-            <TextInput value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.input} />
+            <TextInput testID="interest" value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.input} />
             <TouchableOpacity onPress={handleAddInterest}>
                 <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-add" size={25} />
             </TouchableOpacity>
@@ -109,7 +109,7 @@ const Step2 = ({ navigation, route }) => {
         </View>
       </View>
       <View style={{ alignItems: "center", marginTop: interests.length === 3 ? 30 : 20 }}>
-        <TouchableOpacity style={styles.signUpButton} onPress={handleCompleteSignup}>
+        <TouchableOpacity testID="completeSignupButtonTestId" style={styles.signUpButton} onPress={handleCompleteSignup}>
           <Text style={styles.buttonText}>Complete Sign Up</Text>
         </TouchableOpacity>
       </View>

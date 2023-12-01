@@ -10,7 +10,7 @@ const MyStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen 
-                name='Messages Main'
+                name='Saved Events'
                 component={SavedEvents}
                 options={{
                     headerShown: false,

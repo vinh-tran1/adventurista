@@ -27,10 +27,10 @@ const PostBottom = (props) => {
             const updatedUser = response.data;
             console.log(updatedUser.eventsGoingTo);
 
-            // dispatch(setUserInfo({
-            //   newPost: false,
-            //   ...updatedUser
-            // }));
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
 
             console.log("Successfully added event to your calendar");
           } else {
@@ -50,10 +50,10 @@ const PostBottom = (props) => {
             const updatedUser = response.data;
             console.log(updatedUser.eventsSaved);
 
-            // dispatch(setUserInfo({
-            //   newPost: false,
-            //   ...updatedUser
-            // }));
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
 
             console.log("Successfully saved event to your saved events list");
           } else {

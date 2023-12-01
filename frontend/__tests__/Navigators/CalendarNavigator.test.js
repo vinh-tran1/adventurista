@@ -30,7 +30,7 @@ jest.mock('@react-navigation/stack', () => {
   
       expect(getByTestId('stackNavigator')).toBeTruthy();
       expect(getByTestId('stackScreen-Calendar Main')).toBeTruthy();
-      expect(getByTestId('stackScreen-EventDetails')).toBeTruthy();
+      expect(getByTestId('stackScreen-Event Details')).toBeTruthy();
     });
   
     test('was called with appropriate props', () => {

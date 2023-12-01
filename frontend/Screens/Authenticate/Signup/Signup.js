@@ -13,7 +13,6 @@ const Signup = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-        console.log("urllll", API_URL);
         const response = await axios.post(API_URL, {
         email: email,
         firstName: first,
@@ -40,26 +39,26 @@ const Signup = ({ navigation }) => {
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>First Name</Text>
-        <TextInput value={first} onChangeText={(text) => setFirst(text)} style={styles.input} />
+        <TextInput testID="firstname" value={first} onChangeText={(text) => setFirst(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Last Name</Text>
-        <TextInput value={last} onChangeText={(text) => setLast(text)} style={styles.input} />
+        <TextInput testID="lastname" value={last} onChangeText={(text) => setLast(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Email</Text>
-        <TextInput value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
+        <TextInput testID="email" value={email} onChangeText={(text) => setEmail(text)} style={styles.input} />
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Password</Text>
-        <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
+        <TextInput testID="password" value={password} onChangeText={(text) => setPassword(text)} style={styles.input} secureTextEntry={true} />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.signUpButton} onPress={handleSignup}>
+        <TouchableOpacity testID="signup" style={styles.signUpButton} onPress={handleSignup}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.signupContainer} onPress={() => navigation.navigate('Login Main')}>
+      <TouchableOpacity testID="login" style={styles.signupContainer} onPress={() => navigation.navigate('Login Main')}>
         <Text style={styles.signup}>Already have an account? Log In!</Text>
       </TouchableOpacity>
     </View>

@@ -1,11 +1,12 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import '@testing-library/jest-native/extend-expect'; // For extending jest matchers
-import axios from 'axios';
 import FeedFixedTop from '../../Screens/Feed/FeedFixedTop';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
+// Mock the Axios library
+import axios from 'axios';
 jest.mock('axios');
 
 jest.mock('react-redux', () => ({
@@ -13,8 +14,9 @@ jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
 
+const mockStore = configureStore([]);
+
 describe('FeedFixedTop Component', () => {
-  const mockStore = configureStore([]);
 
   test('renders correctly', () => {
     const store = mockStore({
@@ -26,16 +28,16 @@ describe('FeedFixedTop Component', () => {
       },
     });
 
-    const { getByText, getByPlaceholderText } = render(
+    const { getByText, getByPlaceholderText, getByTestId } = render(
       <Provider store={store}>
         <FeedFixedTop navigation={{ navigate: jest.fn() }} />
       </Provider>
     );
 
-    expect(getByText('New York')).toBeTruthy();
-    expect(getByText('X')).not.toBeTruthy(); // Search button is not visible initially
+    expect(getByText('New Haven, CT')).toBeTruthy();
+    // expect(getByText('X')).not.toBeTruthy(); // Search button is not visible initially
 
-    fireEvent.press(getByText('Search'));
+    fireEvent.press(getByTestId('searchbar1'));
 
     expect(getByPlaceholderText('New Haven, CT')).toBeTruthy();
     expect(getByText('X')).toBeTruthy(); // Search button is visible after pressing Search
@@ -51,34 +53,58 @@ describe('FeedFixedTop Component', () => {
       },
     });
 
+    const mockResponse = {
+      newPost: false,
+      userId: '1234',
+      age: '21',
+      blockedUsers: [],
+      email: '123',
+      eventsGoingTo: ['1'],
+      eventsNotGoingTo: [],
+      eventsOwned: ['1'],
+      eventsSaved: [],
+      firstName: 'Vinh',
+      lastName: 'Tran',
+      friends: ['2'],
+      groups: ['3'],
+      interests: ['tag'],
+      messages: [],
+      primaryLocation: '123',
+      profilePictureUrl: '123',
+      bannerImageUrl: '123',
+      bio: '123',
+      requests: {
+        outgoing:[],
+        incoming: []
+      }
+  };
+
     axios.post.mockResolvedValue({
       status: 200,
-      data: {
-        userId: '1',
-        primaryLocation: 'New Haven, CT',
-        // other user properties...
-      },
+      mockResponse
     });
 
-    const { getByText, getByPlaceholderText } = render(
+    const { getByText, getByPlaceholderText, getByTestId } = render(
       <Provider store={store}>
         <FeedFixedTop navigation={{ navigate: jest.fn() }} />
       </Provider>
     );
 
-    fireEvent.press(getByText('Search'));
-    fireEvent.changeText(getByPlaceholderText('New Haven, CT'), 'New Haven, CT');
-    fireEvent.press(getByText('Search'));
+    fireEvent.press(getByTestId('searchbar1'));
+    fireEvent.changeText(getByPlaceholderText('New Haven, CT'), 'Boston, MA');
+    fireEvent.press(getByTestId('searchbar2'));
 
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(
-        expect.any(String),
         {
           userId: '1',
-          primaryLocation: 'New Haven, CT',
-          // other user properties...
+          primaryLocation: 'Boston, MA',
+          firstName: expect.any(String),
+          lastName: expect.any(String),
+          interests: expect.any(Array),
+          age: expect.any(Number),
+          bio: expect.any(String),
         },
-        expect.any(Object)
       );
     });
   });

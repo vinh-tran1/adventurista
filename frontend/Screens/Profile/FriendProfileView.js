@@ -29,11 +29,17 @@ const FriendProfileView = ({ navigation, route }) => {
     setModalVisible(!isModalVisible);
   };
 
-  const [isFriend, setIsFriend] = useState(user.friends.some(friendId => friendId === poster.userId));
-  const [requested, setRequested] = useState(user.requests.outgoing.some(friendId => friendId === poster.userId));
+  const friends = user?.friends || [];
+  const requestsOutgoing = user?.requests?.outgoing || [];
+  const posterEventsGoing = poster?.eventsGoingTo || [];
+  const posterEventsOwned = poster?.eventsOwned || [];
+  const [posterInterests, setPosterInterests] = useState(poster?.interests || []);
+
+  const [isFriend, setIsFriend] = useState(friends.some(friendId => friendId === poster.userId));
+  const [requested, setRequested] = useState(requestsOutgoing.some(friendId => friendId === poster.userId));
   const [friendStatus, setFriendStatus] = useState(isFriend ? "Friends" : requested ? "Requested" : "Add Friend");
   // the friend's groups (not the user's)
-  const [groups, setGroups] = useState(poster.eventsGoingTo.filter(event => !poster.eventsOwned.includes(event)));
+  const [groups, setGroups] = useState(posterEventsGoing.filter(event => !posterEventsOwned.includes(event)));
 
   // dummy data
   const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
@@ -121,12 +127,12 @@ const FriendProfileView = ({ navigation, route }) => {
             <View style={{ flexDirection: 'row', flexGrow: 1, justifyContent: 'space-between', marginLeft: 8}}>
                 <Text style={styles.headerText}>{poster.firstName}</Text>
 
-                <TouchableOpacity style={{marginTop: 6}} onPress={toggleModal}>
+                <TouchableOpacity testID="ellipsis" style={{marginTop: 6}} onPress={toggleModal}>
                   <FontAwesomeIcon icon="fa-ellipsis" size={25} />
                 </TouchableOpacity>
                 
                 <Modal 
-                  testID={'modal'}
+                  testID="modal"
                   isVisible={isModalVisible}
                   backdropOpacity={0.9}
                   backdropColor="#B4B3DB"
@@ -165,8 +171,8 @@ const FriendProfileView = ({ navigation, route }) => {
                 <Image source={{uri: profilePic}} style={styles.profilePic}/>
               </View>
               <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.065 }]}>
-                <Bubble value={poster.eventsOwned.length} name={'Events'}/>
-                <Bubble value={poster.friends.length} name={'Connections'}/>
+                <Bubble value={poster?.eventsOwned?.length || 0} name={'Events'}/>
+                <Bubble value={poster?.friends?.length || 0} name={'Connections'}/>
                 <Bubble value={groups.length} name={'Groups'}/>
                 {/* <Bubble value={poster.groups.length} name={'Groups'}/> */}
               </View>
@@ -205,7 +211,7 @@ const FriendProfileView = ({ navigation, route }) => {
               <Text style={{marginTop: 8, fontSize: 16}}>{poster.bio}</Text>
 
               <View style={styles.tagContainer}>
-                  {poster.interests.map((tag, index) => {
+                  {posterInterests.map((tag, index) => {
                       return (
                           <BubbleText key={index.toString()} title={tag} />
                       )
@@ -224,7 +230,7 @@ const FriendProfileView = ({ navigation, route }) => {
                           <FontAwesomeIcon color={"black"} icon="lock" size={30} />
                   </View>
                   <Text style={{ fontSize: 22, fontWeight: '600', marginBottom: 8 }}>Not Friends Yet!</Text>
-                  <Text style={{ color: '#808080' }}>Add Nikhil As A Friend To View Profile</Text> 
+                  <Text style={{ color: '#808080' }}>Add {poster.firstName} As A Friend To View Profile</Text> 
               </View>
           </View> :
           <View>
