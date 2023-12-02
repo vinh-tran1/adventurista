@@ -9,7 +9,6 @@ import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice
 
 const Feed = ({ navigation }) => {
   const user = useSelector(selectUserInfo);
-  // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/events'
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events/' + user.userId;
   const newPost = useSelector(selectNewPost);
   const dispatch = useDispatch();  
@@ -40,7 +39,6 @@ const Feed = ({ navigation }) => {
           <Post 
             date={item.date}
             location={item.location}
-            // img={'https://adventurista-event-picture-bucket.s3.amazonaws.com/' + item.eventPictureUrl}
             img={item.eventPictureUrl}
             createdBy={item.postingUserId}
             time={item.time}

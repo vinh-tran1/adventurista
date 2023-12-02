@@ -63,9 +63,9 @@ const FeedFixedTop = ({ navigation }) => {
       <View style={styles.topBar}>
 
         {!isSearchVisible ? 
-          <TouchableOpacity style={styles.location} onPress={toggleSearchBar}>
+          <TouchableOpacity testID="searchbar1" style={styles.location} onPress={toggleSearchBar}>
             <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={20} />
-            <Text style={{ marginTop: 2, fontSize: 14 }}>{user.primaryLocation}</Text>
+            <Text style={{ marginTop: 2, fontSize: 14 }}>{user?.primaryLocation || 'New Haven, CT'}</Text>
           </TouchableOpacity>
           :
           <View style={styles.searchBar}>
@@ -76,7 +76,11 @@ const FeedFixedTop = ({ navigation }) => {
               onChangeText={(text) => setLocation(text)} 
               style={{ marginLeft: 10, flex: 1 }} 
             />
-            <TouchableOpacity style={{ marginLeft: 8, borderWidth: 1,  borderColor: '#D99BFF', paddingHorizontal: 6, paddingVertical: 4, backgroundColor: 'white' }} onPress={handleSetLocation}>
+            <TouchableOpacity 
+                  testID="searchbar2" 
+                  style={{ marginLeft: 8, borderWidth: 1.5,  borderColor: '#D99BFF', paddingHorizontal: 6, paddingVertical: 4, backgroundColor: 'white', borderRadius: 5 }} 
+                  onPress={handleSetLocation}
+            >
               <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '600' }}>Search</Text>
             </TouchableOpacity>
           </View>

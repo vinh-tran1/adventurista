@@ -3,6 +3,8 @@ import axios from "axios";
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, TextInput, ImageBackground, Image, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import BubbleText from "../../Shared/BubbleText";
 
 // Redux
@@ -16,19 +18,15 @@ const EditProfile = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(selectUserInfo);
 
-  // console.log("before: ", user.firstName, user.lastName, user.interests, user.primaryLocation, user.bio, user.age)
-
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
   const [interests, setInterests] = useState(user.interests);
   const [tempInterest, setTempInterest] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
-  const [bannerImage, setBannerImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(user.profilePictureUrl);
+  const [bannerImage, setBannerImage] = useState(user.bannerImageUrl);
   const [location, setLocation] = useState(user.primaryLocation);
   const [bio, setBio] = useState("");
   const [age, setAge]= useState(user.age);
-
-  // console.log("after: ", firstName, lastName, interests, location, bio, age)
 
   const handleProfileUpload = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -118,6 +116,8 @@ const EditProfile = ({ navigation }) => {
       });
       if (response.status === 200) {
         const updatedUser = response.data;
+        let profilePic = "";
+        let bannerPic = "";
         
         // GET and PUT requests for profile picture URL
         try {
@@ -127,18 +127,53 @@ const EditProfile = ({ navigation }) => {
             return;
           }
 
-          const fileBase64 = await FileSystem.readAsStringAsync(profileImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
+          const manipulatedImage = await ImageManipulator.manipulateAsync(
+            profileImage,
+            [{ resize: { width: 300 } }],
+            { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+          );
+
+          const byteArray = await fetch(manipulatedImage.uri)
+            .then((response) => response.arrayBuffer())
+            .then((arrayBuffer) => new Uint8Array(arrayBuffer));
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "users/profile-pic-presigned/" + updatedUser.userId)
             .then(async (response2) => {
-              console.log(response2.data);
+              const indexOfQuestionMark = response2.data.uploadURL.indexOf('?');
+              profilePic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
+              dispatch(setUserInfo({
+                newPost: false,
+                userId: updatedUser.userId,
+                age: updatedUser.age,
+                blockedUsers: updatedUser.blockedUsers,
+                email: updatedUser.email,
+                eventsGoingTo: updatedUser.eventsGoingTo,
+                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                eventsOwned: updatedUser.eventsOwned,
+                eventsSaved: updatedUser.eventsSaved,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                friends: updatedUser.friends,
+                groups: updatedUser.groups,
+                interests: updatedUser.interests,
+                messages: updatedUser.messages,
+                primaryLocation: updatedUser.primaryLocation,
+                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                bio: updatedUser.bio,
+                requests: updatedUser.requests
+              }));
               console.log("Succesfully received pre-signed URL")
               try {
-                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
-                   'Content-Type': "image/jpeg"
-                });
+                const response3 = await axios.put(
+                  response2.data.uploadURL,
+                  byteArray,
+                  {
+                    headers: {
+                      "Content-Type": "image/jpeg",
+                    },
+                  }
+                );
                 if (response3.status === 200) {
                   console.log("Successfully added profile picture url");
                 } else {
@@ -166,18 +201,53 @@ const EditProfile = ({ navigation }) => {
             return;
           }
 
-          const fileBase64 = await FileSystem.readAsStringAsync(bannerImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });
+          const manipulatedImage = await ImageManipulator.manipulateAsync(
+            bannerImage,
+            [{ resize: { width: 300 } }],
+            { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+          );
+
+          const byteArray = await fetch(manipulatedImage.uri)
+            .then((response) => response.arrayBuffer())
+            .then((arrayBuffer) => new Uint8Array(arrayBuffer));
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "users/banner-image-presigned/" + updatedUser.userId)
             .then(async (response2) => {
-              console.log(response2.data);
+              const indexOfQuestionMark = response2.data.uploadURL.indexOf('?');
+              bannerPic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
+              dispatch(setUserInfo({
+                newPost: false,
+                userId: updatedUser.userId,
+                age: updatedUser.age,
+                blockedUsers: updatedUser.blockedUsers,
+                email: updatedUser.email,
+                eventsGoingTo: updatedUser.eventsGoingTo,
+                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                eventsOwned: updatedUser.eventsOwned,
+                eventsSaved: updatedUser.eventsSaved,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                friends: updatedUser.friends,
+                groups: updatedUser.groups,
+                interests: updatedUser.interests,
+                messages: updatedUser.messages,
+                primaryLocation: updatedUser.primaryLocation,
+                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                bio: updatedUser.bio,
+                requests: updatedUser.requests
+              }));
               console.log("Succesfully received pre-signed URL")
               try {
-                const response3 = await axios.put(response2.data.uploadURL, fileBase64, {
-                   'Content-Type': "image/jpeg"
-                });
+                const response3 = await axios.put(
+                  response2.data.uploadURL,
+                  byteArray,
+                  {
+                    headers: {
+                      "Content-Type": "image/jpeg",
+                    },
+                  }
+                );
                 if (response3.status === 200) {
                   console.log("Successfully added banner picture url");
                 } else {
@@ -212,13 +282,6 @@ const EditProfile = ({ navigation }) => {
         console.log("An error occured for updating user. Please try again");
     }
   };
-
-//   console.log(firstName, lastName)
-//   console.log(interests)
-//   console.log(age)
-//   console.log(bio)
-//   console.log(location)
-//   console.log(user.userId)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -255,26 +318,31 @@ const EditProfile = ({ navigation }) => {
         <View style={styles.sectionContainer}> 
             <Text style={styles.label}>Edit Profile and Banner</Text>
             <View style={styles.centerContainer}>
-                <View style={styles.image}>
-                    <TouchableOpacity onPress={handleProfileUpload}>
-                        {!profileImage ?
-                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                        :
-                        <ImageBackground style={styles.image} source={{uri: profileImage}} />
-                        }
-                    </TouchableOpacity>
-                    <Text style={{ marginBottom: 2 }}>Profile</Text>
+                
+
+                <View style={{alignItems: 'center'}}>
+                  <View style={styles.image}>
+                      <TouchableOpacity onPress={handleProfileUpload}>
+                          <ImageBackground style={styles.image} source={{uri: profileImage}}>
+                          <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                          </ImageBackground>
+                      </TouchableOpacity>
+                      
                   </View>
+                  <Text style={{ fontWeight:'700', fontSize: 16, marginTop: 6  }}>Profile</Text>
+                </View>
+
+                <View style={{alignItems: 'center'}}>
                   <View style={styles.image}>
                     <TouchableOpacity onPress={handleBannerUpload}>
-                        {!bannerImage ?
-                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                        :
-                        <ImageBackground style={styles.image} source={{uri: bannerImage}} />
-                        }
+                        <ImageBackground style={styles.image} source={{uri: bannerImage}}>
+                          <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                        </ImageBackground>
                     </TouchableOpacity>
-                    <Text style={{ marginBottom: 2 }}>Banner</Text>
                 </View>
+                <Text style={{ fontWeight:'700', fontSize: 16, marginTop: 6 }}>Banner</Text>
+              </View>
+
             </View>
         </View>
 
@@ -413,7 +481,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 70,
+    paddingHorizontal: 40,
     paddingBottom: 10,
   },
   sectionContainer: {

@@ -72,7 +72,7 @@ const Post = (props) => {
         .catch((error) => {
             console.log(error);
         });
-    }, [newPost, user.friends]);
+    }, [newPost, user?.friends || []]);
 
     return (
         <View>
@@ -116,10 +116,10 @@ const Post = (props) => {
                 </View>
                 ))}
             </Swiper>
-            <TouchableOpacity onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '65%'}}>
+            <TouchableOpacity testID="left-touchable" onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '65%'}}>
                 {/* Left 1/3 of the screen is a touchable area for moving to the previous slide */}
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%'}}>
+            <TouchableOpacity testID="right-touchable" onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%'}}>
                 {/* Right 1/3 of the screen is a touchable area for moving to the next slide */}
             </TouchableOpacity>
 

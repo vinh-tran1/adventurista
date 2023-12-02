@@ -1,26 +1,42 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
 
 const EventCard = (props) => {
 
-  const { attending } = props;
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
+  const { event } = props;
   const navigation = useNavigation();
+  const[poster, setPoster] = useState("");
+  console.log("event card:", event)
+
+  useEffect(() => {
+    // console.log(user.userId)
+    axios.get(API_URL + event.postingUserId) 
+    .then((response) => {
+        //setUserName(response.data.firstName);
+        setPoster(response.data);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}, [event || []]);
 
   return (
     <TouchableOpacity onPress={() => navigation.navigate("Event Details")}>
-      <ImageBackground source={{uri: "https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg"}} style={styles.container}>
+      <ImageBackground source={{uri: event.eventPictureUrl}} style={styles.container}>
           <View style={styles.postHeader}>
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                  <Text style={{fontSize: 18, fontWeight: "bold", marginTop: 2.5}}>Hallowoads</Text>
+                  <Text style={{fontSize: 18, fontWeight: "bold", marginTop: 2.5}}>{event.title}</Text>
                   <TouchableOpacity>
                       <FontAwesomeIcon style={{ marginTop: 5, marginRight: 5 }} icon="fa-right-from-bracket" size={20} />
                   </TouchableOpacity>
               </View>
               <View style={styles.locationContainer}>
                   <FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={15} />
-                  <Text style={{ fontWeight: "bold", fontSize: 12 }}>300 York St. New Haven</Text>
+                  <Text style={{ fontWeight: "bold", fontSize: 12 }}>{event.location}</Text>
               </View>
           </View>
           <View style={styles.bottomContent}>
@@ -30,13 +46,13 @@ const EventCard = (props) => {
                           <View style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 25, height: 25 }}>
                               <FontAwesomeIcon style={{ marginLeft: 6, marginTop: 5 }} icon="user" size={13} />
                           </View>
-                          <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24 others</Text>
+                          <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+ {event?.whoIsGoing?.length || 0} Others</Text>
                       </View>
-                      <Text style={{ fontSize: 12, color: "white", fontWeight: "bold" }}>by Vinh</Text>
+                      <Text style={{ fontSize: 12, color: "white", fontWeight: "bold" }}>by {poster.firstName}</Text>
                   </View>
                   <View style={{ marginTop: 5 }}>
-                      <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>Wed, Oct 25</Text>
-                      <Text style={{ color: "white", textAlign: "center", fontSize: 13 }}>10:30 PM</Text>
+                      <Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}>{event.date}</Text>
+                      <Text style={{ color: "white", textAlign: "center", fontSize: 13 }}>{event.time}</Text>
                   </View>
               </View>
           </View>

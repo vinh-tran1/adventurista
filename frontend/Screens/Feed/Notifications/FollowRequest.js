@@ -95,10 +95,10 @@ const FollowRequest = ({ requesterId }) => {
             <Text style={{ fontWeight: "bold", fontSize: 18, marginTop: 12.5, marginLeft: 12.5 }}>{requester.firstName} {requester.lastName}</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={styles.button} onPress={handleAcceptFriend}>
+            <TouchableOpacity testID="acceptFriendButton" style={styles.button} onPress={handleAcceptFriend}>
                 <FontAwesomeIcon style={{ marginLeft: 6, marginTop: 7 }} icon="fa-check" size={25} color="#D186FF"/>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={handleDenyFriend}>
+            <TouchableOpacity testID="denyFriendButton" style={styles.button} onPress={handleDenyFriend}>
                 <FontAwesomeIcon style={{ marginLeft: 6, marginTop: 7 }} icon="fa-xmark" size={25} />
             </TouchableOpacity>
         </View>

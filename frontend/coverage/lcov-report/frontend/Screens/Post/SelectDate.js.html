@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -123,20 +123,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,11 +141,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,14 +179,14 @@
 import {View, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 &nbsp;
-const SelectDate = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> title, data, func }) =&gt; {</span>
+const SelectDate = ({ title, data, func }) =&gt; {
   
-  const handleSelection = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>electedItem) =&gt; {</span>
+  const handleSelection = <span class="fstat-no" title="function not covered" >(s</span>electedItem) =&gt; {
 <span class="cstat-no" title="statement not covered" >        func(selectedItem);</span>
       };
       
-<span class="cstat-no" title="statement not covered" >    return (</span>
-        &lt;View style={styles.dropdownsRow}&gt;
+    return (
+        &lt;View testID='select-date-button' style={styles.dropdownsRow}&gt;
              &lt;SelectDropdown
                 data={data}
                 onSelect={handleSelection}
@@ -196,8 +196,8 @@ const SelectDate = <span class="cstat-no" title="statement not covered" ><span c
                 }}
                 buttonStyle={styles.dropdown1BtnStyle}
                 buttonTextStyle={styles.dropdown1BtnTxtStyle}
-                renderDropdownIcon={<span class="fstat-no" title="function not covered" >is</span>Opened =&gt; {
-<span class="cstat-no" title="statement not covered" >                    return &lt;FontAwesomeIcon icon={isOpened ? 'chevron-up' : 'chevron-down'} color={'#D186FF'} size={14} /&gt;;</span>
+                renderDropdownIcon={isOpened =&gt; {
+                    return &lt;FontAwesomeIcon icon={isOpened ? <span class="branch-0 cbranch-no" title="branch not covered" >'chevron-up' </span>: 'chevron-down'} color={'#D186FF'} size={14} /&gt;;
                 }}
                 dropdownIconPosition={'right'}
                 dropdownStyle={styles.dropdown1DropdownStyle}
@@ -206,7 +206,7 @@ const SelectDate = <span class="cstat-no" title="statement not covered" ><span c
     );
 }
 &nbsp;
-const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
+const styles = StyleSheet.create({
     dropdownsRow: {
         flexDirection: 'row', 
         width: 90,
@@ -238,7 +238,7 @@ export default SelectDate;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-30T00:06:53.928Z
+                at 2023-12-02T05:15:43.571Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

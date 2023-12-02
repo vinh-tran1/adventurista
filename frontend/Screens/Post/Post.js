@@ -4,6 +4,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, Tex
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
@@ -32,7 +33,7 @@ const Post = ({ navigation }) => {
 
   const tags1 = [
     'catan', 'paddle', 'drinks', 'social',
-    'drives', 'school', 'student', 'energy',
+    'drives', 'school', 'study', 'energy',
     'beach', 'hike', 'food', 'squash',
     'cs', 'games', 'dinner', 'apps'
   ];
@@ -153,7 +154,6 @@ const Post = ({ navigation }) => {
   const handlePost = async () => {
 
     try {
-      // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
       const response = await axios.post(API_URL, {
         title: eventName,
         description: caption,
@@ -161,7 +161,8 @@ const Post = ({ navigation }) => {
         time: time,
         location: location,
         postingUserId: user.userId,
-        tags: selectTags
+        tags: selectTags,
+        metricsId: "small"
       });
       if (response.status === 201) {
         const updatedUser = response.data.user;
@@ -175,22 +176,24 @@ const Post = ({ navigation }) => {
             return;
           }
 
-          var fs = require("fs");
-          const imageFile = fs.readFileSync(selectedImage);
-
-          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });*/
+          const manipulatedImage = await ImageManipulator.manipulateAsync(
+            selectedImage,
+            [{ resize: { width: 300 } }],
+            { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+          );
+    
+          const byteArray = await fetch(manipulatedImage.uri)
+            .then((response) => response.arrayBuffer())
+            .then((arrayBuffer) => new Uint8Array(arrayBuffer));
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
               console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
               try {
-                // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
                 const response3 = await axios.put(
                   response2.data.uploadURL,
-                  imageFile,
+                  byteArray,
                   {
                     headers: {
                       "Content-Type": "image/jpeg",
@@ -255,7 +258,7 @@ const Post = ({ navigation }) => {
 
           <Text style={{ fontSize: 20, fontWeight: "600" }}>Event Details</Text>
 
-          <TouchableOpacity onPress={handlePost} style={styles.navButton}>
+          <TouchableOpacity testID="upload" onPress={handlePost} style={styles.navButton}>
             <Text style={styles.navButton}>Post</Text>
           </TouchableOpacity>
         </View>

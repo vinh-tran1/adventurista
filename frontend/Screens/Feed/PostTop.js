@@ -15,7 +15,7 @@ const PostTop = (props) => {
     const fake_img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
 
     return (
-        <ImageBackground source={{uri: fake_img}} style={styles.postTop}>
+        <ImageBackground source={{uri: img}} style={styles.postTop}>
             <View style={styles.postHeader}>
                 <Text style={{fontSize: 28, fontWeight: "bold"}}>{title}</Text>
                 <View style={styles.locationContainer}>
@@ -28,6 +28,7 @@ const PostTop = (props) => {
                     <View style={{ backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
                         <View style={{ flexDirection: "row"}}>
                             <TouchableOpacity 
+                                testID="view-profile-button"
                                 style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}
                                 onPress={handleViewProfile}
                             >

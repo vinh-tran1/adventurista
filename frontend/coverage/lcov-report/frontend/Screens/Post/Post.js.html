@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/111</span>
+                <span class='fraction'>0/114</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/108</span>
+                <span class='fraction'>0/111</span>
             </div>
         
             
@@ -516,7 +516,19 @@
 <a name='L451'></a><a href='#L451'>451</a>
 <a name='L452'></a><a href='#L452'>452</a>
 <a name='L453'></a><a href='#L453'>453</a>
-<a name='L454'></a><a href='#L454'>454</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L454'></a><a href='#L454'>454</a>
+<a name='L455'></a><a href='#L455'>455</a>
+<a name='L456'></a><a href='#L456'>456</a>
+<a name='L457'></a><a href='#L457'>457</a>
+<a name='L458'></a><a href='#L458'>458</a>
+<a name='L459'></a><a href='#L459'>459</a>
+<a name='L460'></a><a href='#L460'>460</a>
+<a name='L461'></a><a href='#L461'>461</a>
+<a name='L462'></a><a href='#L462'>462</a>
+<a name='L463'></a><a href='#L463'>463</a>
+<a name='L464'></a><a href='#L464'>464</a>
+<a name='L465'></a><a href='#L465'>465</a>
+<a name='L466'></a><a href='#L466'>466</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -528,6 +540,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -671,7 +684,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -681,6 +693,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -697,13 +710,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -975,6 +999,7 @@ import { StyleSheet, Text, SafeAreaView, ScrollView, View, TouchableOpacity, Tex
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from 'expo-file-system';
+import * as ImageManipulator from 'expo-image-manipulator';
 import SelectDate from "./SelectDate";
 import Tags from "./Tags";
 // Redux
@@ -1003,7 +1028,7 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
 &nbsp;
   const tags1 = <span class="cstat-no" title="statement not covered" >[</span>
     'catan', 'paddle', 'drinks', 'social',
-    'drives', 'school', 'student', 'energy',
+    'drives', 'school', 'study', 'energy',
     'beach', 'hike', 'food', 'squash',
     'cs', 'games', 'dinner', 'apps'
   ];
@@ -1124,7 +1149,6 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
   const handlePost = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
-      // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
       const response = <span class="cstat-no" title="statement not covered" >await axios.post(API_URL, {</span>
         title: eventName,
         description: caption,
@@ -1132,7 +1156,8 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
         time: time,
         location: location,
         postingUserId: user.userId,
-        tags: selectTags
+        tags: selectTags,
+        metricsId: "small"
       });
 <span class="cstat-no" title="statement not covered" >      if (response.status === 201) {</span>
         const updatedUser = <span class="cstat-no" title="statement not covered" >response.data.user;</span>
@@ -1146,19 +1171,30 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
 <span class="cstat-no" title="statement not covered" >            return;</span>
           }
 &nbsp;
-          const fileBase64 = <span class="cstat-no" title="statement not covered" >await FileSystem.readAsStringAsync(selectedImage, {</span>
-            encoding: FileSystem.EncodingType.Base64,
-          });
+          const manipulatedImage = <span class="cstat-no" title="statement not covered" >await ImageManipulator.manipulateAsync(</span>
+            selectedImage,
+            [{ resize: { width: 300 } }],
+            { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+          );
+    
+          const byteArray = <span class="cstat-no" title="statement not covered" >await fetch(manipulatedImage.uri)</span>
+            .then(<span class="fstat-no" title="function not covered" >(r</span>esponse) =&gt; <span class="cstat-no" title="statement not covered" >response.arrayBuffer())</span>
+            .then(<span class="fstat-no" title="function not covered" >(a</span>rrayBuffer) =&gt; <span class="cstat-no" title="statement not covered" >new Uint8Array(arrayBuffer))</span>;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >          axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)</span>
             .then(<span class="fstat-no" title="function not covered" >as</span>ync (response2) =&gt; {
 <span class="cstat-no" title="statement not covered" >              console.log(response2.data);</span>
 <span class="cstat-no" title="statement not covered" >              console.log("Succesfully received pre-signed URL")</span>
 <span class="cstat-no" title="statement not covered" >              try {</span>
-                // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
-                const response3 = <span class="cstat-no" title="statement not covered" >await axios.put(response2.data.uploadURL, {</span>
-                  data: fileBase64,
-                });
+                const response3 = <span class="cstat-no" title="statement not covered" >await axios.put(</span>
+                  response2.data.uploadURL,
+                  byteArray,
+                  {
+                    headers: {
+                      "Content-Type": "image/jpeg",
+                    },
+                  }
+                );
 <span class="cstat-no" title="statement not covered" >                if (response3.status === 200) {</span>
 <span class="cstat-no" title="statement not covered" >                  console.log("Successfully added picture url to event");</span>
                 } else {
@@ -1217,7 +1253,7 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
 &nbsp;
           &lt;Text style={{ fontSize: 20, fontWeight: "600" }}&gt;Event Details&lt;/Text&gt;
 &nbsp;
-          &lt;TouchableOpacity onPress={handlePost} style={styles.navButton}&gt;
+          &lt;TouchableOpacity testID="upload" onPress={handlePost} style={styles.navButton}&gt;
             &lt;Text style={styles.navButton}&gt;Post&lt;/Text&gt;
           &lt;/TouchableOpacity&gt;
         &lt;/View&gt;
@@ -1429,7 +1465,7 @@ export default Post;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-30T00:06:53.928Z
+                at 2023-12-02T05:15:43.571Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

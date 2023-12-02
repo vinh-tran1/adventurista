@@ -13,9 +13,10 @@ const PostBottom = (props) => {
     const { caption, tags, eventId } = props;
 
     const user = useSelector(selectUserInfo);
+    const dispatch = useDispatch();
 
-    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event'
-    const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId
+    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event';
+    const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId;
 
     const handleAttendEvent = async () => {
         try {
@@ -27,10 +28,10 @@ const PostBottom = (props) => {
             const updatedUser = response.data;
             console.log(updatedUser.eventsGoingTo);
 
-            // dispatch(setUserInfo({
-            //   newPost: false,
-            //   ...updatedUser
-            // }));
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
 
             console.log("Successfully added event to your calendar");
           } else {
@@ -48,12 +49,12 @@ const PostBottom = (props) => {
           if (response.status === 200) {
 
             const updatedUser = response.data;
-            console.log(updatedUser.eventsSaved);
+            console.log("events saved", updatedUser.eventsSaved);
 
-            // dispatch(setUserInfo({
-            //   newPost: false,
-            //   ...updatedUser
-            // }));
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
 
             console.log("Successfully saved event to your saved events list");
           } else {
@@ -76,10 +77,10 @@ const PostBottom = (props) => {
                     })}
                 </View>
                 <View style={{ flexDirection: "row", marginTop: 12.5 }}>
-                    <TouchableOpacity style={{ marginRight: 12.5 }} onPress={handleAttendEvent}>
+                    <TouchableOpacity testID="attend-button" style={{ marginRight: 12.5 }} onPress={handleAttendEvent}>
                         <FontAwesomeIcon color={"#717171"} icon="calendar-plus" size={25} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginTop: 1.5 }} onPress={handleSaveEvent}>
+                    <TouchableOpacity testID="save-button" style={{ marginTop: 1.5 }} onPress={handleSaveEvent}>
                         <FontAwesomeIcon  color={"#717171"} icon="bookmark" size={24} />
                     </TouchableOpacity>
                 </View>

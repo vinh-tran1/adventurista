@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">15.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>2/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">15.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/6</span>
+                <span class='fraction'>2/13</span>
             </div>
         
             
@@ -138,7 +138,24 @@
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
 <a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,6 +164,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -214,28 +246,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from '@react-navigation/native';
 &nbsp;
 const EventCard = <span class="fstat-no" title="function not covered" >(p</span>rops) =&gt; {
 &nbsp;
-  const { attending } = <span class="cstat-no" title="statement not covered" >props;</span>
+  const API_URL = <span class="cstat-no" title="statement not covered" >process.env.REACT_APP_AWS_API_URL + 'users/';</span>
+  const { event } = <span class="cstat-no" title="statement not covered" >props;</span>
   const navigation = <span class="cstat-no" title="statement not covered" >useNavigation();</span>
+  const[poster, setPoster] = <span class="cstat-no" title="statement not covered" >useState("");</span>
+<span class="cstat-no" title="statement not covered" >  console.log("event card:", event)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    // console.log(user.userId)
+<span class="cstat-no" title="statement not covered" >    axios.get(API_URL + event.postingUserId) </span>
+    .then(<span class="fstat-no" title="function not covered" >(r</span>esponse) =&gt; {
+        //setUserName(response.data.firstName);
+<span class="cstat-no" title="statement not covered" >        setPoster(response.data);</span>
+    })
+    .catch(<span class="fstat-no" title="function not covered" >(e</span>rror) =&gt; {
+<span class="cstat-no" title="statement not covered" >        console.log(error);</span>
+    });
+}, [event || []]);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;TouchableOpacity onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigation.navigate("Event Details")}</span>&gt;
-      &lt;ImageBackground source={{uri: "https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg"}} style={styles.container}&gt;
+      &lt;ImageBackground source={{uri: event.eventPictureUrl}} style={styles.container}&gt;
           &lt;View style={styles.postHeader}&gt;
               &lt;View style={{ flexDirection: "row", justifyContent: "space-between" }}&gt;
-                  &lt;Text style={{fontSize: 18, fontWeight: "bold", marginTop: 2.5}}&gt;Hallowoads&lt;/Text&gt;
+                  &lt;Text style={{fontSize: 18, fontWeight: "bold", marginTop: 2.5}}&gt;{event.title}&lt;/Text&gt;
                   &lt;TouchableOpacity&gt;
                       &lt;FontAwesomeIcon style={{ marginTop: 5, marginRight: 5 }} icon="fa-right-from-bracket" size={20} /&gt;
                   &lt;/TouchableOpacity&gt;
               &lt;/View&gt;
               &lt;View style={styles.locationContainer}&gt;
                   &lt;FontAwesomeIcon style={{ marginRight: 5 }} color={"#D186FF"} icon="location-dot" size={15} /&gt;
-                  &lt;Text style={{ fontWeight: "bold", fontSize: 12 }}&gt;300 York St. New Haven&lt;/Text&gt;
+                  &lt;Text style={{ fontWeight: "bold", fontSize: 12 }}&gt;{event.location}&lt;/Text&gt;
               &lt;/View&gt;
           &lt;/View&gt;
           &lt;View style={styles.bottomContent}&gt;
@@ -245,13 +293,13 @@ const EventCard = <span class="fstat-no" title="function not covered" >(p</span>
                           &lt;View style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 25, height: 25 }}&gt;
                               &lt;FontAwesomeIcon style={{ marginLeft: 6, marginTop: 5 }} icon="user" size={13} /&gt;
                           &lt;/View&gt;
-                          &lt;Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}&gt;+24 others&lt;/Text&gt;
+                          &lt;Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}&gt;+ {event?.whoIsGoing?.length || 0} Others&lt;/Text&gt;
                       &lt;/View&gt;
-                      &lt;Text style={{ fontSize: 12, color: "white", fontWeight: "bold" }}&gt;by Vinh&lt;/Text&gt;
+                      &lt;Text style={{ fontSize: 12, color: "white", fontWeight: "bold" }}&gt;by {poster.firstName}&lt;/Text&gt;
                   &lt;/View&gt;
                   &lt;View style={{ marginTop: 5 }}&gt;
-                      &lt;Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}&gt;Wed, Oct 25&lt;/Text&gt;
-                      &lt;Text style={{ color: "white", textAlign: "center", fontSize: 13 }}&gt;10:30 PM&lt;/Text&gt;
+                      &lt;Text style={{ color: "white", fontWeight: "bold", fontSize: 16 }}&gt;{event.date}&lt;/Text&gt;
+                      &lt;Text style={{ color: "white", textAlign: "center", fontSize: 13 }}&gt;{event.time}&lt;/Text&gt;
                   &lt;/View&gt;
               &lt;/View&gt;
           &lt;/View&gt;
@@ -295,7 +343,7 @@ export default EventCard;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-11-30T00:06:53.928Z
+                at 2023-12-02T05:15:43.571Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
