@@ -21,7 +21,7 @@ const MyGroups = ({ groupId, poster }) => {
         console.log(error);
         console.log("cannot get event going to")
     });
-  }, [poster]);
+  }, [poster?.eventsGoingTo || []]);
 
   return (
     <View style={styles.container}>

@@ -25,7 +25,7 @@ const Calendar = () => {
         console.log("getting attending events failed")
         console.log(error);
       });
-  }, [user.eventsGoingTo]);
+  }, [user?.eventsGoingTo || []]);
 
   return (
     <SafeAreaView style={styles.container}>

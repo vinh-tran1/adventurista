@@ -77,12 +77,12 @@ const AttendingUser = ({ userId, ownerId, navigation }) => {
             </TouchableOpacity> 
           }
           {isFriend && 
-            <View style={{ width: 70, backgroundColor: '#D186FF', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 2, borderColor: '#EDDBFF', justifyContent: 'center'}}>
+            <View style={{ width: 75, backgroundColor: '#D186FF', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 2, borderColor: '#EDDBFF', justifyContent: 'center'}}>
               <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '600', color: 'white'}}>friends</Text>
             </View>
           }
           {(!isSamePerson && requested) &&
-            <View style={{ width: 70, backgroundColor: '#B3B3B3', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 2, borderColor: '#D186FF', justifyContent: 'center'}}>
+            <View style={{ width: 75, backgroundColor: '#B3B3B3', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 2, borderColor: '#D186FF', justifyContent: 'center'}}>
               <Text style={{ textAlign: 'center', fontSize: 14, fontWeight: '600', color: 'white'}}>pending</Text>
             </View>
           }

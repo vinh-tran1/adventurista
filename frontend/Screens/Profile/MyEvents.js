@@ -24,7 +24,7 @@ const MyEvents = ({ eventId }) => {
       console.log("my event error")
       console.log(error);
     });
-  }, [user])
+  }, [user?.eventsOwned || []])
 
 
   return (

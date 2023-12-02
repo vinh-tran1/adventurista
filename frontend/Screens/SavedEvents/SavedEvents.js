@@ -24,7 +24,7 @@ const SavedEvents = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [user.eventsSaved]);
+  }, [user?.eventsSaved || []]);
 
   return (
     <SafeAreaView style={styles.container}>

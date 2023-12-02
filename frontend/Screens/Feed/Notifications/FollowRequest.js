@@ -12,7 +12,6 @@ const FollowRequest = ({ requesterId }) => {
   const API_URL_POST_ACCEPT = process.env.REACT_APP_AWS_API_URL + 'users/friend-request/accept';
   const API_URL_POST_DENY = process.env.REACT_APP_AWS_API_URL + 'users/friend-request/deny';
   const [requester, setRequester] = useState("");
-  const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY';
   const user = useSelector(selectUserInfo);
   const dispatch = useDispatch();
 
@@ -27,7 +26,7 @@ const FollowRequest = ({ requesterId }) => {
         console.log(error);
     });
 
-  }, [user, dispatch]);
+  }, [user?.reqests?.incoming || []]);
 
   // console.log(requester.userId, requester.firstName);
   // console.log(user.userId, user.firstName)
@@ -91,7 +90,7 @@ const FollowRequest = ({ requesterId }) => {
   return (
     <TouchableOpacity style={styles.request}>
         <View style={{ flexDirection: "row" }}>
-            <Image source={{uri: profilePic}} style={styles.profilePic}/>
+            <Image source={{uri: requester.profilePictureUrl }} style={styles.profilePic}/>
             <Text style={{ fontWeight: "bold", fontSize: 18, marginTop: 12.5, marginLeft: 12.5 }}>{requester.firstName} {requester.lastName}</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
