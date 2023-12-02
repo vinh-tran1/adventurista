@@ -136,7 +136,9 @@ docker run -p 80:80 --name adventurista ts-adventurista
 4. To test a component, view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
 5. To test a function, view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
 
-Image Of Coverage Here
+**Coverage:** 
+
+<img src="frontend/assets/coverage_table.png" />
 
 ### Backend (Jest)
 
