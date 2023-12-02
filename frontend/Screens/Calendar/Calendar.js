@@ -4,10 +4,10 @@ import axios from 'axios';
 import EventCard from "../../Shared/EventCard";
 
 // Redux
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo } from '../../Redux/userSlice';
 
-const Calendar = () => {
+const Calendar = ({ navigation }) => {
 
   const user = useSelector(selectUserInfo);
 
@@ -38,7 +38,7 @@ const Calendar = () => {
           { attending.length > 0 ?
             attending.map((eventObj, index) => {
             return (
-              <EventCard key={index} event={eventObj} privacy={false}/>
+              <EventCard key={index} event={eventObj} privacy={false} navigation={navigation}/>
             )
             })
             :

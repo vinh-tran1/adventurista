@@ -36,7 +36,7 @@ const FriendProfileView = ({ navigation, route }) => {
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
     setViewDimensions({ width, height });
-  }, [poster.profilePictureUrl, poster.bannerImageUrl]);
+  }, []);
 
   console.log(poster.profilePictureUrl + '\n' +  poster.bannerImageUrl)
 
@@ -161,10 +161,10 @@ const FriendProfileView = ({ navigation, route }) => {
       {/* profile banner */}
       <View>
       {/* top half */}
-          <ImageBackground source={{uri: poster.bannerImageUrl}} style={styles.imageBanner}>
+          <ImageBackground testID="banner-pic"  source={{uri: poster.bannerImageUrl}} style={styles.imageBanner}>
           <View style={{position: 'absolute', top: viewDimensions.height * .03}}>
               <View style={{ left: viewDimensions.width * 0.045 }}>
-                <Image source={{uri: poster.profilePictureUrl}} style={styles.profilePic}/>
+                <Image testID="profile-pic" source={{uri: poster.profilePictureUrl}} style={styles.profilePic}/>
               </View>
               <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.065 }]}>
                 <Bubble value={poster?.eventsOwned?.length || 0} name={'Events'}/>
@@ -255,7 +255,7 @@ const FriendProfileView = ({ navigation, route }) => {
                 { (poster?.eventsOwned || []).length > 0 ?
                     poster.eventsOwned.map((eventId, index) => {
                     return (
-                      <MyEvents key={index} eventId={eventId}/>
+                      <MyEvents key={index} eventId={eventId} navigation={navigation}/>
                     )
                     })
                     :

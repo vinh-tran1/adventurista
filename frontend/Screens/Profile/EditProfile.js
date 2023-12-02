@@ -143,25 +143,27 @@ const EditProfile = ({ navigation }) => {
               profilePic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
               dispatch(setUserInfo({
                 newPost: false,
-                userId: updatedUser.userId,
-                age: updatedUser.age,
-                blockedUsers: updatedUser.blockedUsers,
-                email: updatedUser.email,
-                eventsGoingTo: updatedUser.eventsGoingTo,
-                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                eventsOwned: updatedUser.eventsOwned,
-                eventsSaved: updatedUser.eventsSaved,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                friends: updatedUser.friends,
-                groups: updatedUser.groups,
-                interests: updatedUser.interests,
-                messages: updatedUser.messages,
-                primaryLocation: updatedUser.primaryLocation,
-                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                bio: updatedUser.bio,
-                requests: updatedUser.requests
+                profilePictureUrl: profilePic ? profilePic : updatedUser.profilePictureUrl,
+                ...updatedUser
+                // userId: updatedUser.userId,
+                // age: updatedUser.age,
+                // blockedUsers: updatedUser.blockedUsers,
+                // email: updatedUser.email,
+                // eventsGoingTo: updatedUser.eventsGoingTo,
+                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                // eventsOwned: updatedUser.eventsOwned,
+                // eventsSaved: updatedUser.eventsSaved,
+                // firstName: updatedUser.firstName,
+                // lastName: updatedUser.lastName,
+                // friends: updatedUser.friends,
+                // groups: updatedUser.groups,
+                // interests: updatedUser.interests,
+                // messages: updatedUser.messages,
+                // primaryLocation: updatedUser.primaryLocation,
+                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                // bio: updatedUser.bio,
+                // requests: updatedUser.requests
               }));
               console.log("Succesfully received pre-signed URL")
               try {
@@ -217,25 +219,27 @@ const EditProfile = ({ navigation }) => {
               bannerPic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
               dispatch(setUserInfo({
                 newPost: false,
-                userId: updatedUser.userId,
-                age: updatedUser.age,
-                blockedUsers: updatedUser.blockedUsers,
-                email: updatedUser.email,
-                eventsGoingTo: updatedUser.eventsGoingTo,
-                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                eventsOwned: updatedUser.eventsOwned,
-                eventsSaved: updatedUser.eventsSaved,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                friends: updatedUser.friends,
-                groups: updatedUser.groups,
-                interests: updatedUser.interests,
-                messages: updatedUser.messages,
-                primaryLocation: updatedUser.primaryLocation,
-                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                bio: updatedUser.bio,
-                requests: updatedUser.requests
+                bannerImageUrl: bannerImage ? bannerImage : updatedUser.bannerImageUrl,
+                ...updatedUser
+                // userId: updatedUser.userId,
+                // age: updatedUser.age,
+                // blockedUsers: updatedUser.blockedUsers,
+                // email: updatedUser.email,
+                // eventsGoingTo: updatedUser.eventsGoingTo,
+                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                // eventsOwned: updatedUser.eventsOwned,
+                // eventsSaved: updatedUser.eventsSaved,
+                // firstName: updatedUser.firstName,
+                // lastName: updatedUser.lastName,
+                // friends: updatedUser.friends,
+                // groups: updatedUser.groups,
+                // interests: updatedUser.interests,
+                // messages: updatedUser.messages,
+                // primaryLocation: updatedUser.primaryLocation,
+                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                // bio: updatedUser.bio,
+                // requests: updatedUser.requests
               }));
               console.log("Succesfully received pre-signed URL")
               try {

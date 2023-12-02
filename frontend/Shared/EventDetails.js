@@ -84,7 +84,7 @@ const EventDetails = ({ navigation, route }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 }}>
                 <Text style={styles.subheaderText}>Attending ({event.whoIsGoing.length})</Text>
                 {!isAttending ? 
-                <TouchableOpacity onPress={handleAttendEvent}>
+                <TouchableOpacity testID="attendButton" onPress={handleAttendEvent}>
                     <FontAwesomeIcon  color={'#4b3654'} icon="calendar-plus" size={25} />
                 </TouchableOpacity>
                 :

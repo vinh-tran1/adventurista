@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/50</span>
+                <span class='fraction'>0/46</span>
             </div>
         
             
@@ -602,7 +602,11 @@
 <a name='L537'></a><a href='#L537'>537</a>
 <a name='L538'></a><a href='#L538'>538</a>
 <a name='L539'></a><a href='#L539'>539</a>
-<a name='L540'></a><a href='#L540'>540</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L540'></a><a href='#L540'>540</a>
+<a name='L541'></a><a href='#L541'>541</a>
+<a name='L542'></a><a href='#L542'>542</a>
+<a name='L543'></a><a href='#L543'>543</a>
+<a name='L544'></a><a href='#L544'>544</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -767,6 +771,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -820,6 +826,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1286,25 +1294,27 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              profilePic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);</span>
 <span class="cstat-no" title="statement not covered" >              dispatch(setUserInfo({</span>
                 newPost: false,
-                userId: updatedUser.userId,
-                age: updatedUser.age,
-                blockedUsers: updatedUser.blockedUsers,
-                email: updatedUser.email,
-                eventsGoingTo: updatedUser.eventsGoingTo,
-                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                eventsOwned: updatedUser.eventsOwned,
-                eventsSaved: updatedUser.eventsSaved,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                friends: updatedUser.friends,
-                groups: updatedUser.groups,
-                interests: updatedUser.interests,
-                messages: updatedUser.messages,
-                primaryLocation: updatedUser.primaryLocation,
-                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                bio: updatedUser.bio,
-                requests: updatedUser.requests
+                profilePictureUrl: profilePic ? profilePic : updatedUser.profilePictureUrl,
+                ...updatedUser
+                // userId: updatedUser.userId,
+                // age: updatedUser.age,
+                // blockedUsers: updatedUser.blockedUsers,
+                // email: updatedUser.email,
+                // eventsGoingTo: updatedUser.eventsGoingTo,
+                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                // eventsOwned: updatedUser.eventsOwned,
+                // eventsSaved: updatedUser.eventsSaved,
+                // firstName: updatedUser.firstName,
+                // lastName: updatedUser.lastName,
+                // friends: updatedUser.friends,
+                // groups: updatedUser.groups,
+                // interests: updatedUser.interests,
+                // messages: updatedUser.messages,
+                // primaryLocation: updatedUser.primaryLocation,
+                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                // bio: updatedUser.bio,
+                // requests: updatedUser.requests
               }));
 <span class="cstat-no" title="statement not covered" >              console.log("Succesfully received pre-signed URL")</span>
 <span class="cstat-no" title="statement not covered" >              try {</span>
@@ -1360,25 +1370,27 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
 <span class="cstat-no" title="statement not covered" >              bannerPic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);</span>
 <span class="cstat-no" title="statement not covered" >              dispatch(setUserInfo({</span>
                 newPost: false,
-                userId: updatedUser.userId,
-                age: updatedUser.age,
-                blockedUsers: updatedUser.blockedUsers,
-                email: updatedUser.email,
-                eventsGoingTo: updatedUser.eventsGoingTo,
-                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                eventsOwned: updatedUser.eventsOwned,
-                eventsSaved: updatedUser.eventsSaved,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                friends: updatedUser.friends,
-                groups: updatedUser.groups,
-                interests: updatedUser.interests,
-                messages: updatedUser.messages,
-                primaryLocation: updatedUser.primaryLocation,
-                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                bio: updatedUser.bio,
-                requests: updatedUser.requests
+                bannerImageUrl: bannerImage ? bannerImage : updatedUser.bannerImageUrl,
+                ...updatedUser
+                // userId: updatedUser.userId,
+                // age: updatedUser.age,
+                // blockedUsers: updatedUser.blockedUsers,
+                // email: updatedUser.email,
+                // eventsGoingTo: updatedUser.eventsGoingTo,
+                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                // eventsOwned: updatedUser.eventsOwned,
+                // eventsSaved: updatedUser.eventsSaved,
+                // firstName: updatedUser.firstName,
+                // lastName: updatedUser.lastName,
+                // friends: updatedUser.friends,
+                // groups: updatedUser.groups,
+                // interests: updatedUser.interests,
+                // messages: updatedUser.messages,
+                // primaryLocation: updatedUser.primaryLocation,
+                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                // bio: updatedUser.bio,
+                // requests: updatedUser.requests
               }));
 <span class="cstat-no" title="statement not covered" >              console.log("Succesfully received pre-signed URL")</span>
 <span class="cstat-no" title="statement not covered" >              try {</span>
@@ -1687,7 +1699,7 @@ export default EditProfile;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-02T14:20:15.688Z
+                at 2023-12-02T18:43:19.413Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

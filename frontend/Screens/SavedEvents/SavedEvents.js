@@ -7,7 +7,7 @@ import EventCard from "../../Shared/EventCard";
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../../Redux/userSlice';
 
-const SavedEvents = () => {
+const SavedEvents = ({ navigation }) => {
   
   const user = useSelector(selectUserInfo);
 
@@ -36,7 +36,7 @@ const SavedEvents = () => {
           { savedEvents.length > 0 ?
             savedEvents.map((eventObj, index) => {
             return (
-              <EventCard key={index} event={eventObj} privacy={true}/>
+              <EventCard key={index} event={eventObj} privacy={true} navigation={navigation}/>
             )
             })
             :

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../../Redux/userSlice';
 
 
-const MyEvents = ({ eventId }) => {
+const MyEvents = ({ eventId, navigation }) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/' + eventId;
   const [event, setEvent] = useState("");
@@ -29,7 +29,7 @@ const MyEvents = ({ eventId }) => {
 
   return (
     <View style={styles.eventsContainer}>
-        {event && <EventCard event={event} privacy={false}/>}
+        {event && <EventCard event={event} privacy={false} navigation={navigation}/>}
     </View>
   );
 }

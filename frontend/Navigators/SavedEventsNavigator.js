@@ -43,6 +43,6 @@ const MyStack = () => {
     )
 }
 
-export default function MessagesNavigator() {
+export default function SavedEventsNavigator() {
     return <MyStack />;
 }
