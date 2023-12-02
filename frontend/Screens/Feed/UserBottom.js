@@ -4,13 +4,14 @@ import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import getAge from "../../Shared/GetAge";
 // Redux
-import { useSelector } from 'react-redux';
-import { selectUserInfo } from '../../Redux/userSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, setUserInfo } from '../../Redux/userSlice';
 
 const UserBottom = (props) => {
 
     const { userId, update, navigation } = props;
     const user = useSelector(selectUserInfo);
+    const dispatch = useDispatch();
     const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/' + userId;
     const [attendingUser, setAttendingUser] = useState(""); 
     const [age, setAge] = useState(0);
@@ -29,12 +30,38 @@ const UserBottom = (props) => {
             console.log("fail to get user attending info from the event")
             console.log(error);
         });
-    }, [update])
+    }, [user.requests, update]);
+
 
     const handleAddFriend = async () => {
-        // api call to request to add friend --> should be same as friendprofileview
-        setIsFriend(true);
-    };
+        try {
+          const response = await axios.post(API_URL_ADD, {
+            requesterId: user.userId, 
+            requestId: userId
+          });
+    
+          if (response.status == 200) {
+            const updatedUser = response.data;
+            // console.log(updatedUser);
+            setRequested(true);
+            
+            // redux to update friend status 
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
+    
+            console.log("Sucessfully requested friend!")
+    
+          } else {
+            console.log("Error in sending friend request!");
+          }
+    
+        } catch (err) {
+          console.log(err);
+          console.log("An error occured for sending request. Please try again");
+        }
+      };
 
     return (
         <View style={styles.postBottom}>
@@ -51,7 +78,7 @@ const UserBottom = (props) => {
                             <Text style={{ fontSize: 14, fontWeight: '600', color: 'white'}}>pending</Text>
                         </View> )
                         : (
-                        <TouchableOpacity style={{ marginRight: 12.5 }}>
+                        <TouchableOpacity testID="user-plus-icon" style={{ marginRight: 12.5 }} onPress={handleAddFriend}>
                             <FontAwesomeIcon color={"#717171"} icon="user-plus" size={25} />
                         </TouchableOpacity>
                         )
