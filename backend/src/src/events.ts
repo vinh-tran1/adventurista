@@ -266,14 +266,23 @@ router.get("/events-going-to/:userId", async (req, res) => {
     return res.status(404).send("User does not exist");
   }
 
-  const events: Event[] = [];
-  user.eventsGoingTo.forEach(async (eventId) => {
-    const event: Event | null = await getEvent(eventId);
+  // const events: Event[] = [];
+  // user.eventsGoingTo.forEach(async (eventId) => {
+  //   const event: Event | null = await getEvent(eventId);
 
+  //   if (event) {
+  //     events.push(event);
+  //   }
+  // });
+
+  // do the above in antoher way
+  const events: Event[] = [];
+  for (let i = 0; i < user.eventsGoingTo.length; i++) {
+    const event: Event | null = await getEvent(user.eventsGoingTo[i]);
     if (event) {
       events.push(event);
     }
-  });
+  }
 
 
   res.status(200).send(events);
