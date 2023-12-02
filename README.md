@@ -165,3 +165,14 @@ If you are looking for code that needs testing coverage:
 
 - `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URL generation, or for banner image presigned URL (`users.ts`) or event image presigned URL (`events.ts`)
 - `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB, or `deleteEvent` in `backend/src/src/events.ts`
+
+## Metrics
+
+We are currently utilizing an epsilon-greedy method to tackle the multi-armed bandit problem of selecting the best "Create Event" button. This button, which is rendered at the bottom of the application, is utilized to create a new event. We have three possible buttons; the button chosen to render is selected at the time of user log-in. We use the following methodology:
+
+- With 10% probability:
+  - Return a random button to render
+- With 90% probability:
+  - Return the button that has the highest `(# of events created with the button / # of users using the button)`
+
+We increment the number of users utilizing a button (in our Metrics table, a separate table in DynamoDB) per button when the backend indicates to the client which button to render, and we increment the number of events created with the button when the client requests to create an event through the create-event API (also stored in our Metrics table). We then utilize these values to address the multi-armed bandit problem.
