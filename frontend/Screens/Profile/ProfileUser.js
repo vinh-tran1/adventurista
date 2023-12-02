@@ -20,7 +20,6 @@ const ProfileUser = ({ navigation }) => {
 
   //console.log("profile: ", user.profilePictureUrl)
   // console.log("banner: ", user.bannerImageUrl)
-  console.log("first", user.firstName);
 
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");

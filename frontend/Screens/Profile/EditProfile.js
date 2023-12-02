@@ -274,7 +274,7 @@ const EditProfile = ({ navigation }) => {
         }));
 
         handleClear();
-        navigation.navigate("Feed Main");
+        navigation.goBack();
         
         console.log("Sucessfully updated user!");
       } else {
