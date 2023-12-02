@@ -1377,8 +1377,8 @@ router.post("/auth/logout", (req, res) => {
 });
 
 // GET /friends/mutual/:userId1/:userId2
-router.get("/friends/mutual", async (req, res) => {
-  const { userId1, userId2 } = req.body;
+router.get("/friends/mutual/:userId1/:userId2", async (req, res) => {
+  const { userId1, userId2 } = req.params;
 
   try {
     const user1 = await getUser(userId1);
@@ -1451,8 +1451,8 @@ export async function saveEvent(
 }
 
 // Mark an event as seen by a user
-router.post("/events/mark-as-seen", async (req, res) => {
-  const { userId, eventId } = req.body;
+router.post("/events/mark-as-seen/:userId/:eventId", async (req, res) => {
+  const { userId, eventId } = req.params;
   try {
     const updatedUser = await markEventAsSeen(userId, eventId);
     if (!updatedUser) {
@@ -1571,15 +1571,15 @@ async function updateEventAttendeesList(
 }
 
 // Delete a user from the database
-router.delete("/user", async (req, res) => {
-  const { userId } = req.body;
+router.delete("/:userId", async (req, res) => {
+  const { userId } = req.params;
   const result = await deleteUser(userId);
   res.status(200).send(result);
 });
 
 // Endpoint to save an event to a user's profile
-router.post("/events/save", async (req, res) => {
-  const { userId, eventId } = req.body;
+router.post("/events/save/:userId/:eventId", async (req, res) => {
+  const { userId, eventId } = req.params;
 
   // Assume a function exists to check if the event exists
   const event = await getEvent(eventId);
@@ -1634,8 +1634,8 @@ async function saveEventToUserProfile(userId: string, eventId: string) {
 }
 
 // Endpoint to get all saved events for a user
-router.get("/events/saved", async (req, res) => {
-  const { userId } = req.body;
+router.get("/events/saved/:userId", async (req, res) => {
+  const { userId } = req.params;
 
   const user = await getUser(userId);
   if (!user) {
