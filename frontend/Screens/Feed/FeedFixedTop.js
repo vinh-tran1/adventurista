@@ -13,7 +13,6 @@ const FeedFixedTop = ({ navigation }) => {
 
   const [location, setLocation] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [notifications, setNotifications] = useState(user?.requests.incoming.length || 0);
 
   const toggleSearchBar = () => {
     setIsSearchVisible(!isSearchVisible);
@@ -61,9 +60,9 @@ const FeedFixedTop = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
             <FontAwesomeIcon style={{ marginTop: 20 }} icon="fa-bell" size={25} />
           </TouchableOpacity>
-          {notifications > 0 && 
+          {(user?.requests.incoming.length || []) > 0 && 
             <View style={{ marginTop: 10, height: 20, width: 20, backgroundColor: '#EDDBFF', padding: 2, borderRadius: 10, borderWidth: 1, borderColor:'#D186FF' }}>
-              <Text style={{ textAlign: 'center', fontSize: 10 }}>{notifications}</Text>
+              <Text style={{ textAlign: 'center', fontSize: 10 }}>{user?.requests.incoming.length || 0}</Text>
             </View>
           }
           

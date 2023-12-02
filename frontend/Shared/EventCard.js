@@ -16,17 +16,15 @@ const EventCard = (props) => {
   const user = useSelector(selectUserInfo);
 
   useEffect(() => {
-    // console.log(user.userId)
     axios.get(API_URL + event.postingUserId) 
     .then((response) => {
         setPoster(response.data);
-        // console.log(poster)
     })
     .catch((error) => {
         console.log("event card error")
         console.log(error);
     });
-}, [user]);
+}, [event, user]);
 
   return (
     <View >
