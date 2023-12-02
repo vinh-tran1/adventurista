@@ -36,7 +36,7 @@ describe('FriendProfileView Component', () => {
 
     useSelector.mockReturnValue({
       user: {
-          friends: ['Vinh'],
+          friends: ['Vinh123'],
           requests: {
               outgoing: ['123'],
               incoming: ['456']
@@ -61,7 +61,7 @@ describe('FriendProfileView Component', () => {
         <Provider store={store}>
             <FriendProfileView
                 navigation={{ goBack: jest.fn() }}
-                route={{ params: { poster: { firstName: 'Vinh' } } }}
+                route={{ params: { poster: { userId:'Vinh1234', firstName: 'Vinh' } } }}
             />
         </Provider>
       
@@ -70,7 +70,7 @@ describe('FriendProfileView Component', () => {
     // Wait for the component to render
     await waitFor(() => {
       // Check if the component renders the expected text
-      expect(getByText(/Add Friend/i)).toBeDefined();
+      expect(getByText(/not a friend/i)).toBeDefined();
     });
 
     // You can add more specific assertions or checks here based on your requirements
@@ -78,14 +78,14 @@ describe('FriendProfileView Component', () => {
 
   test('renders correctly when user is a friend', async () => {
     const { getByText } = render(
-        <Provider store={store}>
-            <FriendProfileView
-                navigation={{ goBack: jest.fn() }}
-                route={{ params: { poster: { firstName: 'Vinh', friends: [1] } } }}
-            />
-        </Provider>
-      
-    );
+      <Provider store={store}>
+          <FriendProfileView
+              navigation={{ goBack: jest.fn() }}
+              route={{ params: { poster: { userId:'Vinh123', firstName: 'Vinh' } } }}
+          />
+      </Provider>
+    
+  );
 
     // Wait for the component to render
     await waitFor(() => {
@@ -98,12 +98,13 @@ describe('FriendProfileView Component', () => {
 
   test('handles add friend button click correctly', async () => {
     const { getByText } = render(
-        <Provider store={store}>
-            <FriendProfileView
-                navigation={{ goBack: jest.fn() }}
-                route={{ params: { poster: { firstName: 'Vinh' } } }}
-            />
-        </Provider>
+      <Provider store={store}>
+          <FriendProfileView
+              navigation={{ goBack: jest.fn() }}
+              route={{ params: { poster: { userId:'Vinh123', firstName: 'Vinh' } } }}
+          />
+      </Provider>
+    
     );
 
     // Wait for the component to render

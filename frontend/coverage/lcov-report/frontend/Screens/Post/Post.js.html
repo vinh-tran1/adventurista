@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/114</span>
+                <span class='fraction'>0/113</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/111</span>
+                <span class='fraction'>0/110</span>
             </div>
         
             
@@ -526,9 +526,7 @@
 <a name='L461'></a><a href='#L461'>461</a>
 <a name='L462'></a><a href='#L462'>462</a>
 <a name='L463'></a><a href='#L463'>463</a>
-<a name='L464'></a><a href='#L464'>464</a>
-<a name='L465'></a><a href='#L465'>465</a>
-<a name='L466'></a><a href='#L466'>466</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L464'></a><a href='#L464'>464</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -559,8 +557,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -718,7 +714,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1024,25 +1020,23 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
   const [selectTags, setSelectTags] = <span class="cstat-no" title="statement not covered" >useState([]);</span>
   const [moreTagsClicked, setMoreTagsClicked] = <span class="cstat-no" title="statement not covered" >useState(1);</span>
 &nbsp;
-  //const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
-&nbsp;
   const tags1 = <span class="cstat-no" title="statement not covered" >[</span>
-    'catan', 'paddle', 'drinks', 'social',
-    'drives', 'school', 'study', 'energy',
-    'beach', 'hike', 'food', 'squash',
-    'cs', 'games', 'dinner', 'apps'
+    'tech', 'swim', 'beach', 'clubs',
+    'food', 'books', 'drinks', 'sports',
+    'gamer', 'finance', 'nature', 'style',
+    'fitness', 'pets', 'fashion', 'hiking',
   ];
   const tags2 = <span class="cstat-no" title="statement not covered" >[</span>
-    'travel', 'music', 'movies', 'gym',
-    'cook', 'read', 'garden', 'art',
-    'shop', 'photos', 'coding', 'sports',
-    'tennis', 'nature', 'write', 'fashion',
+    'crafts', 'guitar', 'gaming', 'bake',
+    'bike', 'fishing', 'yoga', 'music',
+    'coding', 'dance', 'read', 'kayak',
+    'golf', 'surf', 'travel', 'piano',
   ];
   const tags3 = <span class="cstat-no" title="statement not covered" >[</span>
-    'poetry', 'dance', 'pizza', 'guitar',
-    'walks', 'coffee', 'explore', 'water',
-    'ocean', 'books', 'lawn', 'yoga',
-    'paint', 'films', 'hiking', 'chess',
+    'poetry', 'theater', 'cheap', 'jazz',
+    'study', 'cook', 'history', 'opera',
+    'social', 'laugh', 'film', 'paint',
+    'gallery', 'art', 'fun', 'energy',
   ];
   const months = <span class="cstat-no" title="statement not covered" >['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];</span>
   const dates = <span class="cstat-no" title="statement not covered" >[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];</span>
@@ -1183,7 +1177,7 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
 &nbsp;
 <span class="cstat-no" title="statement not covered" >          axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)</span>
             .then(<span class="fstat-no" title="function not covered" >as</span>ync (response2) =&gt; {
-<span class="cstat-no" title="statement not covered" >              console.log(response2.data);</span>
+              // console.log(response2.data);
 <span class="cstat-no" title="statement not covered" >              console.log("Succesfully received pre-signed URL")</span>
 <span class="cstat-no" title="statement not covered" >              try {</span>
                 const response3 = <span class="cstat-no" title="statement not covered" >await axios.put(</span>
@@ -1465,7 +1459,7 @@ export default Post;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-02T05:34:40.589Z
+                at 2023-12-02T14:20:15.688Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

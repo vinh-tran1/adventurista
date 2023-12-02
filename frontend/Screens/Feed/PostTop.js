@@ -4,15 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const PostTop = (props) => {
 
-    const { title, location, img, createdBy, createdByObj, date, time, navigation } = props;
-    // console.log(createdById)
+    const { title, location, img, createdBy, createdByObj, date, time, attendance, navigation } = props;
 
     // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
         navigation.navigate('FriendProfileView', {poster: createdByObj});
     };
-
-    const fake_img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
 
     return (
         <ImageBackground source={{uri: img}} style={styles.postTop}>
@@ -34,7 +31,7 @@ const PostTop = (props) => {
                             >
                                 <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+24 others</Text>
+                            <Text style={{ fontSize: 12, fontWeight: "bold", color: "white", marginLeft: 5, marginTop: 7.5 }}>+{attendance} others</Text>
                         </View>
                         <Text style={{ color: "white", fontWeight: "700", marginTop: 2 }}>by {createdBy}</Text>
                     </View>

@@ -39,24 +39,24 @@ describe('PostBottom Component', () => {
       status: 200,
       data: { eventId: '123' },
     });
-
+  
     const { getByTestId } = render(
       <PostBottom caption={mockCaption} tags={mockTags} eventId={mockEventId} />
     );
-
+  
     // Trigger press event on the attend button
     fireEvent.press(getByTestId('attend-button'));
-
+  
     // Wait for promises to resolve
     await waitFor(() => {});
-
+  
     // Check if dispatch is called with the correct action
-    // expect(mockDispatch).toHaveBeenCalledWith({
-    //   type: 'SET_USER_INFO',
-    //   newPost: false,
-    //   eventsGoingTo: ['newEventId', ...mockUser.eventsGoingTo],
-    // });
-    expect(mockDispatch).toHaveBeenCalledTimes(0);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_USER_INFO',
+      payload: {
+        eventId: '123',
+        newPost: false,
+    }});
   });
 
   test('handles save event button press', async () => {
@@ -64,19 +64,24 @@ describe('PostBottom Component', () => {
       status: 200,
       data: { eventId: '123' },
     });
-
+  
     const { getByTestId } = render(
       <PostBottom caption={mockCaption} tags={mockTags} eventId={mockEventId} />
     );
-
+  
     // Trigger press event on the save button
     fireEvent.press(getByTestId('save-button'));
-
+  
     // Wait for promises to resolve
     await waitFor(() => {});
-
+  
     // Check if dispatch is called with the correct action
-    expect(mockDispatch).toHaveBeenCalledTimes(0);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_USER_INFO',
+      payload: {
+        eventId: '123',
+        newPost: false,
+    }});
   });
 
   test('handles save event button press - failure', async () => {

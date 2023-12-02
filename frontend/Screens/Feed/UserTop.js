@@ -1,33 +1,59 @@
-import React from "react";
-import { View, Text, TouchableOpacity, ImageBackground, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from "react";
+import axios from "axios";
+import { View, Text, TouchableOpacity, ImageBackground, StyleSheet, processColor} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import BubbleText from "../../Shared/BubbleText";
+// Redux
+import { useSelector, useDispatch } from 'react-redux';
+import { selectUserInfo, setUserInfo } from "../../Redux/userSlice";
 
 const UserTop = (props) => {
 
-    const { createdByObj, profile_pic, interests, navigation } = props;
-    // console.log(JSON.stringify(createdByObj))
-
-    // need logic for if they are friends or not -> use REDUX
+    const { createdByObj, userId, update, navigation } = props;
+    const user = useSelector(selectUserInfo);
+    const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/' + userId;
+    const API_URL_MUTUALS = process.env.REACT_APP_AWS_API_URL + 'users/friends/mutual/' + userId + '/' + user.userId;
+    const [attendingUser, setAttendingUser] = useState("");
+    const [mutuals, setMutuals] = useState([]);
+    
     const handleViewProfile = () => {
-        navigation.navigate('FriendProfileView', {poster: createdByObj});
+        navigation.navigate('FriendProfileView', {poster: attendingUser });
     };
 
+    useEffect(() => {
+        axios.get(API_URL) 
+        .then((response) => {
+            setAttendingUser(response.data);
+            // console.log("attending user: ", attendingUser.firstName)
+        })
+        .catch((error) => {
+            console.log("fail to get user attending the event")
+            console.log(error);
+        });
+        axios.get(API_URL_MUTUALS) 
+        .then((response) => {
+            setMutuals(response.data);
+        })
+        .catch((error) => {
+            console.log("fail to get user mutuals")
+            console.log(error);
+        });
+    }, [update])
+
     return (
-        <ImageBackground source={{uri: profile_pic}} style={styles.postTop}>
+        <ImageBackground source={{uri: attendingUser.profilePictureUrl}} style={styles.postTop}>
             <View style={styles.bottomContent}>
-                <View style={{ flexDirection: "row", alignItems: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
-                    <TouchableOpacity 
-                        testID='view-profile-button'
-                        style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 4}}
-                        onPress={handleViewProfile}
-                    >
+                <TouchableOpacity testID='view-profile-button' 
+                    style={{ flexDirection: "row", alignItems: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}
+                    onPress={handleViewProfile}
+                >
+                    <View style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 4}}>
                         <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
-                    </TouchableOpacity>
-                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 12, marginLeft: 2 }}>10 mutual friends</Text>
-                </View>
+                    </View>
+                    <Text style={{ color: "white", fontWeight: "bold", fontSize: 12, marginLeft: 2 }}>{mutuals.length} mutual friends</Text>
+                </TouchableOpacity>
                 <View style={{ flexDirection: "row", marginTop: 10 }}>
-                    {interests.map((interest, index) => {
+                    {attendingUser?.interests?.length > 0 && attendingUser.interests.map((interest, index) => {
                         return (
                             <BubbleText key={index.toString()} title={interest} />
                         )
