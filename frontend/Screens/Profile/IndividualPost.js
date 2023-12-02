@@ -28,8 +28,13 @@ const IndividualPost = ({ eventId }) => {
     }, [user]);
 
     return (
+<<<<<<< HEAD
         <TouchableOpacity testID='individual-post-component' onPress={() => navigation.navigate("Event Details")}>
             <ImageBackground source={{uri: img}} style={styles.postTop}>
+=======
+        <TouchableOpacity onPress={() => navigation.navigate("Event Details")}>
+            <ImageBackground source={{uri: event.eventPictureUrl}} style={styles.postTop}>
+>>>>>>> e536e880451ed4aaa4d7d20fbbdc7d3f89bda18a
                 <View style={styles.postHeader}>
                     <Text style={{fontSize: 10, fontWeight: "700"}}>{event.title}</Text>
                     {/* <View style={styles.locationContainer}>
