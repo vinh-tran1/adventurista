@@ -264,7 +264,7 @@ const Post = ({ navigation }) => {
 
           <Text style={{ fontSize: 20, fontWeight: "600" }}>Event Details</Text>
 
-          <TouchableOpacity onPress={handlePost} style={styles.navButton}>
+          <TouchableOpacity testID="upload" onPress={handlePost} style={styles.navButton}>
             <Text style={styles.navButton}>Post</Text>
           </TouchableOpacity>
         </View>

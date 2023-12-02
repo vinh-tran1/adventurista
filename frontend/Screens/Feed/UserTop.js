@@ -18,6 +18,7 @@ const UserTop = (props) => {
             <View style={styles.bottomContent}>
                 <View style={{ flexDirection: "row", alignItems: 'center', backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
                     <TouchableOpacity 
+                        testID='view-profile-button'
                         style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 4}}
                         onPress={handleViewProfile}
                     >

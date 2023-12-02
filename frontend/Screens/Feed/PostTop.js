@@ -28,6 +28,7 @@ const PostTop = (props) => {
                     <View style={{ backgroundColor: '#4b3654', paddingVertical: 8, paddingHorizontal: 10, borderRadius: 10 }}>
                         <View style={{ flexDirection: "row"}}>
                             <TouchableOpacity 
+                                testID="view-profile-button"
                                 style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}
                                 onPress={handleViewProfile}
                             >
