@@ -700,6 +700,54 @@
               "version": "2.80.0"
             }
           },
+          "metrics": {
+            "id": "metrics",
+            "path": "CdkStack/metrics",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CdkStack/metrics/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "metricsId",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "metricsId",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "provisionedThroughput": {
+                      "readCapacityUnits": 5,
+                      "writeCapacityUnits": 5
+                    },
+                    "tableName": "metrics"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.80.0"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "CdkStack/metrics/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.80.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.80.0"
+            }
+          },
           "MyVpc": {
             "id": "MyVpc",
             "path": "CdkStack/MyVpc",
@@ -1478,6 +1526,12 @@
                                     "groupchatsA5E16861",
                                     "Arn"
                                   ]
+                                },
+                                {
+                                  "Fn::GetAtt": [
+                                    "metrics11C9AF8C",
+                                    "Arn"
+                                  ]
                                 }
                               ]
                             }
@@ -1992,6 +2046,34 @@
                                           "Ref": "AWS::NoValue"
                                         }
                                       ]
+                                    },
+                                    {
+                                      "Action": [
+                                        "dynamodb:BatchGetItem",
+                                        "dynamodb:GetRecords",
+                                        "dynamodb:GetShardIterator",
+                                        "dynamodb:Query",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan",
+                                        "dynamodb:ConditionCheckItem",
+                                        "dynamodb:BatchWriteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:UpdateItem",
+                                        "dynamodb:DeleteItem",
+                                        "dynamodb:DescribeTable"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "metrics11C9AF8C",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Ref": "AWS::NoValue"
+                                        }
+                                      ]
                                     }
                                   ],
                                   "Version": "2012-10-17"
@@ -2031,7 +2113,7 @@
                           {
                             "essential": true,
                             "image": {
-                              "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:4560143e5156582181e833ccc6305ce2c6f4b2a8ebb5387aaa0f8d08f1c20f89"
+                              "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:50ed0747f80b28bb3ff96525f733562b72a7a0cd246b4ea4e03e752b05e1e5d1"
                             },
                             "name": "web",
                             "portMappings": [
@@ -2095,6 +2177,16 @@
                                 "name": "GROUP_CHAT_TABLE_NAME",
                                 "value": {
                                   "Ref": "groupchatsA5E16861"
+                                }
+                              },
+                              {
+                                "name": "METRICS_PRIMARY_KEY",
+                                "value": "metricsId"
+                              },
+                              {
+                                "name": "METRICS_TABLE_NAME",
+                                "value": {
+                                  "Ref": "metrics11C9AF8C"
                                 }
                               },
                               {

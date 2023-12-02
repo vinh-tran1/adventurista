@@ -17,7 +17,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/a4e77d2e7fad71ea610c978c286989ef65e8613743c37c2a316ab2dd01d6b313.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/ff054c3df1b00535e951f898a8e7f8fa2b48001466b0c875057a24d7b269b19d.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -135,6 +135,20 @@
           {
             "type": "aws:cdk:logicalId",
             "data": "groupchatsA5E16861"
+          }
+        ],
+        "/CdkStack/metrics": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "metrics11C9AF8C"
+            }
+          }
+        ],
+        "/CdkStack/metrics/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "metrics11C9AF8C"
           }
         ],
         "/CdkStack/MyVpc/Resource": [

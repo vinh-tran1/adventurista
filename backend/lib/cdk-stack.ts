@@ -108,6 +108,15 @@ export class CdkStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
     });
 
+    const metricsTable = new Table(this, "metrics", {
+      partitionKey: {
+        name: "metricsId",
+        type: AttributeType.STRING,
+      },
+      tableName: "metrics",
+      removalPolicy: RemovalPolicy.DESTROY, // change removal policy to RETAIL in prod
+    });
+
     // ECS + Fargate
     const vpc = new Vpc(this, "MyVpc", {
       maxAzs: 3,
@@ -142,14 +151,16 @@ export class CdkStack extends Stack {
           image: ContainerImage.fromAsset(path.join(__dirname, "../src/")),
           environment: {
             USERS_PRIMARY_KEY: "userId",
-			USERS_SECONDARY_KEY: "emailId",
+			      USERS_SECONDARY_KEY: "emailId",
             USERS_TABLE_NAME: usersTable.tableName,
             EVENTS_PRIMARY_KEY: "eventId",
             EVENTS_TABLE_NAME: eventsTable.tableName,
-			MESSAGES_PRIMARY_KEY: "messageId",
-			MESSAGES_TABLE_NAME: messagesTable.tableName,
-			GROUP_CHAT_PRIMARY_KEY: "groupId",
-			GROUP_CHAT_TABLE_NAME: groupchatsTable.tableName,
+			      MESSAGES_PRIMARY_KEY: "messageId",
+			      MESSAGES_TABLE_NAME: messagesTable.tableName,
+			      GROUP_CHAT_PRIMARY_KEY: "groupId",
+			      GROUP_CHAT_TABLE_NAME: groupchatsTable.tableName,
+            METRICS_PRIMARY_KEY: "metricsId",
+            METRICS_TABLE_NAME: metricsTable.tableName,
             PROFILE_PICTURE_BUCKET_NAME: profPicBucket.bucketName,
             EVENT_PICTURE_BUCKET_NAME: eventPicBucket.bucketName,
             region: process.env.CDK_DEFAULT_REGION!,
@@ -210,7 +221,7 @@ export class CdkStack extends Stack {
 		  "dynamodb:Query",
 		  "dynamodb:Scan",
         ],
-        resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`, `${usersTable.tableArn}/index/*`, `${messagesTable.tableArn}`, `${groupchatsTable.tableArn}`],
+        resources: [`${usersTable.tableArn}`, `${eventsTable.tableArn}`, `${usersTable.tableArn}/index/*`, `${messagesTable.tableArn}`, `${groupchatsTable.tableArn}`, `${metricsTable.tableArn}`],
         conditions: {
           ArnEquals: {
             "aws:PrincipalArn": `${fargate.taskDefinition.taskRole.roleArn}`,
@@ -225,7 +236,8 @@ export class CdkStack extends Stack {
     usersTable.grantReadWriteData(fargate.taskDefinition.taskRole);
     eventsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
     messagesTable.grantReadWriteData(fargate.taskDefinition.taskRole);
-	groupchatsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
+	  groupchatsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
+    metricsTable.grantReadWriteData(fargate.taskDefinition.taskRole);
 
     // API Gateway
     const httpVpcLink = new CfnResource(this, "HttpVpcLink", {
