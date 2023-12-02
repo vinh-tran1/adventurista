@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1701481442858" clover="3.2.0">
-  <project timestamp="1701481442858" name="All files">
-    <metrics statements="696" coveredstatements="300" conditionals="156" coveredconditionals="53" methods="181" coveredmethods="80" elements="1033" coveredelements="433" complexity="0" loc="696" ncloc="696" packages="12" files="40" classes="40"/>
+<coverage generated="1701483365774" clover="3.2.0">
+  <project timestamp="1701483365774" name="All files">
+    <metrics statements="696" coveredstatements="300" conditionals="158" coveredconditionals="53" methods="181" coveredmethods="80" elements="1035" coveredelements="433" complexity="0" loc="696" ncloc="696" packages="12" files="40" classes="40"/>
     <package name="frontend">
       <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="App.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/App.js">
@@ -216,7 +216,7 @@
       </file>
     </package>
     <package name="frontend.Screens.Feed">
-      <metrics statements="116" coveredstatements="65" conditionals="18" coveredconditionals="8" methods="30" coveredmethods="14"/>
+      <metrics statements="116" coveredstatements="65" conditionals="20" coveredconditionals="8" methods="30" coveredmethods="14"/>
       <file name="Feed.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Feed.js">
         <metrics statements="15" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="10" count="1" type="stmt"/>
@@ -264,7 +264,7 @@
         <line num="108" count="2" type="stmt"/>
       </file>
       <file name="Post.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Post.js">
-        <metrics statements="27" coveredstatements="2" conditionals="6" coveredconditionals="0" methods="8" coveredmethods="0"/>
+        <metrics statements="27" coveredstatements="2" conditionals="8" coveredconditionals="0" methods="8" coveredmethods="0"/>
         <line num="14" count="1" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
         <line num="17" count="0" type="stmt"/>

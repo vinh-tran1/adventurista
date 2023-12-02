@@ -14,8 +14,8 @@ const PostBottom = (props) => {
 
     const user = useSelector(selectUserInfo);
 
-    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event'
-    const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId
+    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event';
+    const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId;
 
     const handleAttendEvent = async () => {
         try {
