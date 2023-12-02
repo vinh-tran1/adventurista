@@ -85,7 +85,7 @@ describe('Create Event', () => {
     const incompleteEvent = { ...sampleEvent };
     incompleteEvent.title = ""; // Assuming title is a required field
 
-    const result2: User | string = await createEvent(incompleteEvent as Event);
+    const result2: User | string = await createEvent(incompleteEvent as Event, "metricsId");
     expect(result2).toEqual("Error creating event");
   });
 
@@ -112,7 +112,7 @@ describe('Create Event', () => {
     sandbox.stub(DocumentClient.prototype, 'put').throwsException("Error creating event");
 
 
-    const result2: User | string = await createEvent(sampleEvent);
+    const result2: User | string = await createEvent(sampleEvent, "metricsId");
     expect(result2).toEqual("Error creating event");
   });
 });
