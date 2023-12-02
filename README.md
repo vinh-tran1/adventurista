@@ -143,7 +143,7 @@ Image Of Coverage Here
 - CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`) (in `backend/test`)
   - Coverage: 100%
 - Events Unit Tests (in `backend/src/test`)
-  - Coverage: 50%
+  - Coverage: 75%
 - Users Unit Tests (in `backend/src/test`)
   - Coverage: 95%
 - Messages Unit Tests (in `backend/src/test`)
