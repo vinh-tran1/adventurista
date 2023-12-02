@@ -436,12 +436,13 @@ router.get("/who-is-going-ids", async (req, res) => {
 export async function goingToEvent(
   userId: string,
   eventId: string
-): Promise<string | null> {
+): Promise<User | null> {
   const user: User | null = await getUser(userId);
   const event: Event | null = await getEvent(eventId);
 
   if (!user || !event) {
-    return "User or Event not found";
+    return null;
+    //return "User or Event not found";
   }
 
   // if either is undefined, set them to empty arrays
@@ -457,7 +458,8 @@ export async function goingToEvent(
 
   
   if (event.whoIsGoing.includes(user.userId) || user.eventsGoingTo.includes(event.eventId)) {
-    return "User is already going to event";
+    //return "User is already going to event";
+    return null;
   }
 
   // return "Event people going: " + event.whoIsGoing + " User events going to: " + user.eventsGoingTo;
@@ -485,7 +487,8 @@ export async function goingToEvent(
     await db.update(eventParams).promise();
   } catch (err) {
     console.error("Error updating event:", err);
-    return `Error updating`;
+    return null;
+    //return `Error updating`;
   }
 
   // Update users table
@@ -504,18 +507,20 @@ export async function goingToEvent(
     await db.update(userParams).promise();
   } catch (err) {
     console.error("Error updating event:", err);
-    return `Error updating`;
+    return null;
+    //return `Error updating`;
   }
-  return null;
+  return user;
 }
 
 router.post("/going-to-event", async (req, res) => {
   const { userId, eventId } = req.body;
   const result = await goingToEvent(userId, eventId);
-  if (result) {
-    return res.status(404).send(result);
+  if (result == null) {
+    return res.status(404).send("Error going to event");
   }
-  res.status(200).send(`User ${userId} going to event ${eventId}`);
+  //res.status(200).send(`User ${userId} going to event ${eventId}`);
+  res.status(200).send(result);
 });
 
 export async function cancelGoingToEvent(

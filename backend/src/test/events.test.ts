@@ -304,7 +304,7 @@ describe('Going To Event', () => {
     const stub1 = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock2);
 
     const result = await goingToEvent(sampleUserId, sampleEventId);
-    expect(result).toBeNull();
+    expect(result).toEqual(sampleUser);
   });
 
   it('should handle user or event not found', async () => {
@@ -313,7 +313,7 @@ describe('Going To Event', () => {
     sandbox.stub(eventsFunctions, 'getEvent').resolves(null);
 
     const result = await goingToEvent(sampleUserId, sampleEventId);
-    expect(result).toEqual("User or Event not found");
+    expect(result).toBeNull();
   });
 
   // it('should handle user already attending', async () => {

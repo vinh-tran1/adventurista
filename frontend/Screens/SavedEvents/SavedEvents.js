@@ -18,13 +18,14 @@ const Messages = () => {
   useEffect(() => {
     axios.get(API_URL)
       .then((response) => {
-        setSavedEvents(response.data.eventsSaved);
-        console.log("saved events:", savedEvents);
+        setSavedEvents(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, [user.eventsSaved]);
+
+  console.log("saveddd", savedEvents);
 
   return (
     <SafeAreaView style={styles.container}>
