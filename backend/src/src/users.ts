@@ -1642,10 +1642,17 @@ router.get("/events/saved/:userId", async (req, res) => {
     return res.status(404).send("User not found");
   }
 
-  // Assume the eventsSaved attribute contains the IDs of saved events
-  const events = await Promise.all(
-    user.eventsSaved.map((eventId) => getEvent(eventId))
-  );
+  // // Assume the eventsSaved attribute contains the IDs of saved events
+  // const events = await Promise.all(
+  //   user.eventsSaved.map((eventId) => getEvent(eventId))
+  // );
+
+  // do the above line in a new way
+  const events = [];
+  for (const eventId of user.eventsSaved) {
+    const event = await getEvent(eventId);
+    events.push(event);
+  }
 
   res.status(200).send({ eventsSaved: events });
 });
