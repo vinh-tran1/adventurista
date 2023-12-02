@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useNavigation } from '@react-navigation/native';
 
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../Redux/userSlice';
@@ -10,8 +9,7 @@ import { selectUserInfo } from '../Redux/userSlice';
 const EventCard = (props) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
-  const { event, privacy } = props;
-  const navigation = useNavigation();
+  const { event, privacy, navigation } = props;
   const[poster, setPoster] = useState("");
   const user = useSelector(selectUserInfo);
 
@@ -32,7 +30,7 @@ const EventCard = (props) => {
           <View style={styles.postHeader}>
               <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                   <Text style={{fontSize: 18, fontWeight: "bold", marginTop: 2.5}}>{event.title}</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate("Event Details", {event: event, poster: poster, privacy: privacy})}>
+                  <TouchableOpacity testID="navButton" onPress={() => navigation.navigate("Event Details", {event: event, poster: poster, privacy: privacy})}>
                       <FontAwesomeIcon style={{ marginTop: 5, marginRight: 5 }} icon="fa-right-from-bracket" size={20} />
                   </TouchableOpacity>
               </View>

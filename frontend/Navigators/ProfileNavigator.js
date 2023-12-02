@@ -33,13 +33,13 @@ const MyStack = () => {
                     headerShown: false,
                 }}
             /> */}
-            <Stack.Screen 
+            {/* <Stack.Screen 
                 name='Event Card'
                 component={EventCard}
                 options={{
                     headerShown: false,
                 }}
-            />
+            /> */}
             <Stack.Screen 
                 name='Event Details'
                 component={EventDetails}

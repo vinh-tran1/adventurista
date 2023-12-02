@@ -30,6 +30,7 @@ const PostBottom = (props) => {
         if (response.status === 200) {
           const updatedUser = response.data;
           setIsAttending(true);
+          console.log(updatedUser)
 
           dispatch(setUserInfo({
             newPost: false,

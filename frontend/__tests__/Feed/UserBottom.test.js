@@ -3,37 +3,41 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import axios from 'axios';
 import { Provider, useSelector } from 'react-redux';
 import configureStore from 'redux-mock-store';
-import AttendingUser from '../../Shared/AttendingUser';
+import UserBottom from '../../Screens/Feed/UserBottom';
 
 // Mock axios module
 jest.mock('axios');
 
 // Mock the useDispatch and useSelector hooks
+// Mock the useDispatch and useSelector hooks
 jest.mock('react-redux', () => ({
-  ...jest.requireActual('react-redux'),
-  useSelector: jest.fn(),
-}));
+    ...jest.requireActual('react-redux'),
+    useSelector: jest.fn(),
+  }));
 
 const mockStore = configureStore();
 
-describe('AttendingUser Component', () => {
-  test('renders AttendingUser component for different scenarios', async () => {
+describe('UserBottom Component', () => {
+  test('renders UserBottom component with proper data and conditional rendering', async () => {
     const mockUser = {
       userId: 'mockUserId',
       firstName: 'John',
       lastName: 'Doe',
-      profilePictureUrl: 'https://example.com/profile.jpg',
+      age: 25,
       friends: ['friendUserId'],
       requests: {
-        outgoing: ['pendingUserId'],
+        outgoing: ['requestedUserId'],
       },
+      primaryLocation: 'New York',
     };
 
     const mockAttendingUser = {
       userId: 'attendingUserId',
       firstName: 'Jane',
       lastName: 'Smith',
-      profilePictureUrl: 'https://example.com/attendingProfile.jpg',
+      age: 30,
+      friends: ['friendUserId', 'anotherFriendUserId'],
+      primaryLocation: 'San Francisco',
     };
 
     useSelector.mockReturnValue(mockUser);
@@ -47,7 +51,7 @@ describe('AttendingUser Component', () => {
     // Render the component within the Redux Provider
     const { getByText, getByTestId } = render(
       <Provider store={store}>
-        <AttendingUser userId="attendingUserId" ownerId="ownerUserId" navigation={{ navigate: jest.fn() }} />
+        <UserBottom userId="attendingUserId" update={false} navigation={{ navigate: jest.fn() }} />
       </Provider>
     );
 
@@ -59,21 +63,18 @@ describe('AttendingUser Component', () => {
 
     // Verify that the component renders with the expected data
     expect(getByText('Jane Smith')).toBeTruthy();
-    // expect(getByTestId('user-plus-icon')).toBeTruthy(); // Add friend button is rendered
+    expect(getByText('2 friends, 0 groups')).toBeTruthy();
+    expect(getByText('from San Francisco')).toBeTruthy();
+
+    // Verify that the conditional rendering works
+    expect(getByTestId('user-plus-icon')).toBeTruthy(); // Add friend button is rendered
 
     // Simulate adding a friend
-    // act(() => {
-    //   fireEvent.press(getByTestId('user-plus-icon'));
-    // });
+    act(() => {
+      fireEvent.press(getByTestId('user-plus-icon'));
+    });
 
-    // Wait for the asynchronous friend request
-    // await waitFor(() => {
-    //   expect(axios.post).toHaveBeenCalledTimes(1);
-    // });
-
-    // Ensure that the Redux store is updated and the pending state is rendered
-    // const actions = store.getActions();
-    // expect(actions).toContainEqual(setUserInfo(expect.objectContaining({ requests: { outgoing: ['pendingUserId', 'attendingUserId'] } })));
+    // Ensure that the component renders the "pending" state after the friend request
     // expect(getByText('pending')).toBeTruthy();
   });
 

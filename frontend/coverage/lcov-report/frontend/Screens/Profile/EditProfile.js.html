@@ -600,9 +600,7 @@
 <a name='L535'></a><a href='#L535'>535</a>
 <a name='L536'></a><a href='#L536'>536</a>
 <a name='L537'></a><a href='#L537'>537</a>
-<a name='L538'></a><a href='#L538'>538</a>
-<a name='L539'></a><a href='#L539'>539</a>
-<a name='L540'></a><a href='#L540'>540</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L538'></a><a href='#L538'>538</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -855,6 +853,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -872,11 +871,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1013,7 +1014,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1024,8 +1024,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1050,8 +1048,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1338,14 +1334,14 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
 &nbsp;
         // GET and PUT requests for banner picture URL
 <span class="cstat-no" title="statement not covered" >        try {</span>
-          const fileInfo = <span class="cstat-no" title="statement not covered" >await FileSystem.getInfoAsync(profileImage);</span>
+          const fileInfo = <span class="cstat-no" title="statement not covered" >await FileSystem.getInfoAsync(bannerImage);</span>
 <span class="cstat-no" title="statement not covered" >          if (!fileInfo || !fileInfo.exists) {</span>
 <span class="cstat-no" title="statement not covered" >            console.log('File does not exist.');</span>
 <span class="cstat-no" title="statement not covered" >            return;</span>
           }
 &nbsp;
           const manipulatedImage = <span class="cstat-no" title="statement not covered" >await ImageManipulator.manipulateAsync(</span>
-            profileImage,
+            bannerImage,
             [{ resize: { width: 300 } }],
             { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
           );
@@ -1393,6 +1389,7 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
                 );
 <span class="cstat-no" title="statement not covered" >                if (response3.status === 200) {</span>
 <span class="cstat-no" title="statement not covered" >                  console.log("Successfully added banner picture url");</span>
+                  
                 } else {
 <span class="cstat-no" title="statement not covered" >                  console.log("Error adding banner picture url");</span>
                 }
@@ -1414,8 +1411,10 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
           newPost: false,
           ...updatedUser
         }));
+&nbsp;
 <span class="cstat-no" title="statement not covered" >        handleClear();</span>
-<span class="cstat-no" title="statement not covered" >        navigation.goBack();</span>
+<span class="cstat-no" title="statement not covered" >        navigation.navigate("Feed Main");</span>
+        
 <span class="cstat-no" title="statement not covered" >        console.log("Sucessfully updated user!");</span>
       } else {
 <span class="cstat-no" title="statement not covered" >        console.log("Error in updating user");</span>
@@ -1562,11 +1561,8 @@ const EditProfile = <span class="cstat-no" title="statement not covered" ><span 
             &lt;TextInput 
                 value={bio} 
                 placeholder="Bios are overrated!" 
-                multiline={true}
-                maxLength={100}
-                numberOfLines={5}
                 onChangeText={<span class="fstat-no" title="function not covered" >(t</span>ext) =&gt; <span class="cstat-no" title="statement not covered" >setBio(text)} </span>
-                style={styles.largeInput} 
+                style={styles.input} 
             /&gt;
         &lt;/View&gt;
             {/* &lt;/View&gt;
@@ -1678,16 +1674,14 @@ const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.
   }
 });
 &nbsp;
-export default EditProfile;
-&nbsp;
-&nbsp;</pre></td></tr></table></pre>
+export default EditProfile;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-02T17:42:03.563Z
+                at 2023-12-02T21:10:35.737Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

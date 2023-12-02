@@ -26,7 +26,7 @@ const Feed = ({ navigation }) => {
     .catch((error) => {
       console.log(error);
     });
-  }, [newPost])
+  }, [newPost, dispatch])
 
   return (
     <SafeAreaView style={styles.container}>

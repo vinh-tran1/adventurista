@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import MyGroups from "./MyGroups";
 import BubbleText from "../../Shared/BubbleText";
 import Bubble from "./Bubble";
 import MyEvents from "./MyEvents";
@@ -17,7 +16,11 @@ const ProfileUser = ({ navigation }) => {
   const user = useSelector(selectUserInfo);
   const age = getAge(user.age);
   const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
-  const [groups, setGroups] = useState(user.eventsGoingTo.filter(event => !user.eventsOwned.includes(event)));
+  const [groups, setGroups] = useState((user?.eventsGoingTo || []).filter(event => !user.eventsOwned.includes(event)));
+
+  //console.log("profile: ", user.profilePictureUrl)
+  // console.log("banner: ", user.bannerImageUrl)
+  console.log("first", user.firstName);
 
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");
@@ -31,7 +34,7 @@ const ProfileUser = ({ navigation }) => {
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
     setViewDimensions({ width, height });
-  }, [user.bannerImageUrl, user.profilePictureUrl]);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,8 +64,8 @@ const ProfileUser = ({ navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.058 }]}>
-              <Bubble value={user.eventsOwned.length} name={'Events'}/>
-              <Bubble value={user.friends.length} name={'Connections'}/>
+              <Bubble value={(user?.eventsOwned || []).length} name={'Events'}/>
+              <Bubble value={(user?.friends || []).length} name={'Connections'}/>
               <Bubble value={groups.length} name={'Groups'}/>
             </View>
           </View>
@@ -81,7 +84,7 @@ const ProfileUser = ({ navigation }) => {
           <Text style={{marginTop: 8, fontSize: 16}}>{user.bio}</Text>
 
           <View style={styles.tagContainer}>
-            {user.interests.map((tag, index) => {
+            {(user?.interests || []).map((tag, index) => {
                 return (
                     <BubbleText key={index.toString()} title={tag} />
                 )
@@ -100,10 +103,10 @@ const ProfileUser = ({ navigation }) => {
       </View>
 
       <View>
-      { user.eventsOwned.length > 0 ?
+      { (user?.eventsOwned || []).length > 0 ?
           user.eventsOwned.map((eventId, index) => {
           return (
-            <MyEvents key={index} eventId={eventId}/>
+            <MyEvents key={index} eventId={eventId} navigation={navigation}/>
           )
           })
           :

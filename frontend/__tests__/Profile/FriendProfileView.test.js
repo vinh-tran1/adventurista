@@ -1,4 +1,4 @@
-import { render, waitFor, fireEvent } from '@testing-library/react-native';
+import { render, waitFor, fireEvent, findByProps } from '@testing-library/react-native';
 import FriendProfileView from '../../Screens/Profile/FriendProfileView';
 import { useSelector } from 'react-redux';
 
@@ -238,8 +238,6 @@ describe('FriendProfileView Component', () => {
         expect(getByText(/New York/i)).toBeDefined();
         expect(getByText(/This is a bio/i)).toBeDefined();
         expect(getByText(/John Doe/i)).toBeDefined();
-        // expect(getByTestId('profile-pic')).toHaveProp('source', { uri: 'mockProfilePicUrl' }); // replace 'mockProfilePicUrl' with the actual URL
-        // expect(getByTestId('image-banner')).toHaveProp('source', { uri: 'mockProfileBannerImgUrl' }); // replace 'mockProfileBannerImgUrl' with the actual URL
         expect(getByText('3')).toBeDefined();
         expect(getByText('1')).toBeDefined();
         expect(getByText('2')).toBeDefined();
