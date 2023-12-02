@@ -12,10 +12,8 @@ const Calendar = () => {
   const user = useSelector(selectUserInfo);
 
   const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
-  const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/saved/' + user.userId;
 
   const [attending, setAttending] = useState([]);
-  const [saved, setSaved] = useState([]);
 
   useEffect(() => {
     axios.get(ATTEND_API_URL)
@@ -27,6 +25,7 @@ const Calendar = () => {
       .catch((error) => {
         console.log(error);
       });
+<<<<<<< HEAD
 
       axios.get(SAVE_API_URL)
       .then((response) => {
@@ -41,6 +40,9 @@ const Calendar = () => {
       // filter arrays chronologically
 
   }, [user.eventsSaved]);
+=======
+  }, []);
+>>>>>>> 9bc7512be9fec4f6958c28ecc828005a546fa1f3
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,10 +53,6 @@ const Calendar = () => {
         <View style={styles.calendarContainer}>
           <Text style={styles.subheaderText}>Events Attending</Text>
           <EventCard attending={attending[0]} />
-        </View>
-        <View style={styles.savedContainer}>
-          <Text style={styles.subheaderText}>Saved Events</Text>
-          <EventCard />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -29,7 +29,7 @@ const Messages = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>My Groups</Text>
+        <Text style={styles.headerText}>Saved Events</Text>
       </View>
       <ScrollView>
         <View style={styles.groupsContainer}>
