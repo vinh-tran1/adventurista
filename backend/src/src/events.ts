@@ -19,7 +19,7 @@ import {
 import { json } from "express";
 
 // db set-up
-const db = new DynamoDB.DocumentClient();
+export const db = new DynamoDB.DocumentClient();
 // S3 set-up
 const s3 = new S3();
 const router = express.Router();
@@ -326,14 +326,23 @@ router.get("/events-going-to/:userId", async (req, res) => {
     return res.status(404).send("User does not exist");
   }
 
-  const events: Event[] = [];
-  user.eventsGoingTo.forEach(async (eventId) => {
-    const event: Event | null = await getEvent(eventId);
+  // const events: Event[] = [];
+  // user.eventsGoingTo.forEach(async (eventId) => {
+  //   const event: Event | null = await getEvent(eventId);
 
+  //   if (event) {
+  //     events.push(event);
+  //   }
+  // });
+
+  // do the above in antoher way
+  const events: Event[] = [];
+  for (let i = 0; i < user.eventsGoingTo.length; i++) {
+    const event: Event | null = await getEvent(user.eventsGoingTo[i]);
     if (event) {
       events.push(event);
     }
-  });
+  }
 
 
   res.status(200).send(events);
@@ -435,14 +444,28 @@ export async function goingToEvent(
     return "User or Event not found";
   }
 
-  if (
-    event.whoIsGoing.includes(userId) &&
-    user.eventsGoingTo.includes(eventId)
-  ) {
+  // if either is undefined, set them to empty arrays
+
+
+  if (!event.whoIsGoing || event.whoIsGoing === undefined) {
+    event.whoIsGoing = [];
+  }
+  if (!user.eventsGoingTo || user.eventsGoingTo === undefined) {
+    user.eventsGoingTo = [];
+  }
+  // return user.eventsGoingTo + " " + event.whoIsGoing;
+
+  
+  if (event.whoIsGoing.includes(user.userId) || user.eventsGoingTo.includes(event.eventId)) {
     return "User is already going to event";
   }
 
+  // return "Event people going: " + event.whoIsGoing + " User events going to: " + user.eventsGoingTo;
+  
+  
   // Add logic to update `eventsGoingTo` and `whoIsGoing` in the database.
+  // if either of these are undefined, set them to empty arrays
+  
   user.eventsGoingTo.push(eventId);
   event.whoIsGoing.push(userId);
 
@@ -462,7 +485,7 @@ export async function goingToEvent(
     await db.update(eventParams).promise();
   } catch (err) {
     console.error("Error updating event:", err);
-    return `Error updating event: ${err}`;
+    return `Error updating`;
   }
 
   // Update users table
@@ -481,7 +504,7 @@ export async function goingToEvent(
     await db.update(userParams).promise();
   } catch (err) {
     console.error("Error updating event:", err);
-    return `Error updating user: ${err}`;
+    return `Error updating`;
   }
   return null;
 }
@@ -504,6 +527,13 @@ export async function cancelGoingToEvent(
 
   if (!user || !event) {
     return "User or Event not found";
+  }
+  // if either is undefined, set them to empty arrays
+  if (!event.whoIsGoing || event.whoIsGoing === undefined) {
+    event.whoIsGoing = [];
+  }
+  if (!user.eventsGoingTo || user.eventsGoingTo === undefined) {
+    user.eventsGoingTo = [];
   }
 
   if (
@@ -568,7 +598,7 @@ router.post("/cancel-going-to-event", async (req, res) => {
   res.status(200).send(`User ${userId} no longer going to event ${eventId}`);
 });
 
-async function getUser(userId: string): Promise<User | null> {
+export async function getUser(userId: string): Promise<User | null> {
   const params = {
     TableName: USERS_TABLE_NAME,
     Key: {

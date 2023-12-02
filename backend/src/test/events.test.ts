@@ -32,8 +32,10 @@ import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import * as s3 from 'aws-sdk/clients/s3';
 import { sampleEventId, sampleEvent, newSampleEvent, sampleUserId, sampleUser } from './testConstants';
 import { sampleEmail, sampleFirstName, sampleLastName, sampleUnhashedPassword, sampleUpdatedUser, sampleUserFriendsTesting, sampleUserNotBlockedTesting } from './testConstants';
+import {db} from '../src/events';
 
 const eventsFunctions = require("../src/events");
+const usersFunctions = require("../src/users");
 
 const sandbox = sinon.createSandbox();
 
@@ -273,6 +275,196 @@ describe('Delete Event', () => {
     expect(error).toBeNull();
   });
 });
+
+describe('Going To Event', () => {
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should mark attendance successfully', async () => {
+    const returnValueMock = {
+      promise() {
+        return {
+          Item: sampleUser,
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+    const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+    const user = await getUser(sampleUserId);
+    sandbox.stub(eventsFunctions, 'getUser').resolves(sampleUser);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(sampleEvent);
+    const returnValueMock2 = {
+      promise() {
+        return {
+          Item : "",
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+    const stub1 = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock2);
+
+    const result = await goingToEvent(sampleUserId, sampleEventId);
+    expect(result).toBeNull();
+  });
+
+  it('should handle user or event not found', async () => {
+   
+    sandbox.stub(eventsFunctions, 'getUser').resolves(null);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(null);
+
+    const result = await goingToEvent(sampleUserId, sampleEventId);
+    expect(result).toEqual("User or Event not found");
+  });
+
+  // it('should handle user already attending', async () => {
+  //   sampleEvent.whoIsGoing = [sampleUserId];
+  //   sampleUser.eventsGoingTo = [sampleEventId];
+    // const returnValueMock = {
+    //   promise() {
+    //     return {
+    //       Item: sampleUser,
+    //     };
+    //   },
+    // } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+    // const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+    // const user = await getUser(sampleUserId);
+  //   sandbox.stub(eventsFunctions, 'getUser').resolves({...sampleUser, eventsGoingTo: [sampleEventId]});
+  //   sandbox.stub(eventsFunctions, 'getEvent').resolves({ ...sampleEvent, whoIsGoing: [sampleUserId] });
+  //   const returnValueMock2 = {
+  //     promise() {
+  //       return {
+  //         Item : "",
+  //       };
+  //     },
+  //   } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+  //   const stub1 = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock2);
+
+  //   const result = await goingToEvent(sampleUserId, sampleEventId);
+  //   expect(result).toEqual("User is already going to event");
+  // });
+
+  // it('should handle DynamoDB errors during marking attendance', async () => {
+  //   const returnValueMock = {
+  //     promise() {
+  //       return {
+  //         Item: sampleUser,
+  //       };
+  //     },
+  //   } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+  //   const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+  //   const user = await getUser(sampleUserId);
+  //   sandbox.stub(eventsFunctions, 'getUser').resolves({...sampleUser, eventsGoingTo: [""]});
+  //   sandbox.stub(eventsFunctions, 'getEvent').resolves({...sampleEvent, whoIsGoing: [""]});
+  //   sandbox.stub(DocumentClient.prototype, 'update').throwsException(new Error("DynamoDB error"));
+
+  //   const result = await goingToEvent(sampleUserId, sampleEventId);
+  //   expect(result).toContain("Error updating");
+  // });
+});
+
+describe('Cancel Going To Event', () => {
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should cancel attendance successfully', async () => {
+    const returnValueMock = {
+      promise() {
+        return {
+          Item: sampleUser,
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+    const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+    const user = await getUser(sampleUserId);
+    sandbox.stub(usersFunctions, 'getUser').resolves(sampleUser);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(sampleEvent);
+    const returnValueMock2 = {
+      promise() {
+        return {
+          Item : "",
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+    const stub1 = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock2);
+
+    const result = await cancelGoingToEvent(sampleUserId, sampleEventId);
+    expect(result).toBeNull();
+  });
+
+  it('should handle user or event not found during cancellation', async () => {
+    
+    sandbox.stub(usersFunctions, 'getUser').resolves(null);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(null);
+    const returnValueMock = {
+      promise() {
+        return {
+          Item : "",
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+    const result = await cancelGoingToEvent(sampleUserId, sampleEventId);
+    expect(result).toEqual("User or Event not found");
+  });
+
+  it('should handle user not marked as attending', async () => {
+    sampleEvent.whoIsGoing = [];
+    sampleUser.eventsGoingTo = [];
+    const returnValueMock = {
+      promise() {
+        return {
+          Item: sampleUser,
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+    const returnValueMock2 = {
+      promise() {
+        return {
+          Item : "",
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+    const stub1 = sandbox.stub(DocumentClient.prototype, 'update').returns(returnValueMock2);
+
+    const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+    const user = await getUser(sampleUserId);
+    sandbox.stub(usersFunctions, 'getUser').resolves(sampleUser);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(sampleEvent);
+
+    const result = await cancelGoingToEvent(sampleUserId, sampleEventId);
+    expect(result).toEqual("User never marked attendance for event");
+  });
+
+  it('should handle DynamoDB errors during cancelling attendance', async () => {
+    const returnValueMock = {
+      promise() {
+        return {
+          Item: sampleUser,
+        };
+      },
+    } as unknown as Request<DocumentClient.GetItemOutput, AWSError>;
+
+    
+    
+
+    const stub = sandbox.stub(DocumentClient.prototype, 'get').returns(returnValueMock);
+    const user = await getUser(sampleUserId);
+
+
+
+    sandbox.stub(usersFunctions, 'getUser').resolves(sampleUser);
+    sandbox.stub(eventsFunctions, 'getEvent').resolves(sampleEvent);
+    sandbox.stub(DocumentClient.prototype, 'update').throwsException(new Error("DynamoDB error"));
+
+    const result = await cancelGoingToEvent(sampleUserId, sampleEventId);
+    expect(result).toContain("User never marked attendance for event");
+  });
+});
+
 
 
 
