@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1701494143698" clover="3.2.0">
-  <project timestamp="1701494143698" name="All files">
+<coverage generated="1701495280613" clover="3.2.0">
+  <project timestamp="1701495280613" name="All files">
     <metrics statements="708" coveredstatements="301" conditionals="170" coveredconditionals="53" methods="187" coveredmethods="80" elements="1065" coveredelements="434" complexity="0" loc="708" ncloc="708" packages="12" files="40" classes="40"/>
     <package name="frontend">
       <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-      <file name="App.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/App.js">
+      <file name="App.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/App.js">
         <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="12" count="0" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
@@ -13,28 +13,28 @@
     </package>
     <package name="frontend.Navigators">
       <metrics statements="36" coveredstatements="30" conditionals="2" coveredconditionals="1" methods="18" coveredmethods="13"/>
-      <file name="AuthenticationNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/AuthenticationNavigator.js">
+      <file name="AuthenticationNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/AuthenticationNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="9" count="2" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
         <line num="12" count="2" type="stmt"/>
         <line num="40" count="2" type="stmt"/>
       </file>
-      <file name="CalendarNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/CalendarNavigator.js">
+      <file name="CalendarNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/CalendarNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
         <line num="10" count="2" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
       </file>
-      <file name="FeedNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/FeedNavigator.js">
+      <file name="FeedNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/FeedNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="8" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
         <line num="39" count="2" type="stmt"/>
       </file>
-      <file name="MainNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/MainNavigator.js">
+      <file name="MainNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/MainNavigator.js">
         <metrics statements="12" coveredstatements="6" conditionals="2" coveredconditionals="1" methods="6" coveredmethods="1"/>
         <line num="17" count="1" type="stmt"/>
         <line num="19" count="1" type="stmt"/>
@@ -49,21 +49,21 @@
         <line num="80" count="0" type="stmt"/>
         <line num="88" count="0" type="stmt"/>
       </file>
-      <file name="PostNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/PostNavigator.js">
+      <file name="PostNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/PostNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="6" count="1" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
         <line num="23" count="2" type="stmt"/>
       </file>
-      <file name="ProfileNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/ProfileNavigator.js">
+      <file name="ProfileNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/ProfileNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="8" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
         <line num="39" count="2" type="stmt"/>
       </file>
-      <file name="SavedEventsNavigator.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Navigators/SavedEventsNavigator.js">
+      <file name="SavedEventsNavigator.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Navigators/SavedEventsNavigator.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="1" type="stmt"/>
@@ -73,18 +73,18 @@
     </package>
     <package name="frontend.Redux">
       <metrics statements="21" coveredstatements="21" conditionals="8" coveredconditionals="4" methods="7" coveredmethods="5"/>
-      <file name="constants.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Redux/constants.js">
+      <file name="constants.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Redux/constants.js">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="11" type="stmt"/>
         <line num="2" count="11" type="stmt"/>
         <line num="3" count="11" type="stmt"/>
       </file>
-      <file name="store.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Redux/store.js">
+      <file name="store.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Redux/store.js">
         <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="5" count="2" type="stmt"/>
         <line num="9" count="2" type="stmt"/>
       </file>
-      <file name="userSlice.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Redux/userSlice.js">
+      <file name="userSlice.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Redux/userSlice.js">
         <metrics statements="16" coveredstatements="16" conditionals="8" coveredconditionals="4" methods="7" coveredmethods="5"/>
         <line num="4" count="11" type="stmt"/>
         <line num="5" count="5" type="stmt"/>
@@ -106,7 +106,7 @@
     </package>
     <package name="frontend.Screens.Authenticate.Login">
       <metrics statements="20" coveredstatements="19" conditionals="2" coveredconditionals="1" methods="5" coveredmethods="5"/>
-      <file name="Login.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Authenticate/Login/Login.js">
+      <file name="Login.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Authenticate/Login/Login.js">
         <metrics statements="20" coveredstatements="19" conditionals="2" coveredconditionals="1" methods="5" coveredmethods="5"/>
         <line num="9" count="2" type="stmt"/>
         <line num="11" count="7" type="stmt"/>
@@ -132,7 +132,7 @@
     </package>
     <package name="frontend.Screens.Authenticate.Signup">
       <metrics statements="53" coveredstatements="47" conditionals="14" coveredconditionals="11" methods="15" coveredmethods="15"/>
-      <file name="Signup.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Authenticate/Signup/Signup.js">
+      <file name="Signup.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Authenticate/Signup/Signup.js">
         <metrics statements="23" coveredstatements="22" conditionals="2" coveredconditionals="1" methods="7" coveredmethods="7"/>
         <line num="5" count="2" type="stmt"/>
         <line num="7" count="9" type="stmt"/>
@@ -158,7 +158,7 @@
         <line num="61" count="1" type="stmt"/>
         <line num="68" count="2" type="stmt"/>
       </file>
-      <file name="Step2.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Authenticate/Signup/Step2.js">
+      <file name="Step2.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Authenticate/Signup/Step2.js">
         <metrics statements="30" coveredstatements="25" conditionals="12" coveredconditionals="10" methods="8" coveredmethods="8"/>
         <line num="11" count="2" type="stmt"/>
         <line num="13" count="18" type="stmt"/>
@@ -194,7 +194,7 @@
     </package>
     <package name="frontend.Screens.Calendar">
       <metrics statements="11" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
-      <file name="Calendar.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Calendar/Calendar.js">
+      <file name="Calendar.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Calendar/Calendar.js">
         <metrics statements="11" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
         <line num="10" count="0" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
@@ -211,7 +211,7 @@
     </package>
     <package name="frontend.Screens.Feed">
       <metrics statements="117" coveredstatements="68" conditionals="20" coveredconditionals="8" methods="30" coveredmethods="14"/>
-      <file name="Feed.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Feed.js">
+      <file name="Feed.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/Feed.js">
         <metrics statements="15" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
@@ -229,7 +229,7 @@
         <line num="51" count="0" type="stmt"/>
         <line num="58" count="1" type="stmt"/>
       </file>
-      <file name="FeedFixedTop.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/FeedFixedTop.js">
+      <file name="FeedFixedTop.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/FeedFixedTop.js">
         <metrics statements="25" coveredstatements="16" conditionals="8" coveredconditionals="6" methods="5" coveredmethods="4"/>
         <line num="8" count="2" type="stmt"/>
         <line num="10" count="5" type="stmt"/>
@@ -257,7 +257,7 @@
         <line num="76" count="1" type="stmt"/>
         <line num="108" count="2" type="stmt"/>
       </file>
-      <file name="Post.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Post.js">
+      <file name="Post.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/Post.js">
         <metrics statements="27" coveredstatements="2" conditionals="8" coveredconditionals="0" methods="8" coveredmethods="0"/>
         <line num="14" count="1" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -287,7 +287,7 @@
         <line num="86" count="0" type="stmt"/>
         <line num="130" count="1" type="stmt"/>
       </file>
-      <file name="PostBottom.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/PostBottom.js">
+      <file name="PostBottom.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/PostBottom.js">
         <metrics statements="31" coveredstatements="29" conditionals="4" coveredconditionals="2" methods="4" coveredmethods="4"/>
         <line num="11" count="2" type="stmt"/>
         <line num="13" count="5" type="stmt"/>
@@ -321,7 +321,7 @@
         <line num="74" count="15" type="stmt"/>
         <line num="95" count="2" type="stmt"/>
       </file>
-      <file name="PostTop.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/PostTop.js">
+      <file name="PostTop.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/PostTop.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="5" count="2" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -331,7 +331,7 @@
         <line num="17" count="1" type="stmt"/>
         <line num="51" count="2" type="stmt"/>
       </file>
-      <file name="UserBottom.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/UserBottom.js">
+      <file name="UserBottom.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/UserBottom.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="1"/>
         <line num="6" count="2" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -339,7 +339,7 @@
         <line num="14" count="1" type="stmt"/>
         <line num="38" count="2" type="stmt"/>
       </file>
-      <file name="UserTop.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/UserTop.js">
+      <file name="UserTop.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/UserTop.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="6" count="2" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -352,7 +352,7 @@
     </package>
     <package name="frontend.Screens.Feed.Notifications">
       <metrics statements="40" coveredstatements="30" conditionals="4" coveredconditionals="0" methods="9" coveredmethods="9"/>
-      <file name="FollowRequest.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Notifications/FollowRequest.js">
+      <file name="FollowRequest.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/Notifications/FollowRequest.js">
         <metrics statements="34" coveredstatements="24" conditionals="4" coveredconditionals="0" methods="6" coveredmethods="6"/>
         <line num="9" count="2" type="stmt"/>
         <line num="11" count="10" type="stmt"/>
@@ -389,7 +389,7 @@
         <line num="91" count="10" type="stmt"/>
         <line num="109" count="2" type="stmt"/>
       </file>
-      <file name="Notifications.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Feed/Notifications/Notifications.js">
+      <file name="Notifications.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Feed/Notifications/Notifications.js">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="10" count="1" type="stmt"/>
         <line num="12" count="2" type="stmt"/>
@@ -401,7 +401,7 @@
     </package>
     <package name="frontend.Screens.Post">
       <metrics statements="124" coveredstatements="11" conditionals="30" coveredconditionals="1" methods="29" coveredmethods="5"/>
-      <file name="Post.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Post/Post.js">
+      <file name="Post.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Post/Post.js">
         <metrics statements="111" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="22" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -515,7 +515,7 @@
         <line num="361" count="0" type="stmt"/>
         <line num="372" count="0" type="stmt"/>
       </file>
-      <file name="SelectDate.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Post/SelectDate.js">
+      <file name="SelectDate.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Post/SelectDate.js">
         <metrics statements="7" coveredstatements="5" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="2"/>
         <line num="5" count="1" type="stmt"/>
         <line num="7" count="2" type="stmt"/>
@@ -525,7 +525,7 @@
         <line num="23" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="32" count="1" type="stmt"/>
       </file>
-      <file name="Tags.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Post/Tags.js">
+      <file name="Tags.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Post/Tags.js">
         <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="3"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
@@ -537,7 +537,7 @@
     </package>
     <package name="frontend.Screens.Profile">
       <metrics statements="239" coveredstatements="60" conditionals="84" coveredconditionals="25" methods="53" coveredmethods="11"/>
-      <file name="Bubble.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/Bubble.js">
+      <file name="Bubble.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/Bubble.js">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="4" count="2" type="stmt"/>
         <line num="5" count="47" type="stmt"/>
@@ -547,7 +547,7 @@
         <line num="12" count="47" type="stmt"/>
         <line num="24" count="2" type="stmt"/>
       </file>
-      <file name="EditProfile.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/EditProfile.js">
+      <file name="EditProfile.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/EditProfile.js">
         <metrics statements="129" coveredstatements="0" conditionals="50" coveredconditionals="0" methods="23" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -679,7 +679,7 @@
         <line num="437" count="0" type="stmt"/>
         <line num="448" count="0" type="stmt"/>
       </file>
-      <file name="FriendProfileView.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/FriendProfileView.js">
+      <file name="FriendProfileView.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/FriendProfileView.js">
         <metrics statements="55" coveredstatements="37" conditionals="34" coveredconditionals="25" methods="11" coveredmethods="5"/>
         <line num="15" count="1" type="stmt"/>
         <line num="16" count="15" type="stmt"/>
@@ -737,7 +737,7 @@
         <line num="246" count="0" type="stmt"/>
         <line num="266" count="1" type="stmt"/>
       </file>
-      <file name="IndividualPost.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/IndividualPost.js">
+      <file name="IndividualPost.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/IndividualPost.js">
         <metrics statements="14" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="0"/>
         <line num="10" count="1" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
@@ -754,7 +754,7 @@
         <line num="31" count="0" type="stmt"/>
         <line num="51" count="1" type="stmt"/>
       </file>
-      <file name="MyEvents.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/MyEvents.js">
+      <file name="MyEvents.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/MyEvents.js">
         <metrics statements="5" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="7" count="1" type="stmt"/>
         <line num="60" count="1" type="stmt"/>
@@ -762,7 +762,7 @@
         <line num="64" count="0" type="stmt"/>
         <line num="77" count="1" type="stmt"/>
       </file>
-      <file name="MyGroups.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/MyGroups.js">
+      <file name="MyGroups.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/MyGroups.js">
         <metrics statements="11" coveredstatements="11" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="4"/>
         <line num="8" count="2" type="stmt"/>
         <line num="10" count="3" type="stmt"/>
@@ -776,7 +776,7 @@
         <line num="28" count="3" type="stmt"/>
         <line num="36" count="2" type="stmt"/>
       </file>
-      <file name="ProfileUser.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/Profile/ProfileUser.js">
+      <file name="ProfileUser.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/Profile/ProfileUser.js">
         <metrics statements="18" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
         <line num="14" count="0" type="stmt"/>
         <line num="16" count="0" type="stmt"/>
@@ -800,7 +800,7 @@
     </package>
     <package name="frontend.Screens.SavedEvents">
       <metrics statements="13" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="0"/>
-      <file name="SavedEvents.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Screens/SavedEvents/SavedEvents.js">
+      <file name="SavedEvents.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Screens/SavedEvents/SavedEvents.js">
         <metrics statements="13" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="5" coveredmethods="0"/>
         <line num="10" count="0" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
@@ -819,7 +819,7 @@
     </package>
     <package name="frontend.Shared">
       <metrics statements="31" coveredstatements="15" conditionals="6" coveredconditionals="2" methods="11" coveredmethods="3"/>
-      <file name="AttendingUser.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Shared/AttendingUser.js">
+      <file name="AttendingUser.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Shared/AttendingUser.js">
         <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="6" count="3" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
@@ -827,7 +827,7 @@
         <line num="13" count="1" type="stmt"/>
         <line num="26" count="3" type="stmt"/>
       </file>
-      <file name="BubbleText.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Shared/BubbleText.js">
+      <file name="BubbleText.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Shared/BubbleText.js">
         <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="4" count="9" type="stmt"/>
         <line num="5" count="36" type="stmt"/>
@@ -835,7 +835,7 @@
         <line num="8" count="36" type="stmt"/>
         <line num="15" count="9" type="stmt"/>
       </file>
-      <file name="EventCard.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Shared/EventCard.js">
+      <file name="EventCard.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Shared/EventCard.js">
         <metrics statements="13" coveredstatements="2" conditionals="4" coveredconditionals="0" methods="5" coveredmethods="0"/>
         <line num="7" count="1" type="stmt"/>
         <line num="9" count="0" type="stmt"/>
@@ -851,7 +851,7 @@
         <line num="28" count="0" type="stmt"/>
         <line num="64" count="1" type="stmt"/>
       </file>
-      <file name="EventDetails.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Shared/EventDetails.js">
+      <file name="EventDetails.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Shared/EventDetails.js">
         <metrics statements="7" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="9" count="1" type="stmt"/>
         <line num="11" count="0" type="stmt"/>
@@ -861,7 +861,7 @@
         <line num="26" count="0" type="stmt"/>
         <line num="69" count="1" type="stmt"/>
       </file>
-      <file name="GetAge.js" path="/Users/vinhtran/Desktop/junior/fall/SWE/f23-adventurista/frontend/Shared/GetAge.js">
+      <file name="GetAge.js" path="/Users/nikhil.ismail/github/f23-adventurista/frontend/Shared/GetAge.js">
         <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
         <line num="1" count="17" type="stmt"/>
       </file>
