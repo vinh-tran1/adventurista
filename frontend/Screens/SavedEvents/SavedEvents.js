@@ -11,20 +11,20 @@ const Messages = () => {
   
   const user = useSelector(selectUserInfo);
 
-  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/saved/' + user.userId;
 
-  const [groups, setGroups] = useState([]);
+  const [savedEvents, setSavedEvents] = useState([]);
 
   useEffect(() => {
     axios.get(API_URL)
       .then((response) => {
-        setGroups(response.data);
-        console.log(response.data);
+        setSavedEvents(response.data.eventsSaved);
+        console.log("saved events:", savedEvents);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [user.eventsSaved]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,11 +33,12 @@ const Messages = () => {
       </View>
       <ScrollView>
         <View style={styles.groupsContainer}>
-          <EventCard />
-          <EventCard />
-          <EventCard />
-          <EventCard />
-          <EventCard />
+          {savedEvents.map((eventObj, index) => {
+            console.log(eventObj)
+            return (
+              <EventCard key={index} event={eventObj}/>
+            )
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>

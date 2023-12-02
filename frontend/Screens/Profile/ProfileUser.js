@@ -33,7 +33,7 @@ const ProfileUser = ({ navigation }) => {
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
     setViewDimensions({ width, height });
-  }, [user]);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -161,7 +161,8 @@ const Post = ({ navigation }) => {
         time: time,
         location: location,
         postingUserId: user.userId,
-        tags: selectTags
+        tags: selectTags,
+        metricsId: "small"
       });
       if (response.status === 201) {
         const updatedUser = response.data.user;

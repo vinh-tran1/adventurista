@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/115</span>
+                <span class='fraction'>0/114</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/112</span>
+                <span class='fraction'>0/111</span>
             </div>
         
             
@@ -528,13 +528,7 @@
 <a name='L463'></a><a href='#L463'>463</a>
 <a name='L464'></a><a href='#L464'>464</a>
 <a name='L465'></a><a href='#L465'>465</a>
-<a name='L466'></a><a href='#L466'>466</a>
-<a name='L467'></a><a href='#L467'>467</a>
-<a name='L468'></a><a href='#L468'>468</a>
-<a name='L469'></a><a href='#L469'>469</a>
-<a name='L470'></a><a href='#L470'>470</a>
-<a name='L471'></a><a href='#L471'>471</a>
-<a name='L472'></a><a href='#L472'>472</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L466'></a><a href='#L466'>466</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -690,8 +684,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -710,12 +704,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -724,8 +714,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1161,7 +1149,6 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
   const handlePost = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    try {</span>
-      // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
       const response = <span class="cstat-no" title="statement not covered" >await axios.post(API_URL, {</span>
         title: eventName,
         description: caption,
@@ -1169,7 +1156,8 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
         time: time,
         location: location,
         postingUserId: user.userId,
-        tags: selectTags
+        tags: selectTags,
+        metricsId: "small"
       });
 <span class="cstat-no" title="statement not covered" >      if (response.status === 201) {</span>
         const updatedUser = <span class="cstat-no" title="statement not covered" >response.data.user;</span>
@@ -1183,10 +1171,6 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
 <span class="cstat-no" title="statement not covered" >            return;</span>
           }
 &nbsp;
-          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });*/
-&nbsp;
           const manipulatedImage = <span class="cstat-no" title="statement not covered" >await ImageManipulator.manipulateAsync(</span>
             selectedImage,
             [{ resize: { width: 300 } }],
@@ -1196,8 +1180,6 @@ const Post = <span class="cstat-no" title="statement not covered" ><span class="
           const byteArray = <span class="cstat-no" title="statement not covered" >await fetch(manipulatedImage.uri)</span>
             .then(<span class="fstat-no" title="function not covered" >(r</span>esponse) =&gt; <span class="cstat-no" title="statement not covered" >response.arrayBuffer())</span>
             .then(<span class="fstat-no" title="function not covered" >(a</span>rrayBuffer) =&gt; <span class="cstat-no" title="statement not covered" >new Uint8Array(arrayBuffer))</span>;
-&nbsp;
-<span class="cstat-no" title="statement not covered" >          console.log("arrrayyy", byteArray);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >          axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)</span>
             .then(<span class="fstat-no" title="function not covered" >as</span>ync (response2) =&gt; {
@@ -1483,7 +1465,7 @@ export default Post;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-02T02:16:05.679Z
+                at 2023-12-02T04:47:58.142Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

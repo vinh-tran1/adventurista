@@ -42,8 +42,8 @@ const FriendProfileView = ({ navigation, route }) => {
   const [groups, setGroups] = useState(posterEventsGoing.filter(event => !posterEventsOwned.includes(event)));
 
   // dummy data
-  const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY';
-  const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
+  //const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY';
+  //const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
 
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
@@ -165,10 +165,10 @@ const FriendProfileView = ({ navigation, route }) => {
       {/* profile banner */}
       <View>
       {/* top half */}
-          <ImageBackground source={{uri: profileBannerImg}} style={styles.imageBanner}>
+          <ImageBackground source={{uri: poster.bannerImageUrl}} style={styles.imageBanner}>
           <View style={{position: 'absolute', top: viewDimensions.height * .03}}>
               <View style={{ left: viewDimensions.width * 0.045 }}>
-                <Image source={{uri: profilePic}} style={styles.profilePic}/>
+                <Image source={{uri: poster.profilePictureUrl}} style={styles.profilePic}/>
               </View>
               <View style={[styles.bubbleRow, {left: viewDimensions.width * 0.45, top: viewDimensions.height * 0.065 }]}>
                 <Bubble value={poster?.eventsOwned?.length || 0} name={'Events'}/>

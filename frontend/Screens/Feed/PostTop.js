@@ -15,7 +15,7 @@ const PostTop = (props) => {
     const fake_img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
 
     return (
-        <ImageBackground source={{uri: fake_img}} style={styles.postTop}>
+        <ImageBackground source={{uri: img}} style={styles.postTop}>
             <View style={styles.postHeader}>
                 <Text style={{fontSize: 28, fontWeight: "bold"}}>{title}</Text>
                 <View style={styles.locationContainer}>

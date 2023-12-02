@@ -318,26 +318,31 @@ const EditProfile = ({ navigation }) => {
         <View style={styles.sectionContainer}> 
             <Text style={styles.label}>Edit Profile and Banner</Text>
             <View style={styles.centerContainer}>
-                <View style={styles.image}>
-                    <TouchableOpacity onPress={handleProfileUpload}>
-                        {!profileImage ?
-                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                        :
-                        <ImageBackground style={styles.image} source={{uri: profileImage}} />
-                        }
-                    </TouchableOpacity>
-                    <Text style={{ marginBottom: 2 }}>Profile</Text>
+                
+
+                <View style={{alignItems: 'center'}}>
+                  <View style={styles.image}>
+                      <TouchableOpacity onPress={handleProfileUpload}>
+                          <ImageBackground style={styles.image} source={{uri: profileImage}}>
+                          <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                          </ImageBackground>
+                      </TouchableOpacity>
+                      
                   </View>
+                  <Text style={{ fontWeight:'700', fontSize: 16, marginTop: 6  }}>Profile</Text>
+                </View>
+
+                <View style={{alignItems: 'center'}}>
                   <View style={styles.image}>
                     <TouchableOpacity onPress={handleBannerUpload}>
-                        {!bannerImage ?
-                        <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
-                        :
-                        <ImageBackground style={styles.image} source={{uri: bannerImage}} />
-                        }
+                        <ImageBackground style={styles.image} source={{uri: bannerImage}}>
+                          <Text style={{fontSize: 75, fontWeight: '700', color:'#D186FF'}}>+</Text>
+                        </ImageBackground>
                     </TouchableOpacity>
-                    <Text style={{ marginBottom: 2 }}>Banner</Text>
                 </View>
+                <Text style={{ fontWeight:'700', fontSize: 16, marginTop: 6 }}>Banner</Text>
+              </View>
+
             </View>
         </View>
 
@@ -476,7 +481,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 70,
+    paddingHorizontal: 40,
     paddingBottom: 10,
   },
   sectionContainer: {

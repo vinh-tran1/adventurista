@@ -13,6 +13,7 @@ const PostBottom = (props) => {
     const { caption, tags, eventId } = props;
 
     const user = useSelector(selectUserInfo);
+    const dispatch = useDispatch();
 
     const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event';
     const SAVE_API_URL = process.env.REACT_APP_AWS_API_URL + 'users/events/save/' + user.userId + "/" + eventId;
@@ -48,7 +49,7 @@ const PostBottom = (props) => {
           if (response.status === 200) {
 
             const updatedUser = response.data;
-            console.log(updatedUser.eventsSaved);
+            console.log("events saved", updatedUser.eventsSaved);
 
             dispatch(setUserInfo({
               newPost: false,

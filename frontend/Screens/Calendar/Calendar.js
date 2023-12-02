@@ -25,24 +25,7 @@ const Calendar = () => {
       .catch((error) => {
         console.log(error);
       });
-<<<<<<< HEAD
-
-      axios.get(SAVE_API_URL)
-      .then((response) => {
-        setSaved(response.data.eventsSaved);
-        console.log("saved: ", saved);
-        //console.log("saved state: " + saved);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-      // filter arrays chronologically
-
-  }, [user.eventsSaved]);
-=======
   }, []);
->>>>>>> 9bc7512be9fec4f6958c28ecc828005a546fa1f3
 
   return (
     <SafeAreaView style={styles.container}>
