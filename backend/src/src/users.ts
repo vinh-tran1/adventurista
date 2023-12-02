@@ -1319,9 +1319,9 @@ export async function createUser(
     eventsGoingTo: [],
     eventsNotGoingTo: [],
     messages: [],
-    profilePictureUrl: "",
+    profilePictureUrl: `${PROF_PIC_BUCKET_URI}default_profile_picture.jpg`,
     bio: "",
-    bannerImageUrl: "",
+    bannerImageUrl: `${PROF_PIC_BUCKET_URI}default_banner_image.jpg`,
     age: 0,
   };
 

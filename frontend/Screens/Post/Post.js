@@ -154,7 +154,6 @@ const Post = ({ navigation }) => {
   const handlePost = async () => {
 
     try {
-      // const response = await axios.post('https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/events/event/create', {
       const response = await axios.post(API_URL, {
         title: eventName,
         description: caption,
@@ -176,10 +175,6 @@ const Post = ({ navigation }) => {
             return;
           }
 
-          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });*/
-
           const manipulatedImage = await ImageManipulator.manipulateAsync(
             selectedImage,
             [{ resize: { width: 300 } }],
@@ -189,8 +184,6 @@ const Post = ({ navigation }) => {
           const byteArray = await fetch(manipulatedImage.uri)
             .then((response) => response.arrayBuffer())
             .then((arrayBuffer) => new Uint8Array(arrayBuffer));
-
-          console.log("arrrayyy", byteArray);
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {

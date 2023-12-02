@@ -12,7 +12,6 @@ const Signup = ({ navigation }) => {
 
   const handleSignup = async () => {
     try {
-        console.log("urllll", API_URL);
         const response = await axios.post(API_URL, {
         email: email,
         firstName: first,

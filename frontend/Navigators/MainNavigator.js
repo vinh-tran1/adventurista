@@ -67,7 +67,7 @@ const MainNavigator = () => {
                 component={MessagesNavigator}
                 options={{
                     tabBarIcon: () => (
-                      <FontAwesomeIcon icon="message" size={25} />
+                      <FontAwesomeIcon icon="bookmark" size={25} />
                     ),
                     headerShown: false
                   }}

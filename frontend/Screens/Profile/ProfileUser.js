@@ -19,8 +19,7 @@ const ProfileUser = ({ navigation }) => {
   const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
   const [groups, setGroups] = useState(user.eventsGoingTo.filter(event => !user.eventsOwned.includes(event)));
 
-  const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY'
-  const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
+  console.log("banner", user.bannerImageUrl)
 
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");
@@ -34,7 +33,7 @@ const ProfileUser = ({ navigation }) => {
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
     setViewDimensions({ width, height });
-  }, []);
+  }, [user]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,10 +50,10 @@ const ProfileUser = ({ navigation }) => {
       {/* profile banner */}
       <View>
       {/* top half */}
-        <ImageBackground source={{uri: profileBannerImg}} style={styles.imageBanner}>
+        <ImageBackground source={{uri: user.bannerImageUrl}} style={styles.imageBanner}>
           <View style={{position: 'absolute', top: viewDimensions.height * .03}}>
             <View style={{ left: viewDimensions.width * 0.045 }}>
-              <Image source={{uri: profilePic}} style={styles.profilePic}/>
+              <Image source={{uri: user.profilePictureUrl}} style={styles.profilePic}/>
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <TouchableOpacity onPress={handleEditProfile}>
