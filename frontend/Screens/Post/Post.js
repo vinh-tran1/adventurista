@@ -176,7 +176,6 @@ const Post = ({ navigation }) => {
             return;
           }
 
-<<<<<<< HEAD
           const manipulatedImage = await ImageManipulator.manipulateAsync(
             selectedImage,
             [{ resize: { width: 300 } }],
@@ -186,30 +185,15 @@ const Post = ({ navigation }) => {
           const byteArray = await fetch(manipulatedImage.uri)
             .then((response) => response.arrayBuffer())
             .then((arrayBuffer) => new Uint8Array(arrayBuffer));
-=======
-          var fs = require("fs");
-          const imageFile = fs.readFileSync(selectedImage);
-
-          /*const fileBase64 = await FileSystem.readAsStringAsync(selectedImage, {
-            encoding: FileSystem.EncodingType.Base64,
-          });*/
->>>>>>> 454d8790a57b71c427260e5984d01ef6ffdd59c0
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
               console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
               try {
-<<<<<<< HEAD
                 const response3 = await axios.put(
                   response2.data.uploadURL,
                   byteArray,
-=======
-                // let options = { headers: { 'Content-Type': "image/jpeg", 'x-amz-acl': 'public-read' } };
-                const response3 = await axios.put(
-                  response2.data.uploadURL,
-                  imageFile,
->>>>>>> 454d8790a57b71c427260e5984d01ef6ffdd59c0
                   {
                     headers: {
                       "Content-Type": "image/jpeg",
