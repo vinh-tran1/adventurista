@@ -10,7 +10,7 @@ const EventCard = (props) => {
   const { event } = props;
   const navigation = useNavigation();
   const[poster, setPoster] = useState("");
-  console.log("event card:", event)
+  // console.log("event card:", event)
 
   useEffect(() => {
     // console.log(user.userId)
