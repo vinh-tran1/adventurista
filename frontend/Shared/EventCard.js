@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useNavigation } from '@react-navigation/native';
 
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../Redux/userSlice';
@@ -11,7 +10,6 @@ const EventCard = (props) => {
 
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
   const { event, privacy, navigation } = props;
-  // const navigation = useNavigation();
   const[poster, setPoster] = useState("");
   const user = useSelector(selectUserInfo);
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, ImageBackground, Image, Dimensions } from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import MyGroups from "./MyGroups";
 import BubbleText from "../../Shared/BubbleText";
 import Bubble from "./Bubble";
 import MyEvents from "./MyEvents";
@@ -19,6 +18,9 @@ const ProfileUser = ({ navigation }) => {
   const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
   const [groups, setGroups] = useState((user?.eventsGoingTo || []).filter(event => !user.eventsOwned.includes(event)));
 
+  //console.log("profile: ", user.profilePictureUrl)
+  // console.log("banner: ", user.bannerImageUrl)
+  console.log("first", user.firstName);
 
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");

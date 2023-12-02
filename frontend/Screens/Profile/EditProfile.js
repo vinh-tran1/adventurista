@@ -143,27 +143,25 @@ const EditProfile = ({ navigation }) => {
               profilePic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
               dispatch(setUserInfo({
                 newPost: false,
-                profilePictureUrl: profilePic ? profilePic : updatedUser.profilePictureUrl,
-                ...updatedUser
-                // userId: updatedUser.userId,
-                // age: updatedUser.age,
-                // blockedUsers: updatedUser.blockedUsers,
-                // email: updatedUser.email,
-                // eventsGoingTo: updatedUser.eventsGoingTo,
-                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                // eventsOwned: updatedUser.eventsOwned,
-                // eventsSaved: updatedUser.eventsSaved,
-                // firstName: updatedUser.firstName,
-                // lastName: updatedUser.lastName,
-                // friends: updatedUser.friends,
-                // groups: updatedUser.groups,
-                // interests: updatedUser.interests,
-                // messages: updatedUser.messages,
-                // primaryLocation: updatedUser.primaryLocation,
-                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                // bio: updatedUser.bio,
-                // requests: updatedUser.requests
+                userId: updatedUser.userId,
+                age: updatedUser.age,
+                blockedUsers: updatedUser.blockedUsers,
+                email: updatedUser.email,
+                eventsGoingTo: updatedUser.eventsGoingTo,
+                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                eventsOwned: updatedUser.eventsOwned,
+                eventsSaved: updatedUser.eventsSaved,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                friends: updatedUser.friends,
+                groups: updatedUser.groups,
+                interests: updatedUser.interests,
+                messages: updatedUser.messages,
+                primaryLocation: updatedUser.primaryLocation,
+                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                bio: updatedUser.bio,
+                requests: updatedUser.requests
               }));
               console.log("Succesfully received pre-signed URL")
               try {
@@ -197,14 +195,14 @@ const EditProfile = ({ navigation }) => {
 
         // GET and PUT requests for banner picture URL
         try {
-          const fileInfo = await FileSystem.getInfoAsync(profileImage);
+          const fileInfo = await FileSystem.getInfoAsync(bannerImage);
           if (!fileInfo || !fileInfo.exists) {
             console.log('File does not exist.');
             return;
           }
 
           const manipulatedImage = await ImageManipulator.manipulateAsync(
-            profileImage,
+            bannerImage,
             [{ resize: { width: 300 } }],
             { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
           );
@@ -219,27 +217,25 @@ const EditProfile = ({ navigation }) => {
               bannerPic = response2.data.uploadURL.substring(0, indexOfQuestionMark !== -1 ? indexOfQuestionMark : response2.data.uploadURL.length);
               dispatch(setUserInfo({
                 newPost: false,
-                bannerImageUrl: bannerImage ? bannerImage : updatedUser.bannerImageUrl,
-                ...updatedUser
-                // userId: updatedUser.userId,
-                // age: updatedUser.age,
-                // blockedUsers: updatedUser.blockedUsers,
-                // email: updatedUser.email,
-                // eventsGoingTo: updatedUser.eventsGoingTo,
-                // eventsNotGoingTo: updatedUser.eventsNotGoingTo,
-                // eventsOwned: updatedUser.eventsOwned,
-                // eventsSaved: updatedUser.eventsSaved,
-                // firstName: updatedUser.firstName,
-                // lastName: updatedUser.lastName,
-                // friends: updatedUser.friends,
-                // groups: updatedUser.groups,
-                // interests: updatedUser.interests,
-                // messages: updatedUser.messages,
-                // primaryLocation: updatedUser.primaryLocation,
-                // profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
-                // bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
-                // bio: updatedUser.bio,
-                // requests: updatedUser.requests
+                userId: updatedUser.userId,
+                age: updatedUser.age,
+                blockedUsers: updatedUser.blockedUsers,
+                email: updatedUser.email,
+                eventsGoingTo: updatedUser.eventsGoingTo,
+                eventsNotGoingTo: updatedUser.eventsNotGoingTo,
+                eventsOwned: updatedUser.eventsOwned,
+                eventsSaved: updatedUser.eventsSaved,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName,
+                friends: updatedUser.friends,
+                groups: updatedUser.groups,
+                interests: updatedUser.interests,
+                messages: updatedUser.messages,
+                primaryLocation: updatedUser.primaryLocation,
+                profilePictureUrl: profilePic === "" ? updatedUser.profilePictureUrl : profilePic,
+                bannerImageUrl: bannerPic === "" ? updatedUser.bannerImageUrl : bannerPic,
+                bio: updatedUser.bio,
+                requests: updatedUser.requests
               }));
               console.log("Succesfully received pre-signed URL")
               try {
@@ -254,6 +250,7 @@ const EditProfile = ({ navigation }) => {
                 );
                 if (response3.status === 200) {
                   console.log("Successfully added banner picture url");
+                  
                 } else {
                   console.log("Error adding banner picture url");
                 }
@@ -275,8 +272,10 @@ const EditProfile = ({ navigation }) => {
           newPost: false,
           ...updatedUser
         }));
+
         handleClear();
-        navigation.goBack();
+        navigation.navigate("Feed Main");
+        
         console.log("Sucessfully updated user!");
       } else {
         console.log("Error in updating user");
@@ -423,11 +422,8 @@ const EditProfile = ({ navigation }) => {
             <TextInput 
                 value={bio} 
                 placeholder="Bios are overrated!" 
-                multiline={true}
-                maxLength={100}
-                numberOfLines={5}
                 onChangeText={(text) => setBio(text)} 
-                style={styles.largeInput} 
+                style={styles.input} 
             />
         </View>
             {/* </View>
@@ -540,4 +536,3 @@ const styles = StyleSheet.create({
 });
 
 export default EditProfile;
-

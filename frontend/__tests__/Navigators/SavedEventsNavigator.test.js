@@ -26,7 +26,6 @@ jest.mock('@react-navigation/stack', () => {
   
   // Mock your screens
   jest.mock('../../Screens/SavedEvents/SavedEvents', () => 'SavedEvents');
-  jest.mock('../..//Shared/EventCard', () => 'EventCard');
   jest.mock('../..//Shared/EventDetails', () => 'EventDetails');
   
   describe('SavedEventsNavigator', () => {
@@ -35,7 +34,6 @@ jest.mock('@react-navigation/stack', () => {
   
       expect(getByTestId('stackNavigator')).toBeTruthy();
       expect(getByTestId('stackScreen-Saved Events')).toBeTruthy();
-      expect(getByTestId('stackScreen-Event Card')).toBeTruthy();
       expect(getByTestId('stackScreen-Event Details')).toBeTruthy();
     });
   
