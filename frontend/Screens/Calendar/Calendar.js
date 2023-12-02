@@ -19,13 +19,12 @@ const Calendar = () => {
     axios.get(ATTEND_API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log("attending:", attending);
-        //console.log("attending state: " + attending);
+        console.log("attending event:", attending);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [user.eventsGoingTo]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,7 +34,7 @@ const Calendar = () => {
       <ScrollView>
         <View style={styles.calendarContainer}>
           <Text style={styles.subheaderText}>Events Attending</Text>
-          <EventCard attending={attending[0]} />
+          <EventCard event={attending} />
         </View>
       </ScrollView>
     </SafeAreaView>
