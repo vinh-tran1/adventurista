@@ -90,7 +90,7 @@ const Step2 = ({ navigation, route }) => {
         {interests.length < 3 &&
         <View style={{ flexDirection: "row" }}>
             <TextInput testID="interest" value={tempInterest} onChangeText={(text) => setTempInterest(text)} placeholder='i.e. food' style={styles.input} />
-            <TouchableOpacity onPress={handleAddInterest}>
+            <TouchableOpacity testID="addInterestButton" onPress={handleAddInterest}>
                 <FontAwesomeIcon style={{ marginTop: 5, marginLeft: 15 }} icon="fa-add" size={25} />
             </TouchableOpacity>
         </View>
@@ -102,7 +102,7 @@ const Step2 = ({ navigation, route }) => {
                 );
             })}
             {interests.length === 3 &&
-            <TouchableOpacity onPress={() => setInterests([])}>
+            <TouchableOpacity testID="removeInterestButton" onPress={() => setInterests([])}>
                 <FontAwesomeIcon style={{ marginTop: 2.5, marginLeft: 15 }} icon="fa-xmark" size={25} />
             </TouchableOpacity>
             }

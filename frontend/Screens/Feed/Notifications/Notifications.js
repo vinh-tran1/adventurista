@@ -15,7 +15,7 @@ const Notifications = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity testID="back-button" onPress={() => navigation.goBack()}>
           <FontAwesomeIcon icon="fa-caret-left" size={30} />
         </TouchableOpacity>
         <Text style={styles.title}>Follow Requests ({user.requests.incoming.length})</Text>

@@ -32,7 +32,7 @@ const Post = ({ navigation }) => {
 
   const tags1 = [
     'catan', 'paddle', 'drinks', 'social',
-    'drives', 'school', 'student', 'energy',
+    'drives', 'school', 'study', 'energy',
     'beach', 'hike', 'food', 'squash',
     'cs', 'games', 'dinner', 'apps'
   ];

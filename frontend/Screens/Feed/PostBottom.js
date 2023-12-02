@@ -76,10 +76,10 @@ const PostBottom = (props) => {
                     })}
                 </View>
                 <View style={{ flexDirection: "row", marginTop: 12.5 }}>
-                    <TouchableOpacity style={{ marginRight: 12.5 }} onPress={handleAttendEvent}>
+                    <TouchableOpacity testID="attend-button" style={{ marginRight: 12.5 }} onPress={handleAttendEvent}>
                         <FontAwesomeIcon color={"#717171"} icon="calendar-plus" size={25} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginTop: 1.5 }} onPress={handleSaveEvent}>
+                    <TouchableOpacity testID="save-button" style={{ marginTop: 1.5 }} onPress={handleSaveEvent}>
                         <FontAwesomeIcon  color={"#717171"} icon="bookmark" size={24} />
                     </TouchableOpacity>
                 </View>

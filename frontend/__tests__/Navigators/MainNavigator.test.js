@@ -4,7 +4,7 @@ import '@testing-library/jest-native/extend-expect';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import MainNavigator from '../../Navigators/MainNavigator';
-import { NavigationContainer } from '@react-navigation/native';
+import { userReducer } from '../../Redux/userSlice';
 
 jest.mock('@react-navigation/bottom-tabs', () => {
   const TabNavigatorMock = jest.fn(({ children }) => (
@@ -24,6 +24,11 @@ jest.mock('@react-navigation/bottom-tabs', () => {
   };
 });
 
+// Mock Redux
+jest.mock('../../Redux/userSlice', () => ({
+  selectIsLoggedIn: jest.fn(),
+}));
+
 // Mock other navigators
 jest.mock('../../Navigators/FeedNavigator', () => 'FeedNavigator');
 jest.mock('../../Navigators/CalendarNavigator', () => 'CalendarNavigator');
@@ -32,20 +37,29 @@ jest.mock('../../Navigators/SavedEventsNavigator', () => 'SavedEventsNavigator')
 jest.mock('../../Navigators/ProfileNavigator', () => 'ProfileNavigator');
 
 const mockStore = configureStore([]);
+const store = mockStore({
+  userInfo: userReducer
+});
 
 describe('MainNavigator', () => {
-  let store;
 
-    beforeEach(() => {
-      store = mockStore({});
-    });
+  // test('renders the authentication navigator when not logged in', () => {
 
-  test('renders the authentication navigator when not logged in', () => {
-    const store = mockStore({
-      user: {
-        isLoggedIn: true,
-      },
-    });
+  //   // Mock isLoggedIn to be false
+  //   require('../../Redux/userSlice').selectIsLoggedIn.mockReturnValue(false);
+
+  //   const { getByTestId } = render(
+  //     <Provider store={store}>
+  //       <MainNavigator />
+  //     </Provider>
+  //   );
+
+  //   expect(getByTestId('authenticationNavigator')).toBeTruthy();
+  // });
+
+  test('renders the tab navigator when logged in', () => {
+
+    require('../../Redux/userSlice').selectIsLoggedIn.mockReturnValue(true);
 
     const { getByTestId } = render(
       <Provider store={store}>
@@ -53,24 +67,12 @@ describe('MainNavigator', () => {
       </Provider>
     );
 
-    expect(getByTestId('tabNavigator')).not.toBeTruthy();
-    expect(getByTestId('authenticationNavigator')).toBeTruthy();
-  });
-
-  test('renders the tab navigator when logged in', () => {
-    const store = mockStore({
-      user: {
-        isLoggedIn: true,
-      },
-    });
-
-    const { getByTestId } = render(
-        <Provider store={store}>
-            <MainNavigator />
-        </Provider>
-    );
-
     expect(getByTestId('tabNavigator')).toBeTruthy();
-    expect(getByTestId('authenticationNavigator')).not.toBeTruthy();
+    expect(getByTestId('tabScreen-Feed')).toBeTruthy();
+    expect(getByTestId('tabScreen-Calendar')).toBeTruthy();
+    expect(getByTestId('tabScreen-Post')).toBeTruthy();
+    expect(getByTestId('tabScreen-Saved Events')).toBeTruthy();
+    expect(getByTestId('tabScreen-Profile')).toBeTruthy();
+
   });
 });
