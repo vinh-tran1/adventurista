@@ -1,32 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import { View, Text, Image, ImageBackground, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useNavigation } from '@react-navigation/native';
 import AttendingUser from "./AttendingUser";
 import { useSelector, useDispatch } from 'react-redux';
 import { selectUserInfo, setUserInfo } from "../Redux/userSlice";
 
-const EventDetails = ({ event, poster }) => {
+const EventDetails = ({ navigation, route }) => {
 
-    const navigation = useNavigation();
+    const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/going-to-event';
     const user = useSelector(selectUserInfo);
+    const dispatch = useDispatch();
+    const { event, poster, privacy } = route.params;
+    const [isAttending, setIsAttending] = useState(user.eventsGoingTo.some(eventId => eventId === event.eventId));
 
-    // need to get event
-    // useEffect(() => {
-
-    // });
-
-    // need logic for if they are friends or not -> use REDUX
     const handleViewProfile = () => {
-        // navigation.navigate('FriendProfileView', {poster: createdByObj});
+        navigation.navigate('FriendProfileView', {poster: poster});
     };
+
+    const handleAttendEvent = async () => {
+        try {
+            const response = await axios.post(ATTEND_API_URL, {
+            userId: user.userId,
+            eventId: event.eventId
+          });
+          if (response.status === 200) {
+            const updatedUser = response.data;
+            setIsAttending(true);
+  
+            dispatch(setUserInfo({
+              newPost: false,
+              ...updatedUser
+            }));
+  
+            console.log("Successfully added event to your calendar");
+          } else {
+            console.log("Error adding this event to your calendar");
+          }
+        } catch (err) {
+          console.log(err);
+          console.log("An error occurred while adding this event to your calendar. Please try again.");
+        }
+      }
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity style={{ paddingHorizontal: 15, paddingBottom: 15 }} onPress={() => navigation.goBack()}>
-                <FontAwesomeIcon color={"black"} icon="caret-left" size={35} />
-            </TouchableOpacity>
-            <ImageBackground source={{uri: "https://s.hdnux.com/photos/64/42/33/13772497/4/1200x0.jpg"}} style={styles.postTop}>
+            <View style={{ flexDirection: 'row', paddingHorizontal: 15, paddingBottom: 15, alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <FontAwesomeIcon color={"black"} icon="caret-left" size={35} />
+                </TouchableOpacity>
+
+                <Text style={{ fontSize: 30, fontWeight: '700' }}>Event</Text>
+            </View>
+            
+            <ImageBackground source={{uri: event.eventPictureUrl}} style={styles.postTop}>
                 <View style={styles.postHeader}>
                     <Text style={{fontSize: 28, fontWeight: "bold"}}>{event.title}</Text>
                     <View style={styles.locationContainer}>
@@ -36,12 +63,11 @@ const EventDetails = ({ event, poster }) => {
                 </View>
                 <View style={styles.bottomContent}>
                     <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-                        <TouchableOpacity style={{ backgroundColor: '#4b3654', paddingVertical: 15, paddingHorizontal: 10, borderRadius: 10 }}>
+                        <TouchableOpacity 
+                            onPress={handleViewProfile}
+                            style={{ backgroundColor: '#4b3654', paddingVertical: 15, paddingHorizontal: 10, borderRadius: 10 }}>
                             <View style={{ flexDirection: "row"}}>
-                                <View 
-                                    style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}
-                                    onPress={handleViewProfile}
-                                >
+                                <View style={{ backgroundColor: "#D186FF", borderRadius: 20, borderWidth: 0.5, borderColor: 'white', width: 30, height: 30, marginRight: 2, marginBottom: 2}}>
                                     <FontAwesomeIcon style={{ marginLeft: 7.5, marginTop: 7.5 }} icon="user" size={15}/>
                                 </View>
                                 <Text style={{ color: "white", fontWeight: "700", marginTop: 7.5, marginLeft: 5 }}>by {poster.firstName}</Text>
@@ -54,14 +80,41 @@ const EventDetails = ({ event, poster }) => {
                     </View>
                 </View>
             </ImageBackground>
-            <Text style={styles.subheaderText}>Attending {event.whoIsGoing.length}</Text>
-            <ScrollView>
-                <AttendingUser />
-                <AttendingUser />
-                <AttendingUser /> 
-                <AttendingUser /> 
-                <AttendingUser />
-            </ScrollView>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingRight: 20 }}>
+                <Text style={styles.subheaderText}>Attending ({event.whoIsGoing.length})</Text>
+                {!isAttending ? 
+                <TouchableOpacity onPress={handleAttendEvent}>
+                    <FontAwesomeIcon  color={'#4b3654'} icon="calendar-plus" size={25} />
+                </TouchableOpacity>
+                :
+                <FontAwesomeIcon color={'#4b3654'} icon="check" size={35} />
+                }
+            </View>
+
+            {(!privacy || isAttending) ?
+            (<ScrollView>
+            { event.whoIsGoing.length > 0 ?
+                event.whoIsGoing.map((userId, index) => {
+                return (
+                    <AttendingUser key={index} userId={userId} ownerId={event.postingUserId} navigation={navigation}/>
+                )
+                })
+                :
+                <Text style={{ fontSize: 18, fontWeight: '700', color: 'gray' }}>
+                    no users attending yet!
+                </Text>
+            }
+            </ScrollView>)
+            :
+            (<View>
+                <Text style={{ fontSize: 18,fontWeight: "600", marginVertical: 2, paddingHorizontal: 20, color: "gray"}}>
+                    Join Event to See Details!
+                </Text>
+            </View>)
+
+            }
+
         </SafeAreaView>
     )
   };

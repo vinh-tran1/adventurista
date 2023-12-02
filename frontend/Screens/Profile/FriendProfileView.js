@@ -16,39 +16,33 @@ const FriendProfileView = ({ navigation, route }) => {
   const API_URL_ADD = process.env.REACT_APP_AWS_API_URL + 'users/friend-request';
   const API_URL_UNADD = process.env.REACT_APP_AWS_API_URL + 'users/friend-request/unadd';
   const { poster } = route.params;
-  // console.log(poster);
 
   const user = useSelector(selectUserInfo);
   const dispatch = useDispatch();
   const age = getAge(poster.age);
   const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
-  // necessary for modals
   const [isModalVisible, setModalVisible] = useState(false);
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
-
-  const friends = user?.friends || [];
-  const requestsOutgoing = user?.requests?.outgoing || [];
+  // const friends = user?.friends || [];
+  // const requestsOutgoing = user?.requests?.outgoing || [];
   const posterEventsGoing = poster?.eventsGoingTo || [];
   const posterEventsOwned = poster?.eventsOwned || [];
   const [posterInterests, setPosterInterests] = useState(poster?.interests || []);
-
-  const [isFriend, setIsFriend] = useState(friends.some(friendId => friendId === poster.userId));
-  const [requested, setRequested] = useState(requestsOutgoing.some(friendId => friendId === poster.userId));
+  const [isSamePerson, setIsSamePerson] = useState(user.userId === poster.userId);
+  const [isFriend, setIsFriend] = useState((user?.friends || []).some(friendId => friendId === poster.userId));
+  const [requested, setRequested] = useState((user?.requests?.outgoing || []).some(friendId => friendId === poster.userId));
   const [friendStatus, setFriendStatus] = useState(isFriend ? "Friends" : requested ? "Requested" : "Add Friend");
-  // the friend's groups (not the user's)
-  const [groups, setGroups] = useState(posterEventsGoing.filter(event => !posterEventsOwned.includes(event)));
-
-  // dummy data
-  //const profilePic = 'https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_800_800/0/1643655076107?e=2147483647&v=beta&t=v3YTetBWO8TOjEv-7hxNvsOdQWswiQT1DoGAJ7PNlDY';
-  //const profileBannerImg = 'https://dxbhsrqyrr690.cloudfront.net/sidearm.nextgen.sites/yalebulldogs.com/images/2022/1/28/SAM_5155.JPG';
+  const [groups, setGroups] = useState(posterEventsGoing.filter(event => !posterEventsOwned.includes(event)));   // the friend's groups (not the user's)
 
   useEffect(() => {
     const { width, height } = Dimensions.get('window');
     setViewDimensions({ width, height });
-  }, []);
+  }, [poster.profilePictureUrl, poster.bannerImageUrl]);
+
+  console.log(poster.profilePictureUrl + '\n' +  poster.bannerImageUrl)
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
   
   const handleAddFriend = async () => {
     try {
@@ -81,7 +75,7 @@ const FriendProfileView = ({ navigation, route }) => {
     }
   };
 
-  const handelRemoveFriend = async() => {
+  const handleRemoveFriend = async() => {
     try {
       const response = await axios.post(API_URL_UNADD, {
         requesterId: user.userId, 
@@ -127,9 +121,11 @@ const FriendProfileView = ({ navigation, route }) => {
             <View style={{ flexDirection: 'row', flexGrow: 1, justifyContent: 'space-between', marginLeft: 8}}>
                 <Text style={styles.headerText}>{poster.firstName}</Text>
 
-                <TouchableOpacity testID="ellipsis" style={{marginTop: 6}} onPress={toggleModal}>
-                  <FontAwesomeIcon icon="fa-ellipsis" size={25} />
-                </TouchableOpacity>
+                {!isSamePerson && 
+                  <TouchableOpacity testID="ellipsis" style={{marginTop: 6}} onPress={toggleModal}>
+                    <FontAwesomeIcon icon="fa-ellipsis" size={25} />
+                  </TouchableOpacity>
+                }
                 
                 <Modal 
                   testID="modal"
@@ -143,7 +139,7 @@ const FriendProfileView = ({ navigation, route }) => {
                     <View style={{ backgroundColor: 'white', paddingHorizontal: 60, paddingVertical: 40, borderWidth: 2, borderColor: '#D99BFF', borderRadius: 10}}>
                       
                       { isFriend ? 
-                        <TouchableOpacity style={{ justifyContent: 'center', marginBottom: 16 }} onPress={handelRemoveFriend}>
+                        <TouchableOpacity style={{ justifyContent: 'center', marginBottom: 16 }} onPress={handleRemoveFriend}>
                           <Text style={{textAlign: 'center', color: '#D99BFF', fontSize: 20, fontWeight: 700 }}>Remove {poster.firstName} as friend?</Text>
                         </TouchableOpacity> 
                         :
@@ -187,11 +183,12 @@ const FriendProfileView = ({ navigation, route }) => {
                   <Text style={{ fontSize: 20, fontWeight: '600', color: "#D99BFF", marginLeft: 6}}>{age}</Text>
                 </View>
 
-                { isFriend || requested ? 
+                { !isSamePerson && (isFriend || requested) && 
                     <View style={{ backgroundColor: isFriend ? '#EDD3FF' : '#B3B3B3', marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}>
                       <Text style={{ fontSize: 12}}>{friendStatus}</Text>
                     </View>
-                    :
+                }
+                { !isSamePerson && !(isFriend || requested) &&
                     <TouchableOpacity 
                       style={{ backgroundColor: '#EFEFEF', 
                             marginLeft: 6, paddingVertical: 4, paddingHorizontal: 6, borderRadius: 5, borderWidth: 0.25, borderColor: 'gray'}}
@@ -222,7 +219,7 @@ const FriendProfileView = ({ navigation, route }) => {
       </View>
       
       {/* public or private view depending on friend status */}
-      {!isFriend ? 
+      {!isSamePerson && !isFriend ? 
           <View style={styles.sectionContainer}>
               <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, paddingVertical: 50 }}>
                   <View 
@@ -232,29 +229,42 @@ const FriendProfileView = ({ navigation, route }) => {
                   <Text style={{ fontSize: 22, fontWeight: '600', marginBottom: 8 }}>Not Friends Yet!</Text>
                   <Text style={{ color: '#808080' }}>Add {poster.firstName} As A Friend To View Profile</Text> 
               </View>
-          </View> :
+          </View> 
+          :
           <View>
-              <View style={styles.sectionContainer}>
+            {!isSamePerson && 
+              <View style={[styles.sectionContainer, {marginBottom: 10}]}>
                   <View style={styles.sectionHeader}>
                       {groups.length > 0 ? <Text style={styles.sectionText}>My Groups</Text> : <Text style={styles.sectionText}>No Groups Joined Yet!</Text>}
                   </View>
-                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                      {/* {groupData.map((groupId) => (
-                          <MyGroups key={index.toString()} groupId={groupId} />
-                      ))} */}
-                      {groups.map((groupId, index) => (
-                          <MyGroups key={index.toString()} groupId={groupId} poster={poster}/>
-                      ))}
-                  </ScrollView>
+                 
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        {groups.map((groupId, index) => (
+                            <MyGroups key={index.toString()} groupId={groupId} poster={poster}/>
+                        ))}
+                    </ScrollView> 
               </View>
+            }
               <View style={styles.sectionContainer}>
                   <View style={styles.sectionHeader}>
                   <Text style={styles.sectionText}>My Events</Text>
                   </View>
               </View>
 
-              <View style={{paddingHorizontal: 20}}>
-                  <MyEvents events={poster.eventsOwned}/>
+              <View>
+                { (poster?.eventsOwned || []).length > 0 ?
+                    poster.eventsOwned.map((eventId, index) => {
+                    return (
+                      <MyEvents key={index} eventId={eventId}/>
+                    )
+                    })
+                    :
+                    <View style={{ paddingHorizontal: 20 }}>
+                      <Text style={{ fontSize: 16, fontWeight: '700', color: 'gray' }}>
+                        no events posted yet!
+                      </Text>
+                    </View>
+                }
               </View>
           </View>
       } 
@@ -325,7 +335,7 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   sectionContainer: {
-    marginVertical: 10,
+    marginTop: 10,
     paddingHorizontal: 20
   },
   sectionHeader: {
@@ -337,7 +347,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: '#D186FF',
-    marginBottom: 10
   },
   tagContainer: {
     marginVertical: 10,

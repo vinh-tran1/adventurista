@@ -195,14 +195,14 @@ const EditProfile = ({ navigation }) => {
 
         // GET and PUT requests for banner picture URL
         try {
-          const fileInfo = await FileSystem.getInfoAsync(bannerImage);
+          const fileInfo = await FileSystem.getInfoAsync(profileImage);
           if (!fileInfo || !fileInfo.exists) {
             console.log('File does not exist.');
             return;
           }
 
           const manipulatedImage = await ImageManipulator.manipulateAsync(
-            bannerImage,
+            profileImage,
             [{ resize: { width: 300 } }],
             { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
           );

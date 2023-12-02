@@ -10,8 +10,6 @@ const MyGroups = ({ groupId, poster }) => {
   const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/event/' + groupId;
   // const user = useSelector(selectUserInfo);
   const [group, setGroup] = useState("");
-  // dummy image before S3
-  const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
 
   useEffect(() => {
     axios.get(API_URL) 
@@ -27,8 +25,8 @@ const MyGroups = ({ groupId, poster }) => {
 
   return (
     <View style={styles.container}>
-        <Image source={{ uri: img }} style={styles.circle} />
-        <Text style={styles.caption}>{group.title}</Text>
+        <Image source={{ uri: group.eventPictureUrl }} style={styles.circle} />
+        <Text style={styles.caption} numberOfLines={2}>{group.title}</Text>
     </View>
   );
 }
@@ -44,14 +42,17 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 70/2,
+    marginTop: 10,
     marginBottom: 5,
-    borderWidth: 2,
-    borderColor: '#EDDBFF'
+    borderWidth: 3,
+    borderColor: '#D99BFF'
   },
   caption: {
-    fontSize: 14,
+    fontSize: 10,
     fontWeight: '500',
-    color: 'gray'
+    color: 'black',
+    textAlign: 'center',
+    width: 70
   }
 });
 

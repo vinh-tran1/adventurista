@@ -20,10 +20,14 @@ jest.mock('@react-navigation/stack', () => {
       StackNavigatorMock,
     };
   });
+
+  // Mocking react-native-modal library
+  jest.mock('react-native-modal', () => 'MockModal');
   
   // Mock your screens
   jest.mock('../../Screens/Profile/ProfileUser', () => 'Profile');
   jest.mock('../../Screens/Profile/EditProfile', () => 'EditProfile');
+  jest.mock('../../Shared//EventCard', () => 'EventCard');
   jest.mock('../../Shared//EventDetails', () => 'EventDetails');
   
   describe('ProfileNavigator', () => {
@@ -33,6 +37,7 @@ jest.mock('@react-navigation/stack', () => {
       expect(getByTestId('stackNavigator')).toBeTruthy();
       expect(getByTestId('stackScreen-Profile Main')).toBeTruthy();
       expect(getByTestId('stackScreen-Edit Profile')).toBeTruthy();
+      expect(getByTestId('stackScreen-Event Card')).toBeTruthy();
       expect(getByTestId('stackScreen-Event Details')).toBeTruthy();
     });
   

@@ -29,25 +29,23 @@ const Post = ({ navigation }) => {
   const [selectTags, setSelectTags] = useState([]);
   const [moreTagsClicked, setMoreTagsClicked] = useState(1);
 
-  //const img = 'https://i.etsystatic.com/8606357/r/il/144257/2449311457/il_570xN.2449311457_3lz9.jpg';
-
   const tags1 = [
-    'catan', 'paddle', 'drinks', 'social',
-    'drives', 'school', 'study', 'energy',
-    'beach', 'hike', 'food', 'squash',
-    'cs', 'games', 'dinner', 'apps'
+    'tech', 'swim', 'beach', 'clubs',
+    'food', 'books', 'drinks', 'sports',
+    'gamer', 'finance', 'nature', 'style',
+    'fitness', 'pets', 'fashion', 'hiking',
   ];
   const tags2 = [
-    'travel', 'music', 'movies', 'gym',
-    'cook', 'read', 'garden', 'art',
-    'shop', 'photos', 'coding', 'sports',
-    'tennis', 'nature', 'write', 'fashion',
+    'crafts', 'guitar', 'gaming', 'bake',
+    'bike', 'fishing', 'yoga', 'music',
+    'coding', 'dance', 'read', 'kayak',
+    'golf', 'surf', 'travel', 'piano',
   ];
   const tags3 = [
-    'poetry', 'dance', 'pizza', 'guitar',
-    'walks', 'coffee', 'explore', 'water',
-    'ocean', 'books', 'lawn', 'yoga',
-    'paint', 'films', 'hiking', 'chess',
+    'poetry', 'theater', 'cheap', 'jazz',
+    'study', 'cook', 'history', 'opera',
+    'social', 'laugh', 'film', 'paint',
+    'gallery', 'art', 'fun', 'energy',
   ];
   const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
   const dates = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
@@ -188,7 +186,7 @@ const Post = ({ navigation }) => {
 
           axios.get(process.env.REACT_APP_AWS_API_URL + "events/event-pic-presigned/" + eventId)
             .then(async (response2) => {
-              console.log(response2.data);
+              // console.log(response2.data);
               console.log("Succesfully received pre-signed URL")
               try {
                 const response3 = await axios.put(

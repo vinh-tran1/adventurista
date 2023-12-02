@@ -19,8 +19,6 @@ const ProfileUser = ({ navigation }) => {
   const [viewDimensions, setViewDimensions] = useState({ width: 0, height: 0 });
   const [groups, setGroups] = useState(user.eventsGoingTo.filter(event => !user.eventsOwned.includes(event)));
 
-  console.log("banner", user.bannerImageUrl)
-
   const handleEditProfile = () => {
     navigation.navigate("Edit Profile");
   }
@@ -101,8 +99,20 @@ const ProfileUser = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={{paddingHorizontal: 20}}>
-        <MyEvents events={user.eventsOwned}/>
+      <View>
+      { user.eventsOwned.length > 0 ?
+          user.eventsOwned.map((eventId, index) => {
+          return (
+            <MyEvents key={index} eventId={eventId}/>
+          )
+          })
+          :
+          <View style={{ paddingHorizontal: 20 }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: 'gray' }}>
+              no events posted yet!
+            </Text>
+          </View>
+      }
       </View>
         
       </ScrollView>
@@ -173,7 +183,7 @@ const styles = StyleSheet.create({
     fontWeight: '700'
   },
   sectionContainer: {
-    marginVertical: 10,
+    marginTop: 10,
     paddingHorizontal: 20,
   },
   sectionHeader: {
@@ -185,7 +195,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: '#D186FF',
-    marginBottom: 10
   },
   tagContainer: {
     marginVertical: 10,

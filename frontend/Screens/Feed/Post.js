@@ -13,41 +13,17 @@ import { selectNewPost, setNewPost, selectUserInfo } from '../../Redux/userSlice
 
 const Post = (props) => {
 
+    const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
+
+    const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
+    const API_URL_EVENTS = process.env.REACT_APP_AWS_API_URL + 'events/event/' + eventId;
     const user = useSelector(selectUserInfo);
     const newPost = useSelector(selectNewPost);
     const dispatch = useDispatch();  
-    
     const [poster, setPoster] = useState("");
-
-    const { eventId, title, location, caption, img, createdBy, date, time, tags, navigation } = props;
-
-    // const url = 'https://weaapwe0j9.execute-api.us-east-1.amazonaws.com/users/'
-    const API_URL = process.env.REACT_APP_AWS_API_URL + 'users/';
-
     const [activeSlide, setActiveSlide] = useState(0);
-
-    const nikhil = {
-        name: "NIKHIL",
-        age: "20",
-        profile_pic: "https://media.licdn.com/dms/image/C4D03AQGMfYOlb4UFaw/profile-displayphoto-shrink_400_400/0/1643655075770?e=1704326400&v=beta&t=1K3-4rPZswziH2cbOMNbOB0-6Oq6g2xeCkFs1zPpX_A",
-        interests: ["squash", "catan", "south bay"],
-        from: "toronto, canada"
-    }
-    const vinh = {
-        name: "VINH",
-        age: "20",
-        profile_pic: "https://media.licdn.com/dms/image/C4E03AQG_u4KCopf_dA/profile-displayphoto-shrink_800_800/0/1642457325916?e=1703116800&v=beta&t=TSsp3EjRAUXjiKmqRWj7yKQK2LzRukoG8ssxlNAuHdo",
-        interests: ["paddle", "consulting", "pauli murray"],
-        from: "boston, massachusetts"
-    }
-    const patrick = {
-        name: "PATRICK",
-        age: "21",
-        profile_pic: "https://media.licdn.com/dms/image/C4D03AQEEcYoIdoYJGg/profile-displayphoto-shrink_800_800/0/1573619508976?e=1703116800&v=beta&t=sKbslX-_dW8kggNkCcJDdq_c_pgd4XJS3pxxHTO-0GA",
-        interests: ["morse", "chelsea", "fifa"],
-        from: "salisbury, maryland"
-    }
-    const attending = [null, nikhil, vinh, patrick]; // Add your image sources
+    const [peopleAttending, setPeopleAttending] = useState([]);
+    const [totalAttending, setTotalAttending] = useState(0);
 
     const handleLeftTap = () => {
         if (activeSlide > 0) {
@@ -56,23 +32,40 @@ const Post = (props) => {
       };
     
       const handleRightTap = () => {
-        if (activeSlide < attending.length - 1) {
+        if (activeSlide < peopleAttending.length - 1) {
           setActiveSlide(activeSlide + 1); // Move to the next slide
         }
       };
 
     useEffect(() => {
-        // console.log(user.userId)
+        // get's information on poster of event
         axios.get(API_URL + createdBy) 
         .then((response) => {
-            //setUserName(response.data.firstName);
             dispatch(setNewPost(false));
             setPoster(response.data);
         })
         .catch((error) => {
+            console.log("fail to get poster")
             console.log(error);
         });
-    }, [newPost, user?.friends || []]);
+        // gets event information
+        axios.get(API_URL_EVENTS) 
+        .then((response) => {
+            dispatch(setNewPost(false));
+            const temp = response.data.whoIsGoing.filter(personId => personId !== user.userId);
+
+            setTotalAttending(temp.length);
+
+            if (response.data.whoIsGoing.length > 4) 
+                temp = temp.slice(0, 4);
+
+            setPeopleAttending([null, ...temp]);
+
+        })
+        .catch((error) => {
+            console.log("fail to get event info from post")
+        });
+    }, [newPost, user?.friends || [], user?.eventsGoingTo || [], user?.eventsSaved || []]);
 
     return (
         <View>
@@ -82,9 +75,9 @@ const Post = (props) => {
                 onTouchEnd={() => setActiveSlide(activeSlide)}
                 height={"100%"}
             >
-                {attending.map((user, index) => (
+                {peopleAttending.map((userId, index) => (
                 <View key={index}>
-                    {user === null ? (
+                    {userId === null ? (
                     <View style={styles.postContainer}>
                         <PostTop 
                             title={title} 
@@ -94,6 +87,7 @@ const Post = (props) => {
                             createdByObj={poster}
                             date={date} 
                             time={time} 
+                            attendance={totalAttending}
                             navigation={navigation}
                         />
                         <PostBottom eventId={eventId} caption={caption} tags={tags} />
@@ -102,21 +96,26 @@ const Post = (props) => {
                     <View style={styles.postContainer}>
                         <UserTop 
                             createdByObj={poster}
-                            profile_pic={user.profile_pic} 
-                            interests={user.interests}
+                            userId={userId}
+                            update={activeSlide}
+                            // profile_pic={user.profile_pic} 
+                            // interests={user.interests}
                             navigation={navigation}
                         />
                         <UserBottom
-                            name={user.name}
-                            age={user.age}
-                            from={user.from}
+                            // name={user.name}
+                            // age={user.age}
+                            // from={user.from}
+                            userId={userId}
+                            update={activeSlide}
+                            navigation={navigation}
                         />
                     </View>
                     )}
                 </View>
                 ))}
             </Swiper>
-            <TouchableOpacity testID="left-touchable" onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '65%'}}>
+            <TouchableOpacity testID="left-touchable" onPress={handleLeftTap} style={{ position: 'absolute', top: 0, left: 0, width: '50%', height: '55%'}}>
                 {/* Left 1/3 of the screen is a touchable area for moving to the previous slide */}
             </TouchableOpacity>
             <TouchableOpacity testID="right-touchable" onPress={handleRightTap} style={{ position: 'absolute', top: 0, right: 0, width: '50%', height: '75%'}}>

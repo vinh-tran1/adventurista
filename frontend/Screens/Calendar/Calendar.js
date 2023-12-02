@@ -11,17 +11,18 @@ const Calendar = () => {
 
   const user = useSelector(selectUserInfo);
 
-  const ATTEND_API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
+  const API_URL = process.env.REACT_APP_AWS_API_URL + 'events/events-going-to/' + user.userId;
 
   const [attending, setAttending] = useState([]);
 
   useEffect(() => {
-    axios.get(ATTEND_API_URL)
+    axios.get(API_URL)
       .then((response) => {
         setAttending(response.data);
-        console.log("attending event:", attending);
+        // console.log("attending event:", attending);
       })
       .catch((error) => {
+        console.log("getting attending events failed")
         console.log(error);
       });
   }, [user.eventsGoingTo]);
@@ -33,8 +34,18 @@ const Calendar = () => {
       </View>
       <ScrollView>
         <View style={styles.calendarContainer}>
-          <Text style={styles.subheaderText}>Events Attending</Text>
-          <EventCard event={attending} />
+          {attending.length > 0 && <Text style={styles.subheaderText}>Events Attending</Text>}
+          { attending.length > 0 ?
+            attending.map((eventObj, index) => {
+            return (
+              <EventCard key={index} event={eventObj} privacy={false}/>
+            )
+            })
+            :
+            <Text style={{ fontSize: 24, fontWeight: '700', color: 'gray' }}>
+              no events on itinerary!
+            </Text>
+          }
         </View>
       </ScrollView>
     </SafeAreaView>

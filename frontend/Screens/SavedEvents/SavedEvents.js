@@ -7,7 +7,7 @@ import EventCard from "../../Shared/EventCard";
 import { useSelector } from 'react-redux';
 import { selectUserInfo } from '../../Redux/userSlice';
 
-const Messages = () => {
+const SavedEvents = () => {
   
   const user = useSelector(selectUserInfo);
 
@@ -19,13 +19,12 @@ const Messages = () => {
     axios.get(API_URL)
       .then((response) => {
         setSavedEvents(response.data);
+        // console.log("saved event", savedEvents);
       })
       .catch((error) => {
         console.log(error);
       });
   }, [user.eventsSaved]);
-
-  console.log("saveddd", savedEvents);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -34,12 +33,17 @@ const Messages = () => {
       </View>
       <ScrollView>
         <View style={styles.groupsContainer}>
-          {savedEvents.map((eventObj, index) => {
-            console.log(eventObj)
+          { savedEvents.length > 0 ?
+            savedEvents.map((eventObj, index) => {
             return (
-              <EventCard key={index} event={eventObj}/>
+              <EventCard key={index} event={eventObj} privacy={true}/>
             )
-          })}
+            })
+            :
+            <Text style={{ fontSize: 24, fontWeight: '700', color: 'gray' }}>
+              no saved events!
+            </Text>
+          }
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -72,4 +76,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Messages;
+export default SavedEvents;
