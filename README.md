@@ -45,7 +45,7 @@ Using React Native, our app is able to run on both iOS and Android.
 - `frontend/Screens/`: Folders for the major screens
   - `Authenticate/`: authentication for user
     - `Login/`
-    -  `Signup/`
+    - `Signup/`
   - `Calendar/`: Events attending and events saved
   - `Feed/`: Feed for current user
     - `Notifications/`
@@ -125,16 +125,16 @@ docker run -p 80:80 --name adventurista ts-adventurista
 ### Frontend (Jest)
 
 **Run Tests**: `npm test`
+
 - it will automatically generate a coverage report in the terminal
 
 **Add Your Own Tests:** We are using Jest for frontend testing (documentation: https://jestjs.io/docs/tutorial-react-native)
 
-  1. Navigate to `frontend/__tests__` folder
-  2. Create file: NameOfComponentToTestHere.test.js
-  3. Import component, function names, etc from file that you want to test. We are using default export convention (import Component from './Component').
-  4. To test a component, view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
-  5. To test a function, view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
-
+1. Navigate to `frontend/__tests__` folder
+2. Create file: NameOfComponentToTestHere.test.js
+3. Import component, function names, etc from file that you want to test. We are using default export convention (import Component from './Component').
+4. To test a component, view this example: [BubbleText.test.js](frontend/__tests__/Shared/BubbleText.test.js)
+5. To test a function, view this example: [GetAge.test.js](frontend/__tests__/Shared/GetAge.test.js)
 
 Image Of Coverage Here
 
@@ -143,18 +143,25 @@ Image Of Coverage Here
 - CDK Unit Tests (Checks if AWS resources have been written to cdk.out. Cdk.out is what is consumed by AWS CloudFormation when we use `cdk deploy`) (in `backend/test`)
   - Coverage: 100%
 - Events Unit Tests (in `backend/src/test`)
-  - Coverage: 25%
+  - Coverage: 50%
 - Users Unit Tests (in `backend/src/test`)
   - Coverage: 95%
 - Messages Unit Tests (in `backend/src/test`)
 
-  - Coverage: ~~%
-  - We need to refactor for good coverage. Most of the logic is build into the route handler, rather than having a separate function for DynamoDB / S3 access. This will be fixed in the future.
+  - Coverage: 100%
 
 - Notes:
   - You can run the CDK tests by running `npm run test` in `backend/`, and you can run the unit tests by running `npm run test` in `backend/src`
-  - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing.
-  - If you are looking to add tests to this suite, the following need to be formally tested:
-  - `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URI generation
-  - `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB
-  - A large portion of the Events service in `backend/src/src/events.ts` needs to be unit tested. Feel free to write any tests, using a format similar to `backend/src/test/users.test.ts`!
+  - `npm run test` equates to `jest --silent`. The silent flag if for when DynamoDB client is mocked to throw an error; in our code, we `console.error(msg)` the error; however, this is distracting and contradictory to our testing output. This, the console logging has been disabled _only_ for Jest testing
+
+**Add Your Own Tests:** We are using Jest for frontend testing (documentation: https://jestjs.io/docs/tutorial-react-native)
+
+1. Navigate to `backend/src` to create unit tests (or `backend/` if you want to add/refine the CDK tests)
+2. Open `users.test.ts`, `events.test.ts`, or `messages.test.ts` (or `cdk.test.ts`) to add tests
+3. Import the handler function (from `users.ts`, `events.ts`, or `messages.ts`), type (from `models.ts`)
+4. Write your test! For an example, see [users.test.ts](backend/src/test/users.test.ts) or [cdk.test.ts](backend/test/cdk.test.ts)
+
+If you are looking for code that needs testing coverage:
+
+- `getProfilePicUploadURL` in `backend/src/src/users.ts` which handles S3 presigned URL generation, or for banner image presigned URL (`users.ts`) or event image presigned URL (`events.ts`)
+- `deleteUser` in `backend/src/src/users.ts` which handles the deletion of a user from the users table in DynamoDB, or `deleteEvent` in `backend/src/src/events.ts`

@@ -136,7 +136,7 @@ router.post("/event/create", async (req, res) => {
     blockedUsers: [],
     whoIsGoing: [req.body.postingUserId],
     // eventPictureUrl: req.body.eventPictureUrl,
-    eventPictureUrl: `${EVENT_PIC_BUCKET_URI}default_event_picture.jpg`,
+    eventPictureUrl: "",
     tags: req.body.tags,
   };
 

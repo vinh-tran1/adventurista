@@ -592,6 +592,33 @@
     "aws:cdk:path": "CdkStack/groupchats/Resource"
    }
   },
+  "metrics11C9AF8C": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "KeySchema": [
+     {
+      "AttributeName": "metricsId",
+      "KeyType": "HASH"
+     }
+    ],
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "metricsId",
+      "AttributeType": "S"
+     }
+    ],
+    "ProvisionedThroughput": {
+     "ReadCapacityUnits": 5,
+     "WriteCapacityUnits": 5
+    },
+    "TableName": "metrics"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "CdkStack/metrics/Resource"
+   }
+  },
   "MyVpcF9F0CA6F": {
    "Type": "AWS::EC2::VPC",
    "Properties": {
@@ -1171,6 +1198,12 @@
           "groupchatsA5E16861",
           "Arn"
          ]
+        },
+        {
+         "Fn::GetAtt": [
+          "metrics11C9AF8C",
+          "Arn"
+         ]
         }
        ]
       }
@@ -1542,6 +1575,34 @@
          "Ref": "AWS::NoValue"
         }
        ]
+      },
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "metrics11C9AF8C",
+          "Arn"
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
       }
      ],
      "Version": "2012-10-17"
@@ -1608,6 +1669,16 @@
         }
        },
        {
+        "Name": "METRICS_PRIMARY_KEY",
+        "Value": "metricsId"
+       },
+       {
+        "Name": "METRICS_TABLE_NAME",
+        "Value": {
+         "Ref": "metrics11C9AF8C"
+        }
+       },
+       {
         "Name": "PROFILE_PICTURE_BUCKET_NAME",
         "Value": {
          "Ref": "profPicBucketF8FA9785"
@@ -1656,7 +1727,7 @@
       ],
       "Essential": true,
       "Image": {
-       "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:4560143e5156582181e833ccc6305ce2c6f4b2a8ebb5387aaa0f8d08f1c20f89"
+       "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}:50ed0747f80b28bb3ff96525f733562b72a7a0cd246b4ea4e03e752b05e1e5d1"
       },
       "LogConfiguration": {
        "LogDriver": "awslogs",

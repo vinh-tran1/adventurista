@@ -29,9 +29,9 @@ export const sampleUser: User = {
   eventsGoingTo: [],
   eventsNotGoingTo: [],
   messages: [],
-  profilePictureUrl: "default_profile_picture.jpg",
+  profilePictureUrl: "",
   bio: "",
-  bannerImageUrl: "default_banner_image.jpg",
+  bannerImageUrl: "",
   age: 0,
 };
 
@@ -56,9 +56,9 @@ export const sampleUserFriendsTesting: User = {
   eventsGoingTo: [],
   eventsNotGoingTo: [],
   messages: [],
-  profilePictureUrl: "default_profile_picture.jpg",
+  profilePictureUrl: "",
   bio: "",
-  bannerImageUrl: "default_banner_image.jpg",
+  bannerImageUrl: "",
   age: 0,
 };
 
@@ -83,9 +83,9 @@ export const sampleUserNotBlockedTesting: User = {
   eventsGoingTo: [],
   eventsNotGoingTo: [],
   messages: [],
-  profilePictureUrl: "default_profile_picture.jpg",
+  profilePictureUrl: "",
   bio: "",
-  bannerImageUrl: "default_banner_image.jpg",
+  bannerImageUrl: "",
   age: 0,
 };
 
@@ -110,9 +110,9 @@ export const sampleUpdatedUser: User = {
   eventsGoingTo: [],
   eventsNotGoingTo: [],
   messages: [],
-  profilePictureUrl: "default_profile_picture.jpg",
+  profilePictureUrl: "",
   bio: "Hi I have updated my parameters",
-  bannerImageUrl: "default_banner_image.jpg",
+  bannerImageUrl: "",
   age: 22,
 };
 
