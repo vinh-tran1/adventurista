@@ -4,9 +4,14 @@
   a social connectivity app
 </h1>
 
-<p align="center">
+<div align="center">
+  <p>
 Adventurista (F23) is a mobile app designed to tackle the challenges of travel coordination, planning, and meeting new people. The platform allows users to post upcoming adventure plans and join other people’s events within their travel location – fostering seamless friendships, expanding their global network, and making memorable travel experiences.
-</p>
+  </p>
+  
+<a href="https://drive.google.com/file/d/1gGO1vAAq15WjXGt6GP2ugHs6phPP3fgO/view?usp=sharing">Video Demo!</a>
+
+</div>
 
 <p align="center">by Patrick, Nikhil, Ej, Vinh, Akshay</p>
 
